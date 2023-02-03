@@ -110,4 +110,5 @@ enum AccessRole {
   agents
   warehouse
   inventory
+  admin
 }
