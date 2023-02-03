@@ -1,0 +1,113 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       Int        @id @default(autoincrement())
+  name     String
+  email    String     @unique
+  password String
+  role     AccessRole
+}
+
+model Vendor {
+  id             Int    @id @default(autoincrement())
+  name           String
+  contact        String
+  address        String
+  price_per_unit Float
+  // Raw materials
+}
+
+model Customer {
+  id         Int    @id @default(autoincrement())
+  first_name String
+  last_name  String
+  contact    String
+}
+
+model Order {
+  id       Int    @id @default(autoincrement())
+  quantity Int
+  status   String
+  amount   Float
+  address  String
+  // Products ID array
+  // Customer ID
+}
+
+model Product {
+  id             Int            @id @default(autoincrement())
+  name           String
+  price_per_unit Float
+  status         Boolean
+  image          String?
+  weight         Float
+  product_order  ProductOrder[]
+  inventory      Inventory[]
+  // Raw materials required ID array
+}
+
+model ProductOrder {
+  id         Int     @id @default(autoincrement())
+  name       String
+  quantity   Int
+  price      Float
+  product    Product @relation(fields: [product_id], references: [id])
+  product_id Int
+}
+
+model Category {
+  id     Int     @id @default(autoincrement())
+  name   String
+  status Boolean
+  image  String?
+}
+
+model Raw_Mateiral {
+  id        Int         @id @default(autoincrement())
+  name      String
+  quantity  Int
+  inventory Inventory[]
+}
+
+model Warehouse {
+  id           Int    @id @default(autoincrement())
+  address      String
+  contact      String
+  email        String @unique
+  phone_number Int
+  // Products id array
+}
+
+model Agent {
+  id           Int     @id @default(autoincrement())
+  name         String
+  address      String
+  phone_number String
+  city         String
+  status       Boolean
+}
+
+model Inventory {
+  id              Int          @id @default(autoincrement())
+  raw_materials   Raw_Mateiral @relation(fields: [raw_material_id], references: [id])
+  raw_material_id Int
+  products        Product      @relation(fields: [product_id], references: [id])
+  product_id      Int
+}
+
+enum AccessRole {
+  finance
+  orders
+  products
+  customers
+  agents
+  warehouse
+  inventory
+}
