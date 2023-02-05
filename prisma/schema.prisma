@@ -1,10 +1,16 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+  output          = "../src/generated/client"
+}
+
+generator typegraphql {
+  provider = "typegraphql-prisma"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model User {
@@ -69,7 +75,7 @@ model Category {
   image  String?
 }
 
-model Raw_Mateiral {
+model Raw_Material {
   id        Int         @id @default(autoincrement())
   name      String
   quantity  Int
@@ -96,7 +102,7 @@ model Agent {
 
 model Inventory {
   id              Int          @id @default(autoincrement())
-  raw_materials   Raw_Mateiral @relation(fields: [raw_material_id], references: [id])
+  raw_materials   Raw_Material @relation(fields: [raw_material_id], references: [id])
   raw_material_id Int
   products        Product      @relation(fields: [product_id], references: [id])
   product_id      Int
