@@ -62,10 +62,8 @@ export class UserResolver {
         @Arg("password", () => String) password: string,
         @Arg("role", () => String) role: AccessRole,
     ): Promise<AuthenticationToken> {
-        const userCount = await prisma.user.count({ where: { email } });
-        const alreadyExists = userCount > 0;
-
-        if (alreadyExists) throw new Error("Email already exists");
+        const existingUser = await prisma.user.findFirst({ where: { email } });
+        if (existingUser) throw new Error("Email already exists");
 
         const passwordHash = await hashPassword(password);
 

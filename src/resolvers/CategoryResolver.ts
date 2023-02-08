@@ -1,0 +1,94 @@
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import prisma from "../prisma/client";
+import { Category } from "@generated/type-graphql";
+import { UserInputError } from "apollo-server-express";
+
+@Resolver()
+export class CategoryResolver {
+    @Mutation(() => Category)
+    @Authorized()
+    async createCategory(
+        @Arg("name", () => String) name: string,
+        @Arg("status", () => Boolean) status: boolean,
+    ): Promise<Category> {
+        try {
+            // Restrict adding duplicate category
+            const category = await prisma.category.findFirst({
+                where: {
+                    name,
+                    status,
+                },
+            });
+
+            if (category) {
+                throw new UserInputError(
+                    "Category already exists with this data. Please enter different details",
+                );
+            }
+
+            const createdCategory = await prisma.category.create({
+                data: {
+                    name,
+                    status,
+                },
+            });
+
+            return createdCategory;
+        } catch (error: any) {
+            console.error(error);
+            throw new Error(error.message);
+        }
+    }
+
+    @Query(() => [Category])
+    @Authorized()
+    async categories() {
+        try {
+            return await prisma.category.findMany({
+                select: {
+                    id: true,
+                    name: true,
+                    status: true,
+                    image: true,
+                },
+            });
+        } catch (error) {}
+    }
+
+    @Query(() => Category)
+    @Authorized()
+    async categoryById(@Arg("id", () => Number) id: number) {
+        return await prisma.category.findUnique({ where: { id } });
+    }
+
+    @Mutation(() => Category)
+    @Authorized()
+    async updateCategory(
+        @Arg("id", () => Number) id: number,
+        @Arg("name", () => String) name: string,
+        @Arg("status", () => Boolean) status: boolean,
+        @Arg("image", () => String) image: string,
+    ) {
+        const category = await prisma.category.findUnique({ where: { id } });
+        if (!category)
+            throw new UserInputError(
+                "Category does not exists with this data. Please enter different details",
+            );
+
+        return await prisma.category.update({
+            where: { id },
+            data: {
+                name,
+                status,
+                image: image !== null ? image : undefined,
+            },
+        });
+    }
+
+    @Mutation(() => Boolean)
+    @Authorized()
+    async deleteCategory(@Arg("id", () => Number) id: number) {
+        await prisma.category.delete({ where: { id } });
+        return true;
+    }
+}

@@ -1,4 +1,6 @@
 node_modules
+snapshots
+generated
 # Keep environment variables out of version control
 .env*
 

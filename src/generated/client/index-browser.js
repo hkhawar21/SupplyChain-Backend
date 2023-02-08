@@ -2,9 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 
 const {
-  Decimal,
-  objectEnumValues,
-  makeStrictEnum
+  Decimal
 } = require('./runtime/index-browser')
 
 
@@ -13,11 +11,11 @@ const Prisma = {}
 exports.Prisma = Prisma
 
 /**
- * Prisma Client JS version: 4.9.0
+ * Prisma Client JS version: 3.15.2
  * Query Engine version: ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5
  */
 Prisma.prismaVersion = {
-  client: "4.9.0",
+  client: "3.15.2",
   engine: "ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5"
 }
 
@@ -39,10 +37,6 @@ In case this error is unexpected for you, please report it in https://github.com
 )}
 Prisma.PrismaClientValidationError = () => {
   throw new Error(`PrismaClientValidationError is unable to be run in the browser.
-In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
-)}
-Prisma.NotFoundError = () => {
-  throw new Error(`NotFoundError is unable to be run in the browser.
 In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
 )}
 Prisma.Decimal = Decimal
@@ -68,19 +62,12 @@ In case this error is unexpected for you, please report it in https://github.com
 )}
 Prisma.validator = () => (val) => val
 
-
 /**
  * Shorthand utilities for JSON filtering
  */
-Prisma.DbNull = objectEnumValues.instances.DbNull
-Prisma.JsonNull = objectEnumValues.instances.JsonNull
-Prisma.AnyNull = objectEnumValues.instances.AnyNull
-
-Prisma.NullTypes = {
-  DbNull: objectEnumValues.classes.DbNull,
-  JsonNull: objectEnumValues.classes.JsonNull,
-  AnyNull: objectEnumValues.classes.AnyNull
-}
+Prisma.DbNull = 'DbNull'
+Prisma.JsonNull = 'JsonNull'
+Prisma.AnyNull = 'AnyNull'
 
 /**
  * Enums
@@ -89,11 +76,75 @@ Prisma.NullTypes = {
 // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 function makeEnum(x) { return x; }
 
-exports.Prisma.AgentOrderByRelevanceFieldEnum = makeEnum({
+exports.Prisma.UserScalarFieldEnum = makeEnum({
+  id: 'id',
   name: 'name',
+  email: 'email',
+  password: 'password',
+  role: 'role'
+});
+
+exports.Prisma.VendorScalarFieldEnum = makeEnum({
+  id: 'id',
+  name: 'name',
+  contact: 'contact',
   address: 'address',
-  phone_number: 'phone_number',
-  city: 'city'
+  price_per_unit: 'price_per_unit'
+});
+
+exports.Prisma.CustomerScalarFieldEnum = makeEnum({
+  id: 'id',
+  first_name: 'first_name',
+  last_name: 'last_name',
+  contact: 'contact'
+});
+
+exports.Prisma.OrderScalarFieldEnum = makeEnum({
+  id: 'id',
+  quantity: 'quantity',
+  status: 'status',
+  amount: 'amount',
+  address: 'address'
+});
+
+exports.Prisma.ProductScalarFieldEnum = makeEnum({
+  id: 'id',
+  name: 'name',
+  price_per_unit: 'price_per_unit',
+  status: 'status',
+  image: 'image',
+  weight: 'weight',
+  category_name: 'category_name',
+  category_id: 'category_id'
+});
+
+exports.Prisma.ProductOrderScalarFieldEnum = makeEnum({
+  id: 'id',
+  name: 'name',
+  quantity: 'quantity',
+  price: 'price',
+  product_id: 'product_id'
+});
+
+exports.Prisma.CategoryScalarFieldEnum = makeEnum({
+  id: 'id',
+  name: 'name',
+  status: 'status',
+  image: 'image'
+});
+
+exports.Prisma.Raw_MaterialScalarFieldEnum = makeEnum({
+  id: 'id',
+  name: 'name',
+  quantity: 'quantity'
+});
+
+exports.Prisma.WarehouseScalarFieldEnum = makeEnum({
+  id: 'id',
+  address: 'address',
+  contact: 'contact',
+  email: 'email',
+  phone_number: 'phone_number'
 });
 
 exports.Prisma.AgentScalarFieldEnum = makeEnum({
@@ -105,89 +156,10 @@ exports.Prisma.AgentScalarFieldEnum = makeEnum({
   status: 'status'
 });
 
-exports.Prisma.CategoryOrderByRelevanceFieldEnum = makeEnum({
-  name: 'name',
-  image: 'image'
-});
-
-exports.Prisma.CategoryScalarFieldEnum = makeEnum({
-  id: 'id',
-  name: 'name',
-  status: 'status',
-  image: 'image'
-});
-
-exports.Prisma.CustomerOrderByRelevanceFieldEnum = makeEnum({
-  first_name: 'first_name',
-  last_name: 'last_name',
-  contact: 'contact'
-});
-
-exports.Prisma.CustomerScalarFieldEnum = makeEnum({
-  id: 'id',
-  first_name: 'first_name',
-  last_name: 'last_name',
-  contact: 'contact'
-});
-
 exports.Prisma.InventoryScalarFieldEnum = makeEnum({
   id: 'id',
   raw_material_id: 'raw_material_id',
   product_id: 'product_id'
-});
-
-exports.Prisma.OrderOrderByRelevanceFieldEnum = makeEnum({
-  status: 'status',
-  address: 'address'
-});
-
-exports.Prisma.OrderScalarFieldEnum = makeEnum({
-  id: 'id',
-  quantity: 'quantity',
-  status: 'status',
-  amount: 'amount',
-  address: 'address'
-});
-
-exports.Prisma.ProductOrderByRelevanceFieldEnum = makeEnum({
-  name: 'name',
-  image: 'image'
-});
-
-exports.Prisma.ProductOrderOrderByRelevanceFieldEnum = makeEnum({
-  name: 'name'
-});
-
-exports.Prisma.ProductOrderScalarFieldEnum = makeEnum({
-  id: 'id',
-  name: 'name',
-  quantity: 'quantity',
-  price: 'price',
-  product_id: 'product_id'
-});
-
-exports.Prisma.ProductScalarFieldEnum = makeEnum({
-  id: 'id',
-  name: 'name',
-  price_per_unit: 'price_per_unit',
-  status: 'status',
-  image: 'image',
-  weight: 'weight'
-});
-
-exports.Prisma.QueryMode = makeEnum({
-  default: 'default',
-  insensitive: 'insensitive'
-});
-
-exports.Prisma.Raw_MaterialOrderByRelevanceFieldEnum = makeEnum({
-  name: 'name'
-});
-
-exports.Prisma.Raw_MaterialScalarFieldEnum = makeEnum({
-  id: 'id',
-  name: 'name',
-  quantity: 'quantity'
 });
 
 exports.Prisma.SortOrder = makeEnum({
@@ -195,11 +167,9 @@ exports.Prisma.SortOrder = makeEnum({
   desc: 'desc'
 });
 
-exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
-  ReadUncommitted: 'ReadUncommitted',
-  ReadCommitted: 'ReadCommitted',
-  RepeatableRead: 'RepeatableRead',
-  Serializable: 'Serializable'
+exports.Prisma.QueryMode = makeEnum({
+  default: 'default',
+  insensitive: 'insensitive'
 });
 
 exports.Prisma.UserOrderByRelevanceFieldEnum = makeEnum({
@@ -208,26 +178,40 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = makeEnum({
   password: 'password'
 });
 
-exports.Prisma.UserScalarFieldEnum = makeEnum({
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  password: 'password',
-  role: 'role'
-});
-
 exports.Prisma.VendorOrderByRelevanceFieldEnum = makeEnum({
   name: 'name',
   contact: 'contact',
   address: 'address'
 });
 
-exports.Prisma.VendorScalarFieldEnum = makeEnum({
-  id: 'id',
+exports.Prisma.CustomerOrderByRelevanceFieldEnum = makeEnum({
+  first_name: 'first_name',
+  last_name: 'last_name',
+  contact: 'contact'
+});
+
+exports.Prisma.OrderOrderByRelevanceFieldEnum = makeEnum({
+  status: 'status',
+  address: 'address'
+});
+
+exports.Prisma.ProductOrderByRelevanceFieldEnum = makeEnum({
   name: 'name',
-  contact: 'contact',
-  address: 'address',
-  price_per_unit: 'price_per_unit'
+  image: 'image',
+  category_name: 'category_name'
+});
+
+exports.Prisma.ProductOrderOrderByRelevanceFieldEnum = makeEnum({
+  name: 'name'
+});
+
+exports.Prisma.CategoryOrderByRelevanceFieldEnum = makeEnum({
+  name: 'name',
+  image: 'image'
+});
+
+exports.Prisma.Raw_MaterialOrderByRelevanceFieldEnum = makeEnum({
+  name: 'name'
 });
 
 exports.Prisma.WarehouseOrderByRelevanceFieldEnum = makeEnum({
@@ -236,12 +220,11 @@ exports.Prisma.WarehouseOrderByRelevanceFieldEnum = makeEnum({
   email: 'email'
 });
 
-exports.Prisma.WarehouseScalarFieldEnum = makeEnum({
-  id: 'id',
+exports.Prisma.AgentOrderByRelevanceFieldEnum = makeEnum({
+  name: 'name',
   address: 'address',
-  contact: 'contact',
-  email: 'email',
-  phone_number: 'phone_number'
+  phone_number: 'phone_number',
+  city: 'city'
 });
 exports.AccessRole = makeEnum({
   finance: 'finance',

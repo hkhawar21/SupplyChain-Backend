@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import { buildSchema } from "type-graphql";
-import { UserResolver, AgentsResolver } from "./resolvers";
+import { UserResolver, AgentsResolver, CategoryResolver } from "./resolvers";
 import {
     Raw_MaterialRelationsResolver,
     ProductOrderRelationsResolver,
@@ -25,6 +25,7 @@ const express = require("express");
         resolvers: [
             UserResolver,
             AgentsResolver,
+            CategoryResolver,
             Raw_MaterialRelationsResolver,
             ProductOrderRelationsResolver,
             ProductRelationsResolver,

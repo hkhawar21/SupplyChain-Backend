@@ -56,7 +56,10 @@ model Product {
   weight         Float
   product_order  ProductOrder[]
   inventory      Inventory[]
-  // Raw materials required ID array
+  category       Category       @relation(fields: [category_name, category_id], references: [name, id])
+  category_name  String
+  category_id    Int
+  raw_materials  Raw_Material[]
 }
 
 model ProductOrder {
@@ -69,10 +72,13 @@ model ProductOrder {
 }
 
 model Category {
-  id     Int     @id @default(autoincrement())
-  name   String
-  status Boolean
-  image  String?
+  id      Int       @id @default(autoincrement())
+  name    String
+  status  Boolean
+  image   String?
+  product Product[]
+
+  @@unique([name, id])
 }
 
 model Raw_Material {
@@ -80,6 +86,7 @@ model Raw_Material {
   name      String
   quantity  Int
   inventory Inventory[]
+  product   Product[]
 }
 
 model Warehouse {
