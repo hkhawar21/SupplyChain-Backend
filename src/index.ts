@@ -38,7 +38,6 @@ const express = require("express");
             "schema.gql",
         ),
     });
-    console.log(schema);
 
     const app = express();
     app.use(

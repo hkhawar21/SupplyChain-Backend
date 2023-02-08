@@ -1,7 +1,7 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import prisma from "../prisma/client";
 import { Category } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-express";
+import prisma from "../prisma/client";
 
 @Resolver()
 export class CategoryResolver {
