@@ -1,4 +1,12 @@
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+    Arg,
+    Authorized,
+    Ctx,
+    Int,
+    Mutation,
+    Query,
+    Resolver,
+} from "type-graphql";
 import { Category } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-express";
 import prisma from "../prisma/client";
@@ -10,6 +18,7 @@ export class CategoryResolver {
     async createCategory(
         @Arg("name", () => String) name: string,
         @Arg("status", () => Boolean) status: boolean,
+        @Arg("image", () => String) image: string,
     ): Promise<Category> {
         try {
             // Restrict adding duplicate category
@@ -17,6 +26,7 @@ export class CategoryResolver {
                 where: {
                     name,
                     status,
+                    image,
                 },
             });
 
@@ -30,6 +40,7 @@ export class CategoryResolver {
                 data: {
                     name,
                     status,
+                    image: image === "" || !image ? "" : image,
                 },
             });
 
@@ -50,9 +61,21 @@ export class CategoryResolver {
                     name: true,
                     status: true,
                     image: true,
+                    products: {
+                        select: {
+                            id: true,
+                            name: true,
+                            price_per_unit: true,
+                            status: true,
+                            weight: true,
+                        },
+                    },
                 },
             });
-        } catch (error) {}
+        } catch (error: any) {
+            console.error(error);
+            throw new Error(error.message);
+        }
     }
 
     @Query(() => Category)
@@ -87,7 +110,7 @@ export class CategoryResolver {
 
     @Mutation(() => Boolean)
     @Authorized()
-    async deleteCategory(@Arg("id", () => Number) id: number) {
+    async deleteCategory(@Arg("id", () => Int) id: number) {
         await prisma.category.delete({ where: { id } });
         return true;
     }

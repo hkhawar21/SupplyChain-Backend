@@ -16,6 +16,7 @@ import { useServer } from "graphql-ws/lib/use/ws";
 import { WebSocketServer } from "ws";
 import { authChecker } from "./auth/AuthChecker";
 import * as path from "path";
+import { ProductResolver } from "./resolvers/ProductResolver";
 
 const cors = require("cors");
 const express = require("express");
@@ -26,6 +27,7 @@ const express = require("express");
             UserResolver,
             AgentsResolver,
             CategoryResolver,
+            ProductResolver,
             Raw_MaterialRelationsResolver,
             ProductOrderRelationsResolver,
             ProductRelationsResolver,
@@ -42,7 +44,10 @@ const express = require("express");
     const app = express();
     app.use(
         cors({
-            origin: ["https://studio.apollographql.com"],
+            origin: [
+                "https://studio.apollographql.com",
+                "http://localhost:3000",
+            ],
         }),
     );
     const httpServer = http.createServer(app);

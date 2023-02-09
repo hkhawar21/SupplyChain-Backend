@@ -1,7 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
-  output          = "../src/generated/client"
 }
 
 generator typegraphql {
@@ -56,8 +55,7 @@ model Product {
   weight         Float
   product_order  ProductOrder[]
   inventory      Inventory[]
-  category       Category       @relation(fields: [category_name, category_id], references: [name, id])
-  category_name  String
+  category       Category       @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   category_id    Int
   raw_materials  Raw_Material[]
 }
@@ -67,16 +65,16 @@ model ProductOrder {
   name       String
   quantity   Int
   price      Float
-  product    Product @relation(fields: [product_id], references: [id])
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   product_id Int
 }
 
 model Category {
-  id      Int       @id @default(autoincrement())
-  name    String
-  status  Boolean
-  image   String?
-  product Product[]
+  id       Int       @id @default(autoincrement())
+  name     String
+  status   Boolean
+  image    String?
+  products Product[]
 
   @@unique([name, id])
 }
@@ -86,7 +84,7 @@ model Raw_Material {
   name      String
   quantity  Int
   inventory Inventory[]
-  product   Product[]
+  products  Product[]
 }
 
 model Warehouse {
@@ -109,9 +107,9 @@ model Agent {
 
 model Inventory {
   id              Int          @id @default(autoincrement())
-  raw_materials   Raw_Material @relation(fields: [raw_material_id], references: [id])
+  raw_materials   Raw_Material @relation(fields: [raw_material_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   raw_material_id Int
-  products        Product      @relation(fields: [product_id], references: [id])
+  products        Product      @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   product_id      Int
 }
 

@@ -72,11 +72,11 @@ model ProductOrder {
 }
 
 model Category {
-  id      Int       @id @default(autoincrement())
-  name    String
-  status  Boolean
-  image   String?
-  product Product[]
+  id       Int       @id @default(autoincrement())
+  name     String
+  status   Boolean
+  image    String?
+  products Product[]
 
   @@unique([name, id])
 }
@@ -86,7 +86,7 @@ model Raw_Material {
   name      String
   quantity  Int
   inventory Inventory[]
-  product   Product[]
+  products  Product[]
 }
 
 model Warehouse {

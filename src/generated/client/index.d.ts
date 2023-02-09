@@ -1094,11 +1094,11 @@ export namespace Prisma {
 
 
   export type CategoryCountOutputType = {
-    product: number
+    products: number
   }
 
   export type CategoryCountOutputTypeSelect = {
-    product?: boolean
+    products?: boolean
   }
 
   export type CategoryCountOutputTypeGetPayload<S extends boolean | null | undefined | CategoryCountOutputTypeArgs> =
@@ -1138,12 +1138,12 @@ export namespace Prisma {
 
   export type Raw_MaterialCountOutputType = {
     inventory: number
-    product: number
+    products: number
   }
 
   export type Raw_MaterialCountOutputTypeSelect = {
     inventory?: boolean
-    product?: boolean
+    products?: boolean
   }
 
   export type Raw_MaterialCountOutputTypeGetPayload<S extends boolean | null | undefined | Raw_MaterialCountOutputTypeArgs> =
@@ -7115,13 +7115,13 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     image?: boolean
-    product?: boolean | Category$productArgs
+    products?: boolean | Category$productsArgs
     _count?: boolean | CategoryCountOutputTypeArgs
   }
 
 
   export type CategoryInclude = {
-    product?: boolean | Category$productArgs
+    products?: boolean | Category$productsArgs
     _count?: boolean | CategoryCountOutputTypeArgs
   }
 
@@ -7132,13 +7132,13 @@ export namespace Prisma {
     S extends { include: any } & (CategoryArgs | CategoryFindManyArgs)
     ? Category  & {
     [P in TruthyKeys<S['include']>]:
-        P extends 'product' ? Array < ProductGetPayload<S['include'][P]>>  :
+        P extends 'products' ? Array < ProductGetPayload<S['include'][P]>>  :
         P extends '_count' ? CategoryCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (CategoryArgs | CategoryFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-        P extends 'product' ? Array < ProductGetPayload<S['select'][P]>>  :
+        P extends 'products' ? Array < ProductGetPayload<S['select'][P]>>  :
         P extends '_count' ? CategoryCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Category ? Category[P] : never
   } 
       : Category
@@ -7513,7 +7513,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    product<T extends Category$productArgs= {}>(args?: Subset<T, Category$productArgs>): PrismaPromise<Array<ProductGetPayload<T>>| Null>;
+    products<T extends Category$productsArgs= {}>(args?: Subset<T, Category$productsArgs>): PrismaPromise<Array<ProductGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -7871,9 +7871,9 @@ export namespace Prisma {
 
 
   /**
-   * Category.product
+   * Category.products
    */
-  export type Category$productArgs = {
+  export type Category$productsArgs = {
     /**
      * Select specific fields to fetch from the Product
      */
@@ -8096,14 +8096,14 @@ export namespace Prisma {
     name?: boolean
     quantity?: boolean
     inventory?: boolean | Raw_Material$inventoryArgs
-    product?: boolean | Raw_Material$productArgs
+    products?: boolean | Raw_Material$productsArgs
     _count?: boolean | Raw_MaterialCountOutputTypeArgs
   }
 
 
   export type Raw_MaterialInclude = {
     inventory?: boolean | Raw_Material$inventoryArgs
-    product?: boolean | Raw_Material$productArgs
+    products?: boolean | Raw_Material$productsArgs
     _count?: boolean | Raw_MaterialCountOutputTypeArgs
   }
 
@@ -8115,14 +8115,14 @@ export namespace Prisma {
     ? Raw_Material  & {
     [P in TruthyKeys<S['include']>]:
         P extends 'inventory' ? Array < InventoryGetPayload<S['include'][P]>>  :
-        P extends 'product' ? Array < ProductGetPayload<S['include'][P]>>  :
+        P extends 'products' ? Array < ProductGetPayload<S['include'][P]>>  :
         P extends '_count' ? Raw_MaterialCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (Raw_MaterialArgs | Raw_MaterialFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
         P extends 'inventory' ? Array < InventoryGetPayload<S['select'][P]>>  :
-        P extends 'product' ? Array < ProductGetPayload<S['select'][P]>>  :
+        P extends 'products' ? Array < ProductGetPayload<S['select'][P]>>  :
         P extends '_count' ? Raw_MaterialCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Raw_Material ? Raw_Material[P] : never
   } 
       : Raw_Material
@@ -8499,7 +8499,7 @@ export namespace Prisma {
 
     inventory<T extends Raw_Material$inventoryArgs= {}>(args?: Subset<T, Raw_Material$inventoryArgs>): PrismaPromise<Array<InventoryGetPayload<T>>| Null>;
 
-    product<T extends Raw_Material$productArgs= {}>(args?: Subset<T, Raw_Material$productArgs>): PrismaPromise<Array<ProductGetPayload<T>>| Null>;
+    products<T extends Raw_Material$productsArgs= {}>(args?: Subset<T, Raw_Material$productsArgs>): PrismaPromise<Array<ProductGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -8878,9 +8878,9 @@ export namespace Prisma {
 
 
   /**
-   * Raw_Material.product
+   * Raw_Material.products
    */
-  export type Raw_Material$productArgs = {
+  export type Raw_Material$productsArgs = {
     /**
      * Select specific fields to fetch from the Product
      */
@@ -12284,7 +12284,7 @@ export namespace Prisma {
     name?: StringFilter | string
     status?: BoolFilter | boolean
     image?: StringNullableFilter | string | null
-    product?: ProductListRelationFilter
+    products?: ProductListRelationFilter
   }
 
   export type CategoryOrderByWithRelationAndSearchRelevanceInput = {
@@ -12292,7 +12292,7 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     image?: SortOrder
-    product?: ProductOrderByRelationAggregateInput
+    products?: ProductOrderByRelationAggregateInput
     _relevance?: CategoryOrderByRelevanceInput
   }
 
@@ -12331,7 +12331,7 @@ export namespace Prisma {
     name?: StringFilter | string
     quantity?: IntFilter | number
     inventory?: InventoryListRelationFilter
-    product?: ProductListRelationFilter
+    products?: ProductListRelationFilter
   }
 
   export type Raw_MaterialOrderByWithRelationAndSearchRelevanceInput = {
@@ -12339,7 +12339,7 @@ export namespace Prisma {
     name?: SortOrder
     quantity?: SortOrder
     inventory?: InventoryOrderByRelationAggregateInput
-    product?: ProductOrderByRelationAggregateInput
+    products?: ProductOrderByRelationAggregateInput
     _relevance?: Raw_MaterialOrderByRelevanceInput
   }
 
@@ -12724,8 +12724,8 @@ export namespace Prisma {
     weight: number
     product_order?: ProductOrderCreateNestedManyWithoutProductInput
     inventory?: InventoryCreateNestedManyWithoutProductsInput
-    category: CategoryCreateNestedOneWithoutProductInput
-    raw_materials?: Raw_MaterialCreateNestedManyWithoutProductInput
+    category: CategoryCreateNestedOneWithoutProductsInput
+    raw_materials?: Raw_MaterialCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -12739,7 +12739,7 @@ export namespace Prisma {
     inventory?: InventoryUncheckedCreateNestedManyWithoutProductsInput
     category_name: string
     category_id: number
-    raw_materials?: Raw_MaterialUncheckedCreateNestedManyWithoutProductInput
+    raw_materials?: Raw_MaterialUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUpdateInput = {
@@ -12750,8 +12750,8 @@ export namespace Prisma {
     weight?: FloatFieldUpdateOperationsInput | number
     product_order?: ProductOrderUpdateManyWithoutProductNestedInput
     inventory?: InventoryUpdateManyWithoutProductsNestedInput
-    category?: CategoryUpdateOneRequiredWithoutProductNestedInput
-    raw_materials?: Raw_MaterialUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    raw_materials?: Raw_MaterialUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -12765,7 +12765,7 @@ export namespace Prisma {
     inventory?: InventoryUncheckedUpdateManyWithoutProductsNestedInput
     category_name?: StringFieldUpdateOperationsInput | string
     category_id?: IntFieldUpdateOperationsInput | number
-    raw_materials?: Raw_MaterialUncheckedUpdateManyWithoutProductNestedInput
+    raw_materials?: Raw_MaterialUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -12854,7 +12854,7 @@ export namespace Prisma {
     name: string
     status: boolean
     image?: string | null
-    product?: ProductCreateNestedManyWithoutCategoryInput
+    products?: ProductCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUncheckedCreateInput = {
@@ -12862,14 +12862,14 @@ export namespace Prisma {
     name: string
     status: boolean
     image?: string | null
-    product?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+    products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     status?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    product?: ProductUpdateManyWithoutCategoryNestedInput
+    products?: ProductUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryUncheckedUpdateInput = {
@@ -12877,7 +12877,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    product?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
+    products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryCreateManyInput = {
@@ -12904,7 +12904,7 @@ export namespace Prisma {
     name: string
     quantity: number
     inventory?: InventoryCreateNestedManyWithoutRaw_materialsInput
-    product?: ProductCreateNestedManyWithoutRaw_materialsInput
+    products?: ProductCreateNestedManyWithoutRaw_materialsInput
   }
 
   export type Raw_MaterialUncheckedCreateInput = {
@@ -12912,14 +12912,14 @@ export namespace Prisma {
     name: string
     quantity: number
     inventory?: InventoryUncheckedCreateNestedManyWithoutRaw_materialsInput
-    product?: ProductUncheckedCreateNestedManyWithoutRaw_materialsInput
+    products?: ProductUncheckedCreateNestedManyWithoutRaw_materialsInput
   }
 
   export type Raw_MaterialUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     inventory?: InventoryUpdateManyWithoutRaw_materialsNestedInput
-    product?: ProductUpdateManyWithoutRaw_materialsNestedInput
+    products?: ProductUpdateManyWithoutRaw_materialsNestedInput
   }
 
   export type Raw_MaterialUncheckedUpdateInput = {
@@ -12927,7 +12927,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     inventory?: InventoryUncheckedUpdateManyWithoutRaw_materialsNestedInput
-    product?: ProductUncheckedUpdateManyWithoutRaw_materialsNestedInput
+    products?: ProductUncheckedUpdateManyWithoutRaw_materialsNestedInput
   }
 
   export type Raw_MaterialCreateManyInput = {
@@ -13782,15 +13782,15 @@ export namespace Prisma {
     connect?: Enumerable<InventoryWhereUniqueInput>
   }
 
-  export type CategoryCreateNestedOneWithoutProductInput = {
-    create?: XOR<CategoryCreateWithoutProductInput, CategoryUncheckedCreateWithoutProductInput>
-    connectOrCreate?: CategoryCreateOrConnectWithoutProductInput
+  export type CategoryCreateNestedOneWithoutProductsInput = {
+    create?: XOR<CategoryCreateWithoutProductsInput, CategoryUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutProductsInput
     connect?: CategoryWhereUniqueInput
   }
 
-  export type Raw_MaterialCreateNestedManyWithoutProductInput = {
-    create?: XOR<Enumerable<Raw_MaterialCreateWithoutProductInput>, Enumerable<Raw_MaterialUncheckedCreateWithoutProductInput>>
-    connectOrCreate?: Enumerable<Raw_MaterialCreateOrConnectWithoutProductInput>
+  export type Raw_MaterialCreateNestedManyWithoutProductsInput = {
+    create?: XOR<Enumerable<Raw_MaterialCreateWithoutProductsInput>, Enumerable<Raw_MaterialUncheckedCreateWithoutProductsInput>>
+    connectOrCreate?: Enumerable<Raw_MaterialCreateOrConnectWithoutProductsInput>
     connect?: Enumerable<Raw_MaterialWhereUniqueInput>
   }
 
@@ -13808,9 +13808,9 @@ export namespace Prisma {
     connect?: Enumerable<InventoryWhereUniqueInput>
   }
 
-  export type Raw_MaterialUncheckedCreateNestedManyWithoutProductInput = {
-    create?: XOR<Enumerable<Raw_MaterialCreateWithoutProductInput>, Enumerable<Raw_MaterialUncheckedCreateWithoutProductInput>>
-    connectOrCreate?: Enumerable<Raw_MaterialCreateOrConnectWithoutProductInput>
+  export type Raw_MaterialUncheckedCreateNestedManyWithoutProductsInput = {
+    create?: XOR<Enumerable<Raw_MaterialCreateWithoutProductsInput>, Enumerable<Raw_MaterialUncheckedCreateWithoutProductsInput>>
+    connectOrCreate?: Enumerable<Raw_MaterialCreateOrConnectWithoutProductsInput>
     connect?: Enumerable<Raw_MaterialWhereUniqueInput>
   }
 
@@ -13850,24 +13850,24 @@ export namespace Prisma {
     deleteMany?: Enumerable<InventoryScalarWhereInput>
   }
 
-  export type CategoryUpdateOneRequiredWithoutProductNestedInput = {
-    create?: XOR<CategoryCreateWithoutProductInput, CategoryUncheckedCreateWithoutProductInput>
-    connectOrCreate?: CategoryCreateOrConnectWithoutProductInput
-    upsert?: CategoryUpsertWithoutProductInput
+  export type CategoryUpdateOneRequiredWithoutProductsNestedInput = {
+    create?: XOR<CategoryCreateWithoutProductsInput, CategoryUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutProductsInput
+    upsert?: CategoryUpsertWithoutProductsInput
     connect?: CategoryWhereUniqueInput
-    update?: XOR<CategoryUpdateWithoutProductInput, CategoryUncheckedUpdateWithoutProductInput>
+    update?: XOR<CategoryUpdateWithoutProductsInput, CategoryUncheckedUpdateWithoutProductsInput>
   }
 
-  export type Raw_MaterialUpdateManyWithoutProductNestedInput = {
-    create?: XOR<Enumerable<Raw_MaterialCreateWithoutProductInput>, Enumerable<Raw_MaterialUncheckedCreateWithoutProductInput>>
-    connectOrCreate?: Enumerable<Raw_MaterialCreateOrConnectWithoutProductInput>
-    upsert?: Enumerable<Raw_MaterialUpsertWithWhereUniqueWithoutProductInput>
+  export type Raw_MaterialUpdateManyWithoutProductsNestedInput = {
+    create?: XOR<Enumerable<Raw_MaterialCreateWithoutProductsInput>, Enumerable<Raw_MaterialUncheckedCreateWithoutProductsInput>>
+    connectOrCreate?: Enumerable<Raw_MaterialCreateOrConnectWithoutProductsInput>
+    upsert?: Enumerable<Raw_MaterialUpsertWithWhereUniqueWithoutProductsInput>
     set?: Enumerable<Raw_MaterialWhereUniqueInput>
     disconnect?: Enumerable<Raw_MaterialWhereUniqueInput>
     delete?: Enumerable<Raw_MaterialWhereUniqueInput>
     connect?: Enumerable<Raw_MaterialWhereUniqueInput>
-    update?: Enumerable<Raw_MaterialUpdateWithWhereUniqueWithoutProductInput>
-    updateMany?: Enumerable<Raw_MaterialUpdateManyWithWhereWithoutProductInput>
+    update?: Enumerable<Raw_MaterialUpdateWithWhereUniqueWithoutProductsInput>
+    updateMany?: Enumerable<Raw_MaterialUpdateManyWithWhereWithoutProductsInput>
     deleteMany?: Enumerable<Raw_MaterialScalarWhereInput>
   }
 
@@ -13899,16 +13899,16 @@ export namespace Prisma {
     deleteMany?: Enumerable<InventoryScalarWhereInput>
   }
 
-  export type Raw_MaterialUncheckedUpdateManyWithoutProductNestedInput = {
-    create?: XOR<Enumerable<Raw_MaterialCreateWithoutProductInput>, Enumerable<Raw_MaterialUncheckedCreateWithoutProductInput>>
-    connectOrCreate?: Enumerable<Raw_MaterialCreateOrConnectWithoutProductInput>
-    upsert?: Enumerable<Raw_MaterialUpsertWithWhereUniqueWithoutProductInput>
+  export type Raw_MaterialUncheckedUpdateManyWithoutProductsNestedInput = {
+    create?: XOR<Enumerable<Raw_MaterialCreateWithoutProductsInput>, Enumerable<Raw_MaterialUncheckedCreateWithoutProductsInput>>
+    connectOrCreate?: Enumerable<Raw_MaterialCreateOrConnectWithoutProductsInput>
+    upsert?: Enumerable<Raw_MaterialUpsertWithWhereUniqueWithoutProductsInput>
     set?: Enumerable<Raw_MaterialWhereUniqueInput>
     disconnect?: Enumerable<Raw_MaterialWhereUniqueInput>
     delete?: Enumerable<Raw_MaterialWhereUniqueInput>
     connect?: Enumerable<Raw_MaterialWhereUniqueInput>
-    update?: Enumerable<Raw_MaterialUpdateWithWhereUniqueWithoutProductInput>
-    updateMany?: Enumerable<Raw_MaterialUpdateManyWithWhereWithoutProductInput>
+    update?: Enumerable<Raw_MaterialUpdateWithWhereUniqueWithoutProductsInput>
+    updateMany?: Enumerable<Raw_MaterialUpdateManyWithWhereWithoutProductsInput>
     deleteMany?: Enumerable<Raw_MaterialScalarWhereInput>
   }
 
@@ -14279,40 +14279,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type CategoryCreateWithoutProductInput = {
+  export type CategoryCreateWithoutProductsInput = {
     name: string
     status: boolean
     image?: string | null
   }
 
-  export type CategoryUncheckedCreateWithoutProductInput = {
+  export type CategoryUncheckedCreateWithoutProductsInput = {
     id?: number
     name: string
     status: boolean
     image?: string | null
   }
 
-  export type CategoryCreateOrConnectWithoutProductInput = {
+  export type CategoryCreateOrConnectWithoutProductsInput = {
     where: CategoryWhereUniqueInput
-    create: XOR<CategoryCreateWithoutProductInput, CategoryUncheckedCreateWithoutProductInput>
+    create: XOR<CategoryCreateWithoutProductsInput, CategoryUncheckedCreateWithoutProductsInput>
   }
 
-  export type Raw_MaterialCreateWithoutProductInput = {
+  export type Raw_MaterialCreateWithoutProductsInput = {
     name: string
     quantity: number
     inventory?: InventoryCreateNestedManyWithoutRaw_materialsInput
   }
 
-  export type Raw_MaterialUncheckedCreateWithoutProductInput = {
+  export type Raw_MaterialUncheckedCreateWithoutProductsInput = {
     id?: number
     name: string
     quantity: number
     inventory?: InventoryUncheckedCreateNestedManyWithoutRaw_materialsInput
   }
 
-  export type Raw_MaterialCreateOrConnectWithoutProductInput = {
+  export type Raw_MaterialCreateOrConnectWithoutProductsInput = {
     where: Raw_MaterialWhereUniqueInput
-    create: XOR<Raw_MaterialCreateWithoutProductInput, Raw_MaterialUncheckedCreateWithoutProductInput>
+    create: XOR<Raw_MaterialCreateWithoutProductsInput, Raw_MaterialUncheckedCreateWithoutProductsInput>
   }
 
   export type ProductOrderUpsertWithWhereUniqueWithoutProductInput = {
@@ -14367,36 +14367,36 @@ export namespace Prisma {
     product_id?: IntFilter | number
   }
 
-  export type CategoryUpsertWithoutProductInput = {
-    update: XOR<CategoryUpdateWithoutProductInput, CategoryUncheckedUpdateWithoutProductInput>
-    create: XOR<CategoryCreateWithoutProductInput, CategoryUncheckedCreateWithoutProductInput>
+  export type CategoryUpsertWithoutProductsInput = {
+    update: XOR<CategoryUpdateWithoutProductsInput, CategoryUncheckedUpdateWithoutProductsInput>
+    create: XOR<CategoryCreateWithoutProductsInput, CategoryUncheckedCreateWithoutProductsInput>
   }
 
-  export type CategoryUpdateWithoutProductInput = {
+  export type CategoryUpdateWithoutProductsInput = {
     name?: StringFieldUpdateOperationsInput | string
     status?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type CategoryUncheckedUpdateWithoutProductInput = {
+  export type CategoryUncheckedUpdateWithoutProductsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     status?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type Raw_MaterialUpsertWithWhereUniqueWithoutProductInput = {
+  export type Raw_MaterialUpsertWithWhereUniqueWithoutProductsInput = {
     where: Raw_MaterialWhereUniqueInput
-    update: XOR<Raw_MaterialUpdateWithoutProductInput, Raw_MaterialUncheckedUpdateWithoutProductInput>
-    create: XOR<Raw_MaterialCreateWithoutProductInput, Raw_MaterialUncheckedCreateWithoutProductInput>
+    update: XOR<Raw_MaterialUpdateWithoutProductsInput, Raw_MaterialUncheckedUpdateWithoutProductsInput>
+    create: XOR<Raw_MaterialCreateWithoutProductsInput, Raw_MaterialUncheckedCreateWithoutProductsInput>
   }
 
-  export type Raw_MaterialUpdateWithWhereUniqueWithoutProductInput = {
+  export type Raw_MaterialUpdateWithWhereUniqueWithoutProductsInput = {
     where: Raw_MaterialWhereUniqueInput
-    data: XOR<Raw_MaterialUpdateWithoutProductInput, Raw_MaterialUncheckedUpdateWithoutProductInput>
+    data: XOR<Raw_MaterialUpdateWithoutProductsInput, Raw_MaterialUncheckedUpdateWithoutProductsInput>
   }
 
-  export type Raw_MaterialUpdateManyWithWhereWithoutProductInput = {
+  export type Raw_MaterialUpdateManyWithWhereWithoutProductsInput = {
     where: Raw_MaterialScalarWhereInput
     data: XOR<Raw_MaterialUpdateManyMutationInput, Raw_MaterialUncheckedUpdateManyWithoutRaw_materialsInput>
   }
@@ -14417,8 +14417,8 @@ export namespace Prisma {
     image?: string | null
     weight: number
     inventory?: InventoryCreateNestedManyWithoutProductsInput
-    category: CategoryCreateNestedOneWithoutProductInput
-    raw_materials?: Raw_MaterialCreateNestedManyWithoutProductInput
+    category: CategoryCreateNestedOneWithoutProductsInput
+    raw_materials?: Raw_MaterialCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutProduct_orderInput = {
@@ -14431,7 +14431,7 @@ export namespace Prisma {
     inventory?: InventoryUncheckedCreateNestedManyWithoutProductsInput
     category_name: string
     category_id: number
-    raw_materials?: Raw_MaterialUncheckedCreateNestedManyWithoutProductInput
+    raw_materials?: Raw_MaterialUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutProduct_orderInput = {
@@ -14451,8 +14451,8 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: FloatFieldUpdateOperationsInput | number
     inventory?: InventoryUpdateManyWithoutProductsNestedInput
-    category?: CategoryUpdateOneRequiredWithoutProductNestedInput
-    raw_materials?: Raw_MaterialUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    raw_materials?: Raw_MaterialUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutProduct_orderInput = {
@@ -14465,7 +14465,7 @@ export namespace Prisma {
     inventory?: InventoryUncheckedUpdateManyWithoutProductsNestedInput
     category_name?: StringFieldUpdateOperationsInput | string
     category_id?: IntFieldUpdateOperationsInput | number
-    raw_materials?: Raw_MaterialUncheckedUpdateManyWithoutProductNestedInput
+    raw_materials?: Raw_MaterialUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductCreateWithoutCategoryInput = {
@@ -14476,7 +14476,7 @@ export namespace Prisma {
     weight: number
     product_order?: ProductOrderCreateNestedManyWithoutProductInput
     inventory?: InventoryCreateNestedManyWithoutProductsInput
-    raw_materials?: Raw_MaterialCreateNestedManyWithoutProductInput
+    raw_materials?: Raw_MaterialCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -14488,7 +14488,7 @@ export namespace Prisma {
     weight: number
     product_order?: ProductOrderUncheckedCreateNestedManyWithoutProductInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutProductsInput
-    raw_materials?: Raw_MaterialUncheckedCreateNestedManyWithoutProductInput
+    raw_materials?: Raw_MaterialUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -14514,7 +14514,7 @@ export namespace Prisma {
 
   export type ProductUpdateManyWithWhereWithoutCategoryInput = {
     where: ProductScalarWhereInput
-    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutProductInput>
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutProductsInput>
   }
 
   export type ProductScalarWhereInput = {
@@ -14558,7 +14558,7 @@ export namespace Prisma {
     weight: number
     product_order?: ProductOrderCreateNestedManyWithoutProductInput
     inventory?: InventoryCreateNestedManyWithoutProductsInput
-    category: CategoryCreateNestedOneWithoutProductInput
+    category: CategoryCreateNestedOneWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutRaw_materialsInput = {
@@ -14608,20 +14608,20 @@ export namespace Prisma {
 
   export type ProductUpdateManyWithWhereWithoutRaw_materialsInput = {
     where: ProductScalarWhereInput
-    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutProductInput>
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutProductsInput>
   }
 
   export type Raw_MaterialCreateWithoutInventoryInput = {
     name: string
     quantity: number
-    product?: ProductCreateNestedManyWithoutRaw_materialsInput
+    products?: ProductCreateNestedManyWithoutRaw_materialsInput
   }
 
   export type Raw_MaterialUncheckedCreateWithoutInventoryInput = {
     id?: number
     name: string
     quantity: number
-    product?: ProductUncheckedCreateNestedManyWithoutRaw_materialsInput
+    products?: ProductUncheckedCreateNestedManyWithoutRaw_materialsInput
   }
 
   export type Raw_MaterialCreateOrConnectWithoutInventoryInput = {
@@ -14636,8 +14636,8 @@ export namespace Prisma {
     image?: string | null
     weight: number
     product_order?: ProductOrderCreateNestedManyWithoutProductInput
-    category: CategoryCreateNestedOneWithoutProductInput
-    raw_materials?: Raw_MaterialCreateNestedManyWithoutProductInput
+    category: CategoryCreateNestedOneWithoutProductsInput
+    raw_materials?: Raw_MaterialCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutInventoryInput = {
@@ -14650,7 +14650,7 @@ export namespace Prisma {
     product_order?: ProductOrderUncheckedCreateNestedManyWithoutProductInput
     category_name: string
     category_id: number
-    raw_materials?: Raw_MaterialUncheckedCreateNestedManyWithoutProductInput
+    raw_materials?: Raw_MaterialUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutInventoryInput = {
@@ -14666,14 +14666,14 @@ export namespace Prisma {
   export type Raw_MaterialUpdateWithoutInventoryInput = {
     name?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    product?: ProductUpdateManyWithoutRaw_materialsNestedInput
+    products?: ProductUpdateManyWithoutRaw_materialsNestedInput
   }
 
   export type Raw_MaterialUncheckedUpdateWithoutInventoryInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    product?: ProductUncheckedUpdateManyWithoutRaw_materialsNestedInput
+    products?: ProductUncheckedUpdateManyWithoutRaw_materialsNestedInput
   }
 
   export type ProductUpsertWithoutInventoryInput = {
@@ -14688,8 +14688,8 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     weight?: FloatFieldUpdateOperationsInput | number
     product_order?: ProductOrderUpdateManyWithoutProductNestedInput
-    category?: CategoryUpdateOneRequiredWithoutProductNestedInput
-    raw_materials?: Raw_MaterialUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    raw_materials?: Raw_MaterialUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutInventoryInput = {
@@ -14702,7 +14702,7 @@ export namespace Prisma {
     product_order?: ProductOrderUncheckedUpdateManyWithoutProductNestedInput
     category_name?: StringFieldUpdateOperationsInput | string
     category_id?: IntFieldUpdateOperationsInput | number
-    raw_materials?: Raw_MaterialUncheckedUpdateManyWithoutProductNestedInput
+    raw_materials?: Raw_MaterialUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductOrderCreateManyProductInput = {
@@ -14751,13 +14751,13 @@ export namespace Prisma {
     raw_material_id?: IntFieldUpdateOperationsInput | number
   }
 
-  export type Raw_MaterialUpdateWithoutProductInput = {
+  export type Raw_MaterialUpdateWithoutProductsInput = {
     name?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     inventory?: InventoryUpdateManyWithoutRaw_materialsNestedInput
   }
 
-  export type Raw_MaterialUncheckedUpdateWithoutProductInput = {
+  export type Raw_MaterialUncheckedUpdateWithoutProductsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
@@ -14787,7 +14787,7 @@ export namespace Prisma {
     weight?: FloatFieldUpdateOperationsInput | number
     product_order?: ProductOrderUpdateManyWithoutProductNestedInput
     inventory?: InventoryUpdateManyWithoutProductsNestedInput
-    raw_materials?: Raw_MaterialUpdateManyWithoutProductNestedInput
+    raw_materials?: Raw_MaterialUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -14799,10 +14799,10 @@ export namespace Prisma {
     weight?: FloatFieldUpdateOperationsInput | number
     product_order?: ProductOrderUncheckedUpdateManyWithoutProductNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutProductsNestedInput
-    raw_materials?: Raw_MaterialUncheckedUpdateManyWithoutProductNestedInput
+    raw_materials?: Raw_MaterialUncheckedUpdateManyWithoutProductsNestedInput
   }
 
-  export type ProductUncheckedUpdateManyWithoutProductInput = {
+  export type ProductUncheckedUpdateManyWithoutProductsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     price_per_unit?: FloatFieldUpdateOperationsInput | number
@@ -14833,7 +14833,7 @@ export namespace Prisma {
     weight?: FloatFieldUpdateOperationsInput | number
     product_order?: ProductOrderUpdateManyWithoutProductNestedInput
     inventory?: InventoryUpdateManyWithoutProductsNestedInput
-    category?: CategoryUpdateOneRequiredWithoutProductNestedInput
+    category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutRaw_materialsInput = {

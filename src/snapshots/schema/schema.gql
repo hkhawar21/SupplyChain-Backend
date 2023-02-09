@@ -16,6 +16,11 @@ type AuthenticationToken {
   authenticationToken: String!
 }
 
+input BoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
 type Category {
   _count: CategoryCount
   id: Int!
@@ -25,18 +30,338 @@ type Category {
 }
 
 type CategoryCount {
-  product: Int!
+  products: Int!
+}
+
+enum CategoryOrderByRelevanceFieldEnum {
+  image
+  name
+}
+
+input CategoryOrderByRelevanceInput {
+  fields: [CategoryOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input CategoryOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: CategoryOrderByRelevanceInput
+  id: SortOrder
+  image: SortOrder
+  name: SortOrder
+  products: ProductOrderByRelationAggregateInput
+  status: SortOrder
+}
+
+input CategoryRelationFilter {
+  is: CategoryWhereInput
+  isNot: CategoryWhereInput
+}
+
+input CategoryWhereInput {
+  AND: [CategoryWhereInput!]
+  NOT: [CategoryWhereInput!]
+  OR: [CategoryWhereInput!]
+  id: IntFilter
+  image: StringNullableFilter
+  name: StringFilter
+  products: ProductListRelationFilter
+  status: BoolFilter
+}
+
+input FloatFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatFilter
+  notIn: [Float!]
+}
+
+input IntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+type Inventory {
+  id: Int!
+  product_id: Int!
+  products: Product!
+  raw_material_id: Int!
+  raw_materials: Raw_Material!
+}
+
+input InventoryListRelationFilter {
+  every: InventoryWhereInput
+  none: InventoryWhereInput
+  some: InventoryWhereInput
+}
+
+input InventoryOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input InventoryOrderByWithRelationAndSearchRelevanceInput {
+  id: SortOrder
+  product_id: SortOrder
+  products: ProductOrderByWithRelationAndSearchRelevanceInput
+  raw_material_id: SortOrder
+  raw_materials: Raw_MaterialOrderByWithRelationAndSearchRelevanceInput
+}
+
+enum InventoryScalarFieldEnum {
+  id
+  product_id
+  raw_material_id
+}
+
+input InventoryWhereInput {
+  AND: [InventoryWhereInput!]
+  NOT: [InventoryWhereInput!]
+  OR: [InventoryWhereInput!]
+  id: IntFilter
+  product_id: IntFilter
+  products: ProductRelationFilter
+  raw_material_id: IntFilter
+  raw_materials: Raw_MaterialRelationFilter
+}
+
+input InventoryWhereUniqueInput {
+  id: Int
 }
 
 type Mutation {
   createAgent(address: String!, city: String!, name: String!, phone_number: String!, status: Boolean!): Agent!
-  createCategory(name: String!, status: Boolean!): Category!
+  createCategory(image: String!, name: String!, status: Boolean!): Category!
+  createProduct(category_id: Int!, image: String!, name: String!, price_per_unit: Float!, status: Boolean!, weight: Float!): Product!
   deleteAgent(id: Float!): Boolean!
-  deleteCategory(id: Float!): Boolean!
+  deleteCategory(id: Int!): Boolean!
+  deleteProduct(id: Int!): Boolean!
   login(email: String!, password: String!): AuthenticationToken!
   signup(email: String!, name: String!, password: String!, role: String!): AuthenticationToken!
   updateAgent(address: String!, city: String!, id: Float!, name: String!, phone_number: String!, status: Boolean!): Agent!
   updateCategory(id: Float!, image: String!, name: String!, status: Boolean!): Category!
+}
+
+input NestedBoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
+input NestedFloatFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatFilter
+  notIn: [Float!]
+}
+
+input NestedIntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input NestedStringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
+}
+
+input NestedStringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
+}
+
+type Product {
+  _count: ProductCount
+  category: Category!
+  category_id: Int!
+  id: Int!
+  image: String
+  inventory(cursor: InventoryWhereUniqueInput, distinct: [InventoryScalarFieldEnum!], orderBy: [InventoryOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: InventoryWhereInput): [Inventory!]!
+  name: String!
+  price_per_unit: Float!
+  product_order(cursor: ProductOrderWhereUniqueInput, distinct: [ProductOrderScalarFieldEnum!], orderBy: [ProductOrderOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ProductOrderWhereInput): [ProductOrder!]!
+  raw_materials(cursor: Raw_MaterialWhereUniqueInput, distinct: [Raw_MaterialScalarFieldEnum!], orderBy: [Raw_MaterialOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: Raw_MaterialWhereInput): [Raw_Material!]!
+  status: Boolean!
+  weight: Float!
+}
+
+type ProductCount {
+  inventory: Int!
+  product_order: Int!
+  raw_materials: Int!
+}
+
+input ProductListRelationFilter {
+  every: ProductWhereInput
+  none: ProductWhereInput
+  some: ProductWhereInput
+}
+
+type ProductOrder {
+  id: Int!
+  name: String!
+  price: Float!
+  product: Product!
+  product_id: Int!
+  quantity: Int!
+}
+
+input ProductOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+enum ProductOrderByRelevanceFieldEnum {
+  image
+  name
+}
+
+input ProductOrderByRelevanceInput {
+  fields: [ProductOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input ProductOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: ProductOrderByRelevanceInput
+  category: CategoryOrderByWithRelationAndSearchRelevanceInput
+  category_id: SortOrder
+  id: SortOrder
+  image: SortOrder
+  inventory: InventoryOrderByRelationAggregateInput
+  name: SortOrder
+  price_per_unit: SortOrder
+  product_order: ProductOrderOrderByRelationAggregateInput
+  raw_materials: Raw_MaterialOrderByRelationAggregateInput
+  status: SortOrder
+  weight: SortOrder
+}
+
+input ProductOrderListRelationFilter {
+  every: ProductOrderWhereInput
+  none: ProductOrderWhereInput
+  some: ProductOrderWhereInput
+}
+
+input ProductOrderOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+enum ProductOrderOrderByRelevanceFieldEnum {
+  name
+}
+
+input ProductOrderOrderByRelevanceInput {
+  fields: [ProductOrderOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input ProductOrderOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: ProductOrderOrderByRelevanceInput
+  id: SortOrder
+  name: SortOrder
+  price: SortOrder
+  product: ProductOrderByWithRelationAndSearchRelevanceInput
+  product_id: SortOrder
+  quantity: SortOrder
+}
+
+enum ProductOrderScalarFieldEnum {
+  id
+  name
+  price
+  product_id
+  quantity
+}
+
+input ProductOrderWhereInput {
+  AND: [ProductOrderWhereInput!]
+  NOT: [ProductOrderWhereInput!]
+  OR: [ProductOrderWhereInput!]
+  id: IntFilter
+  name: StringFilter
+  price: FloatFilter
+  product: ProductRelationFilter
+  product_id: IntFilter
+  quantity: IntFilter
+}
+
+input ProductOrderWhereUniqueInput {
+  id: Int
+}
+
+input ProductRelationFilter {
+  is: ProductWhereInput
+  isNot: ProductWhereInput
+}
+
+enum ProductScalarFieldEnum {
+  category_id
+  id
+  image
+  name
+  price_per_unit
+  status
+  weight
+}
+
+input ProductWhereInput {
+  AND: [ProductWhereInput!]
+  NOT: [ProductWhereInput!]
+  OR: [ProductWhereInput!]
+  category: CategoryRelationFilter
+  category_id: IntFilter
+  id: IntFilter
+  image: StringNullableFilter
+  inventory: InventoryListRelationFilter
+  name: StringFilter
+  price_per_unit: FloatFilter
+  product_order: ProductOrderListRelationFilter
+  raw_materials: Raw_MaterialListRelationFilter
+  status: BoolFilter
+  weight: FloatFilter
+}
+
+input ProductWhereUniqueInput {
+  id: Int
 }
 
 type Query {
@@ -44,4 +369,116 @@ type Query {
   agents: [Agent!]!
   categories: [Category!]!
   categoryById(id: Float!): Category!
+  products: [Product!]!
+}
+
+enum QueryMode {
+  default
+  insensitive
+}
+
+type Raw_Material {
+  _count: Raw_MaterialCount
+  id: Int!
+  inventory(cursor: InventoryWhereUniqueInput, distinct: [InventoryScalarFieldEnum!], orderBy: [InventoryOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: InventoryWhereInput): [Inventory!]!
+  name: String!
+  products(cursor: ProductWhereUniqueInput, distinct: [ProductScalarFieldEnum!], orderBy: [ProductOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
+  quantity: Int!
+}
+
+type Raw_MaterialCount {
+  inventory: Int!
+  products: Int!
+}
+
+input Raw_MaterialListRelationFilter {
+  every: Raw_MaterialWhereInput
+  none: Raw_MaterialWhereInput
+  some: Raw_MaterialWhereInput
+}
+
+input Raw_MaterialOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+enum Raw_MaterialOrderByRelevanceFieldEnum {
+  name
+}
+
+input Raw_MaterialOrderByRelevanceInput {
+  fields: [Raw_MaterialOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input Raw_MaterialOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: Raw_MaterialOrderByRelevanceInput
+  id: SortOrder
+  inventory: InventoryOrderByRelationAggregateInput
+  name: SortOrder
+  products: ProductOrderByRelationAggregateInput
+  quantity: SortOrder
+}
+
+input Raw_MaterialRelationFilter {
+  is: Raw_MaterialWhereInput
+  isNot: Raw_MaterialWhereInput
+}
+
+enum Raw_MaterialScalarFieldEnum {
+  id
+  name
+  quantity
+}
+
+input Raw_MaterialWhereInput {
+  AND: [Raw_MaterialWhereInput!]
+  NOT: [Raw_MaterialWhereInput!]
+  OR: [Raw_MaterialWhereInput!]
+  id: IntFilter
+  inventory: InventoryListRelationFilter
+  name: StringFilter
+  products: ProductListRelationFilter
+  quantity: IntFilter
+}
+
+input Raw_MaterialWhereUniqueInput {
+  id: Int
+}
+
+enum SortOrder {
+  asc
+  desc
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
+}
+
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
 }
