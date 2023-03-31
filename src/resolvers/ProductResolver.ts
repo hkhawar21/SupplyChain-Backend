@@ -8,7 +8,7 @@ import {
     Resolver,
 } from "type-graphql";
 import prisma from "../prisma/client";
-import { Product, Raw_Material } from "@generated/type-graphql";
+import { Product } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-express";
 
 @Resolver()
@@ -68,6 +68,48 @@ export class ProductResolver {
     @Authorized()
     async products() {
         return await prisma.product.findMany();
+    }
+
+    @Query(() => Product)
+    @Authorized()
+    async productById(@Arg("id", () => Int) id: number) {
+        return await prisma.product.findUnique({
+            where: { id },
+        });
+    }
+
+    @Mutation(() => Product)
+    @Authorized()
+    async updateProduct(
+        @Arg("id", () => Number) id: number,
+        @Arg("name", () => String) name: string,
+        @Arg("status", () => Boolean) status: boolean,
+        @Arg("image", () => String) image: string,
+        @Arg("weight", () => Number) weight: number,
+        @Arg("price_per_unit", () => Number) price_per_unit: number,
+        @Arg("category_id", () => Int) category_id: number,
+    ) {
+        const product = await prisma.product.findUnique({
+            where: { id },
+        });
+
+        if (!product) {
+            throw new UserInputError("Product not found");
+        }
+
+        const updatedProduct = await prisma.product.update({
+            where: { id },
+            data: {
+                name,
+                status,
+                image,
+                weight,
+                price_per_unit,
+                category_id,
+            },
+        });
+
+        return updatedProduct;
     }
 
     @Mutation(() => Boolean)
