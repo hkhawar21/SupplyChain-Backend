@@ -75,24 +75,53 @@ export class OrderResolver {
 
     @Mutation(() => Order)
     @Authorized()
-    async updateOrder(
-        @Arg("orderId") orderId: number,
-        @Arg("products", () => [ProductOrderCreateInput], { nullable: true })
-        products?: ProductOrderCreateInput[],
+    async updateOrderDetails(
+        @Arg("id") id: number,
         @Arg("data") data?: OrderUpdateInput,
     ) {
         const order = await prisma.order.update({
             where: {
-                id: orderId,
+                id,
             },
             data: {
                 ...data,
                 products: {
-                    create: products,
+                    ...data?.products,
                 },
             },
         });
 
         return order;
+    }
+
+    @Mutation(() => Order)
+    @Authorized()
+    async addProductToOrder(
+        @Arg("id") id: number,
+        @Arg("productOrderCreateInput", () => [ProductOrder])
+        productOrderCreateInput: ProductOrderCreateInput[],
+    ) {
+        const order = await prisma.order.update({
+            where: {
+                id,
+            },
+            data: {
+                products: {
+                    create: productOrderCreateInput,
+                },
+            },
+        });
+
+        return order;
+    }
+
+    @Mutation(() => Order)
+    @Authorized()
+    async removeProductFromOrder(@Arg("id") id: number) {
+        return await prisma.productOrder.delete({
+            where: {
+                id,
+            },
+        });
     }
 }
