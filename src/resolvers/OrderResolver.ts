@@ -31,6 +31,9 @@ export class OrderResolver {
             data: {
                 ...orderCreateInput,
                 customer_id,
+                products: {
+                    create: productOrderCreateInput,
+                },
             },
         });
         return createdOrder;
@@ -56,5 +59,16 @@ export class OrderResolver {
         if (!order) throw new UserInputError("Order not found");
 
         return order;
+    }
+
+    @Query(() => [Order])
+    @Authorized()
+    async ordersByCustomerId(@Arg("id", () => Int) id: number) {
+        // fetch orders by customer id
+        return await prisma.order.findMany({
+            where: {
+                customer_id: id,
+            },
+        });
     }
 }
