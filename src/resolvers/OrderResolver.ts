@@ -2,6 +2,7 @@ import {
     OrderCreateInput,
     ProductOrderCreateInput,
     ProductOrder,
+    OrderUpdateInput,
 } from "@generated/type-graphql";
 import {
     Arg,
@@ -70,5 +71,28 @@ export class OrderResolver {
                 customer_id: id,
             },
         });
+    }
+
+    @Mutation(() => Order)
+    @Authorized()
+    async updateOrder(
+        @Arg("orderId") orderId: number,
+        @Arg("products", () => [ProductOrderCreateInput], { nullable: true })
+        products?: ProductOrderCreateInput[],
+        @Arg("data") data?: OrderUpdateInput,
+    ) {
+        const order = await prisma.order.update({
+            where: {
+                id: orderId,
+            },
+            data: {
+                ...data,
+                products: {
+                    create: products,
+                },
+            },
+        });
+
+        return order;
     }
 }
