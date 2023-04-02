@@ -3,6 +3,7 @@ import {
     ProductOrderCreateInput,
     ProductOrder,
     OrderUpdateInput,
+    OrderStatus,
 } from "@generated/type-graphql";
 import {
     Arg,
@@ -123,5 +124,44 @@ export class OrderResolver {
                 id,
             },
         });
+    }
+
+    @Mutation(() => Order)
+    @Authorized()
+    async updateStatus(
+        @Arg("id") id: number,
+        @Arg("status") status: OrderStatus,
+    ) {
+        try {
+            const order = prisma.order.update({
+                where: {
+                    id,
+                },
+                data: {
+                    status,
+                },
+            });
+            return order;
+        } catch (error) {
+            throw new UserInputError("Order not found");
+        }
+    }
+
+    @Mutation(() => Order)
+    @Authorized()
+    async deleteOrder(@Arg("id") id: number) {
+        try {
+            const order = prisma.order.update({
+                where: {
+                    id,
+                },
+                data: {
+                    status: OrderStatus.cancelled,
+                },
+            });
+            return order;
+        } catch (error) {
+            throw new UserInputError("Order not found");
+        }
     }
 }
