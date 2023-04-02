@@ -69,6 +69,13 @@ input CategoryWhereInput {
   status: BoolFilter
 }
 
+input EnumOrderStatusFilter {
+  equals: OrderStatus
+  in: [OrderStatus!]
+  not: NestedEnumOrderStatusFilter
+  notIn: [OrderStatus!]
+}
+
 input FloatFilter {
   equals: Float
   gt: Float
@@ -88,6 +95,17 @@ input IntFilter {
   lt: Int
   lte: Int
   not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input IntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
   notIn: [Int!]
 }
 
@@ -157,6 +175,13 @@ input NestedBoolFilter {
   not: NestedBoolFilter
 }
 
+input NestedEnumOrderStatusFilter {
+  equals: OrderStatus
+  in: [OrderStatus!]
+  not: NestedEnumOrderStatusFilter
+  notIn: [OrderStatus!]
+}
+
 input NestedFloatFilter {
   equals: Float
   gt: Float
@@ -176,6 +201,17 @@ input NestedIntFilter {
   lt: Int
   lte: Int
   not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input NestedIntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
   notIn: [Int!]
 }
 
@@ -209,6 +245,66 @@ input NestedStringNullableFilter {
   startsWith: String
 }
 
+type Order {
+  _count: OrderCount
+  address: String!
+  amount: Float!
+  customer_id: Int
+  id: Int!
+  quantity: Int!
+  status: OrderStatus!
+}
+
+type OrderCount {
+  products: Int!
+}
+
+enum OrderOrderByRelevanceFieldEnum {
+  address
+}
+
+input OrderOrderByRelevanceInput {
+  fields: [OrderOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input OrderOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: OrderOrderByRelevanceInput
+  address: SortOrder
+  amount: SortOrder
+  customer_id: SortOrder
+  id: SortOrder
+  products: ProductOrderOrderByRelationAggregateInput
+  quantity: SortOrder
+  status: SortOrder
+}
+
+input OrderRelationFilter {
+  is: OrderWhereInput
+  isNot: OrderWhereInput
+}
+
+enum OrderStatus {
+  cancelled
+  delivered
+  pending
+  processing
+}
+
+input OrderWhereInput {
+  AND: [OrderWhereInput!]
+  NOT: [OrderWhereInput!]
+  OR: [OrderWhereInput!]
+  address: StringFilter
+  amount: FloatFilter
+  customer_id: IntNullableFilter
+  id: IntFilter
+  products: ProductOrderListRelationFilter
+  quantity: IntFilter
+  status: EnumOrderStatusFilter
+}
+
 type Product {
   _count: ProductCount
   category: Category!
@@ -239,6 +335,8 @@ input ProductListRelationFilter {
 type ProductOrder {
   id: Int!
   name: String!
+  order: Order!
+  order_id: Int!
   price: Float!
   product: Product!
   product_id: Int!
@@ -299,6 +397,8 @@ input ProductOrderOrderByWithRelationAndSearchRelevanceInput {
   _relevance: ProductOrderOrderByRelevanceInput
   id: SortOrder
   name: SortOrder
+  order: OrderOrderByWithRelationAndSearchRelevanceInput
+  order_id: SortOrder
   price: SortOrder
   product: ProductOrderByWithRelationAndSearchRelevanceInput
   product_id: SortOrder
@@ -308,6 +408,7 @@ input ProductOrderOrderByWithRelationAndSearchRelevanceInput {
 enum ProductOrderScalarFieldEnum {
   id
   name
+  order_id
   price
   product_id
   quantity
@@ -319,6 +420,8 @@ input ProductOrderWhereInput {
   OR: [ProductOrderWhereInput!]
   id: IntFilter
   name: StringFilter
+  order: OrderRelationFilter
+  order_id: IntFilter
   price: FloatFilter
   product: ProductRelationFilter
   product_id: IntFilter

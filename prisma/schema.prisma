@@ -37,13 +37,13 @@ model Customer {
 }
 
 model Order {
-  id       Int    @id @default(autoincrement())
-  quantity Int
-  status   String
-  amount   Float
-  address  String
-  // Products ID array
-  // Customer ID
+  id          Int            @id @default(autoincrement())
+  quantity    Int
+  status      OrderStatus
+  amount      Float
+  address     String
+  products    ProductOrder[]
+  customer_id Int?
 }
 
 model Product {
@@ -67,6 +67,8 @@ model ProductOrder {
   price      Float
   product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   product_id Int
+  order      Order   @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  order_id   Int
 }
 
 model Category {
@@ -122,4 +124,11 @@ enum AccessRole {
   warehouse
   inventory
   admin
+}
+
+enum OrderStatus {
+  pending
+  processing
+  delivered
+  cancelled
 }
