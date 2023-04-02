@@ -1,4 +1,8 @@
-import { OrderCreateInput } from "@generated/type-graphql";
+import {
+    OrderCreateInput,
+    ProductOrderCreateInput,
+    ProductOrder,
+} from "@generated/type-graphql";
 import {
     Arg,
     Authorized,
@@ -10,6 +14,7 @@ import {
 } from "type-graphql";
 import prisma from "../prisma/client";
 import { Order } from "@generated/type-graphql";
+import { UserInputError } from "apollo-server-core";
 
 @Resolver()
 export class OrderResolver {
@@ -19,6 +24,8 @@ export class OrderResolver {
         @Arg("orderCreateInput", () => OrderCreateInput)
         orderCreateInput: OrderCreateInput,
         @Arg("customer_id", () => Int, { nullable: true }) customer_id: number,
+        @Arg("productOrderCreateInput", () => [ProductOrder])
+        productOrderCreateInput: ProductOrderCreateInput[],
     ): Promise<Order> {
         const createdOrder = await prisma.order.create({
             data: {
@@ -27,5 +34,27 @@ export class OrderResolver {
             },
         });
         return createdOrder;
+    }
+
+    @Query(() => [Order])
+    @Authorized()
+    async orders() {
+        // fetch all orders
+        return await prisma.order.findMany();
+    }
+
+    @Query(() => Order)
+    @Authorized()
+    async orderById(@Arg("id", () => Int) id: number) {
+        // fetch order by id
+        const order = await prisma.order.findUnique({
+            where: {
+                id,
+            },
+        });
+
+        if (!order) throw new UserInputError("Order not found");
+
+        return order;
     }
 }
