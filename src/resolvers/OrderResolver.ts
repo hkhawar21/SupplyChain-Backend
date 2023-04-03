@@ -1,9 +1,6 @@
 import {
-    OrderCreateInput,
-    ProductOrderCreateInput,
-    ProductOrder,
-    OrderUpdateInput,
     OrderStatus,
+    ProductOrderUpdateManyWithoutOrderNestedInput,
 } from "@generated/type-graphql";
 import {
     Arg,
@@ -13,10 +10,91 @@ import {
     Mutation,
     Query,
     Resolver,
+    InputType,
+    Field,
+    Float,
 } from "type-graphql";
 import prisma from "../prisma/client";
 import { Order } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-core";
+
+@InputType()
+class ProductOrderCreateInput {
+    @Field(() => Int)
+    quantity!: number;
+
+    @Field(() => Float)
+    price!: number;
+
+    @Field(() => String)
+    name!: string;
+
+    @Field(() => Int)
+    product_id!: number;
+}
+
+@InputType()
+class OrderCreateInput {
+    @Field(() => Int)
+    quantity!: number;
+
+    @Field(() => OrderStatus)
+    status!: OrderStatus;
+
+    @Field(() => Float)
+    amount!: number;
+
+    @Field(() => String)
+    address!: string;
+
+    @Field(() => Int, { nullable: true })
+    customer_id?: number;
+
+    @Field(() => [ProductOrderCreateInput])
+    products!: ProductOrderCreateInput[];
+}
+
+@InputType()
+class ProductOrderUpdateInput {
+    @Field(() => Int)
+    id!: number;
+
+    @Field(() => Int)
+    quantity!: number;
+
+    @Field(() => Float)
+    price!: number;
+
+    @Field(() => String)
+    name!: string;
+
+    @Field(() => Int)
+    product_id!: number;
+
+    @Field(() => Int, { nullable: true })
+    order_id?: number;
+}
+
+@InputType()
+class OrderUpdateInput {
+    @Field(() => Int, { nullable: true })
+    quantity?: number;
+
+    @Field(() => OrderStatus, { nullable: true })
+    status?: OrderStatus;
+
+    @Field(() => Float, { nullable: true })
+    amount?: number;
+
+    @Field(() => String, { nullable: true })
+    address?: string;
+
+    @Field(() => Int, { nullable: true })
+    customer_id?: number;
+
+    @Field(() => [ProductOrderUpdateInput])
+    products!: ProductOrderUpdateInput[];
+}
 
 @Resolver()
 export class OrderResolver {
@@ -25,16 +103,12 @@ export class OrderResolver {
     async createOrder(
         @Arg("orderCreateInput", () => OrderCreateInput)
         orderCreateInput: OrderCreateInput,
-        @Arg("customer_id", () => Int, { nullable: true }) customer_id: number,
-        @Arg("productOrderCreateInput", () => [ProductOrder])
-        productOrderCreateInput: ProductOrderCreateInput[],
-    ): Promise<Order> {
+    ) {
         const createdOrder = await prisma.order.create({
             data: {
                 ...orderCreateInput,
-                customer_id,
                 products: {
-                    create: productOrderCreateInput,
+                    create: orderCreateInput.products,
                 },
             },
         });
@@ -77,8 +151,8 @@ export class OrderResolver {
     @Mutation(() => Order)
     @Authorized()
     async updateOrderDetails(
-        @Arg("id") id: number,
-        @Arg("data") data?: OrderUpdateInput,
+        @Arg("id", () => Int) id: number,
+        @Arg("data", () => OrderUpdateInput) data: OrderUpdateInput,
     ) {
         const order = await prisma.order.update({
             where: {
@@ -87,7 +161,14 @@ export class OrderResolver {
             data: {
                 ...data,
                 products: {
-                    ...data?.products,
+                    deleteMany: {
+                        id: {
+                            in: data?.products?.map((product) => product?.id),
+                        },
+                    },
+                    createMany: {
+                        data: data.products,
+                    },
                 },
             },
         });
@@ -98,8 +179,8 @@ export class OrderResolver {
     @Mutation(() => Order)
     @Authorized()
     async addProductToOrder(
-        @Arg("id") id: number,
-        @Arg("productOrderCreateInput", () => [ProductOrder])
+        @Arg("id", () => Int) id: number,
+        @Arg("productOrderCreateInput", () => [ProductOrderCreateInput])
         productOrderCreateInput: ProductOrderCreateInput[],
     ) {
         const order = await prisma.order.update({
@@ -118,7 +199,7 @@ export class OrderResolver {
 
     @Mutation(() => Order)
     @Authorized()
-    async removeProductFromOrder(@Arg("id") id: number) {
+    async removeProductFromOrder(@Arg("id", () => Int) id: number) {
         return await prisma.productOrder.delete({
             where: {
                 id,
@@ -129,8 +210,8 @@ export class OrderResolver {
     @Mutation(() => Order)
     @Authorized()
     async updateStatus(
-        @Arg("id") id: number,
-        @Arg("status") status: OrderStatus,
+        @Arg("id", () => Int) id: number,
+        @Arg("status", () => Int) status: OrderStatus,
     ) {
         try {
             const order = prisma.order.update({
@@ -149,7 +230,7 @@ export class OrderResolver {
 
     @Mutation(() => Order)
     @Authorized()
-    async deleteOrder(@Arg("id") id: number) {
+    async deleteOrder(@Arg("id", () => Int) id: number) {
         try {
             const order = prisma.order.update({
                 where: {
