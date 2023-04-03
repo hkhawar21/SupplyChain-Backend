@@ -26,6 +26,7 @@ type Category {
   id: Int!
   image: String
   name: String!
+  products(cursor: ProductWhereUniqueInput, distinct: [ProductScalarFieldEnum!], orderBy: [ProductOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
   status: Boolean!
 }
 
@@ -112,9 +113,7 @@ input IntNullableFilter {
 type Inventory {
   id: Int!
   product_id: Int!
-  products: Product!
   raw_material_id: Int!
-  raw_materials: Raw_Material!
 }
 
 input InventoryListRelationFilter {
@@ -157,17 +156,23 @@ input InventoryWhereUniqueInput {
 }
 
 type Mutation {
+  addProductToOrder(id: Int!, productOrderCreateInput: [ProductOrderCreateInput!]!): Order!
   createAgent(address: String!, city: String!, name: String!, phone_number: String!, status: Boolean!): Agent!
   createCategory(image: String!, name: String!, status: Boolean!): Category!
+  createOrder(orderCreateInput: OrderCreateInput!): Order!
   createProduct(category_id: Int!, image: String!, name: String!, price_per_unit: Float!, status: Boolean!, weight: Float!): Product!
   deleteAgent(id: Float!): Boolean!
   deleteCategory(id: Int!): Boolean!
+  deleteOrder(id: Int!): Order!
   deleteProduct(id: Int!): Boolean!
   login(email: String!, password: String!): AuthenticationToken!
+  removeProductFromOrder(id: Int!): Order!
   signup(email: String!, name: String!, password: String!, role: String!): AuthenticationToken!
   updateAgent(address: String!, city: String!, id: Float!, name: String!, phone_number: String!, status: Boolean!): Agent!
   updateCategory(id: Float!, image: String!, name: String!, status: Boolean!): Category!
+  updateOrderDetails(data: OrderUpdateInput!, id: Int!): Order!
   updateProduct(category_id: Int!, id: Float!, image: String!, name: String!, price_per_unit: Float!, status: Boolean!, weight: Float!): Product!
+  updateStatus(id: Int!, status: Int!): Order!
 }
 
 input NestedBoolFilter {
@@ -251,12 +256,22 @@ type Order {
   amount: Float!
   customer_id: Int
   id: Int!
+  products(cursor: ProductOrderWhereUniqueInput, distinct: [ProductOrderScalarFieldEnum!], orderBy: [ProductOrderOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ProductOrderWhereInput): [ProductOrder!]!
   quantity: Int!
   status: OrderStatus!
 }
 
 type OrderCount {
   products: Int!
+}
+
+input OrderCreateInput {
+  address: String!
+  amount: Float!
+  customer_id: Int
+  products: [ProductOrderCreateInput!]!
+  quantity: Int!
+  status: OrderStatus!
 }
 
 enum OrderOrderByRelevanceFieldEnum {
@@ -290,6 +305,15 @@ enum OrderStatus {
   delivered
   pending
   processing
+}
+
+input OrderUpdateInput {
+  address: String
+  amount: Float
+  customer_id: Int
+  products: [ProductOrderUpdateInput!]!
+  quantity: Int
+  status: OrderStatus
 }
 
 input OrderWhereInput {
@@ -373,6 +397,13 @@ input ProductOrderByWithRelationAndSearchRelevanceInput {
   weight: SortOrder
 }
 
+input ProductOrderCreateInput {
+  name: String!
+  price: Float!
+  product_id: Int!
+  quantity: Int!
+}
+
 input ProductOrderListRelationFilter {
   every: ProductOrderWhereInput
   none: ProductOrderWhereInput
@@ -412,6 +443,15 @@ enum ProductOrderScalarFieldEnum {
   price
   product_id
   quantity
+}
+
+input ProductOrderUpdateInput {
+  id: Int!
+  name: String!
+  order_id: Int
+  price: Float!
+  product_id: Int!
+  quantity: Int!
 }
 
 input ProductOrderWhereInput {
@@ -473,6 +513,9 @@ type Query {
   agents: [Agent!]!
   categories: [Category!]!
   categoryById(id: Float!): Category!
+  orderById(id: Int!): Order!
+  orders: [Order!]!
+  ordersByCustomerId(id: Int!): [Order!]!
   productById(id: Int!): Product!
   products: [Product!]!
 }
