@@ -2,12 +2,20 @@ import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import { buildSchema } from "type-graphql";
-import { UserResolver, AgentsResolver, CategoryResolver } from "./resolvers";
+import {
+    UserResolver,
+    AgentsResolver,
+    CategoryResolver,
+    ProductResolver,
+    OrderResolver,
+} from "./resolvers";
 import {
     Raw_MaterialRelationsResolver,
     ProductOrderRelationsResolver,
     ProductRelationsResolver,
     InventoryRelationsResolver,
+    OrderRelationsResolver,
+    CategoryRelationsResolver,
 } from "@generated/type-graphql";
 import * as http from "http";
 import prisma from "./prisma/client";
@@ -16,7 +24,6 @@ import { useServer } from "graphql-ws/lib/use/ws";
 import { WebSocketServer } from "ws";
 import { authChecker } from "./auth/AuthChecker";
 import * as path from "path";
-import { ProductResolver } from "./resolvers/ProductResolver";
 
 const cors = require("cors");
 const express = require("express");
@@ -28,12 +35,15 @@ const express = require("express");
             AgentsResolver,
             CategoryResolver,
             ProductResolver,
+            OrderResolver,
             Raw_MaterialRelationsResolver,
             ProductOrderRelationsResolver,
             ProductRelationsResolver,
-            InventoryRelationsResolver,
+            OrderRelationsResolver,
+            CategoryRelationsResolver,
         ],
         authChecker,
+        validate: false,
         emitSchemaFile: path.resolve(
             __dirname,
             "snapshots/schema",
