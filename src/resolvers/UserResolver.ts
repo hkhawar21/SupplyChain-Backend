@@ -43,13 +43,7 @@ export class UserResolver {
         if (!(await compare(password, user.password)))
             throw new Error("Incorrect email/password");
 
-        const token = jwt.sign(
-            user.id,
-            process.env.JWT_SECRET || "JWT_SECRET",
-            {
-                expiresIn: 36000000,
-            },
-        );
+        const token = jwt.sign(user.id, process.env.JWT_SECRET || "JWT_SECRET");
         return {
             authenticationToken: token,
         };
