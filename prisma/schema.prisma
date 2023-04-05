@@ -45,22 +45,21 @@ model Order {
   products     ProductOrder[]
   customer_id  Int?
   inventory    Inventory      @relation(fields: [inventory_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  inventory_id Int
+  inventory_id Int            @default(0)
 }
 
 model Product {
-  id              Int                   @id @default(autoincrement())
-  name            String
-  price_per_unit  Float
-  status          Boolean
-  image           String?
-  weight          Float
-  product_order   ProductOrder[]
-  inventory       Inventory[]
-  category        Category              @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  category_id     Int
-  raw_materials   ProductRawMaterials[]
-  raw_material_id Int
+  id             Int                   @id @default(autoincrement())
+  name           String
+  price_per_unit Float
+  status         Boolean
+  image          String?
+  weight         Float
+  product_order  ProductOrder[]
+  inventory      Inventory[]
+  category       Category              @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category_id    Int
+  raw_materials  ProductRawMaterials[]
 }
 
 model ProductOrder {
@@ -140,8 +139,8 @@ enum AccessRole {
 }
 
 enum OrderStatus {
-  pending
-  processing
-  delivered
-  cancelled
+  PENDING
+  PROCESSING
+  DELIVERED
+  CANCELLED
 }

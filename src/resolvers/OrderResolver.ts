@@ -1,8 +1,4 @@
 import {
-    OrderStatus,
-    ProductOrderUpdateManyWithoutOrderNestedInput,
-} from "@generated/type-graphql";
-import {
     Arg,
     Authorized,
     Ctx,
@@ -15,11 +11,11 @@ import {
     Float,
 } from "type-graphql";
 import prisma from "../prisma/client";
-import { Order } from "@generated/type-graphql";
+import { Order, OrderStatus } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-core";
 
 @InputType()
-class ProductOrderCreateInput {
+export class ProductOrderCreateInput {
     @Field(() => Int)
     quantity!: number;
 
@@ -34,12 +30,9 @@ class ProductOrderCreateInput {
 }
 
 @InputType()
-class OrderCreateInput {
+export class OrderCreateInput {
     @Field(() => Int)
     quantity!: number;
-
-    @Field(() => OrderStatus)
-    status!: OrderStatus;
 
     @Field(() => Float)
     amount!: number;
@@ -55,7 +48,7 @@ class OrderCreateInput {
 }
 
 @InputType()
-class ProductOrderUpdateInput {
+export class ProductOrderUpdateInput {
     @Field(() => Int)
     id!: number;
 
@@ -76,7 +69,7 @@ class ProductOrderUpdateInput {
 }
 
 @InputType()
-class OrderUpdateInput {
+export class OrderUpdateInput {
     @Field(() => Int, { nullable: true })
     quantity?: number;
 
@@ -98,6 +91,9 @@ class OrderUpdateInput {
 
 @Resolver()
 export class OrderResolver {
+    static createOrder(orderCreateInput: OrderCreateInput): Promise<Order> {
+        throw new Error("Method not implemented.");
+    }
     @Mutation(() => Order)
     @Authorized()
     async createOrder(
@@ -107,6 +103,7 @@ export class OrderResolver {
         const createdOrder = await prisma.order.create({
             data: {
                 ...orderCreateInput,
+                status: OrderStatus.PENDING,
                 products: {
                     create: orderCreateInput.products,
                 },
@@ -237,7 +234,7 @@ export class OrderResolver {
                     id,
                 },
                 data: {
-                    status: OrderStatus.cancelled,
+                    status: OrderStatus.CANCELLED,
                 },
             });
             return order;
