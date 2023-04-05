@@ -37,27 +37,30 @@ model Customer {
 }
 
 model Order {
-  id          Int            @id @default(autoincrement())
-  quantity    Int
-  status      OrderStatus
-  amount      Float
-  address     String
-  products    ProductOrder[]
-  customer_id Int?
+  id           Int            @id @default(autoincrement())
+  quantity     Int
+  status       OrderStatus
+  amount       Float
+  address      String
+  products     ProductOrder[]
+  customer_id  Int?
+  inventory    Inventory      @relation(fields: [inventory_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  inventory_id Int
 }
 
 model Product {
-  id             Int            @id @default(autoincrement())
-  name           String
-  price_per_unit Float
-  status         Boolean
-  image          String?
-  weight         Float
-  product_order  ProductOrder[]
-  inventory      Inventory[]
-  category       Category       @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  category_id    Int
-  raw_materials  Raw_Material[]
+  id              Int                   @id @default(autoincrement())
+  name            String
+  price_per_unit  Float
+  status          Boolean
+  image           String?
+  weight          Float
+  product_order   ProductOrder[]
+  inventory       Inventory[]
+  category        Category              @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category_id     Int
+  raw_materials   ProductRawMaterials[]
+  raw_material_id Int
 }
 
 model ProductOrder {
@@ -81,12 +84,22 @@ model Category {
   @@unique([name, id])
 }
 
-model Raw_Material {
-  id        Int         @id @default(autoincrement())
-  name      String
-  quantity  Int
-  inventory Inventory[]
-  products  Product[]
+model ProductRawMaterials {
+  id            Int           @id @default(autoincrement())
+  raw_materials RawMaterial[]
+  product       Product       @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  product_id    Int
+}
+
+model RawMaterial {
+  id           Int                   @id @default(autoincrement())
+  name         String
+  quantity     Int
+  price        Float
+  status       Boolean
+  products     ProductRawMaterials[]
+  inventory    Inventory             @relation(fields: [inventory_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  inventory_id Int
 }
 
 model Warehouse {
@@ -108,11 +121,11 @@ model Agent {
 }
 
 model Inventory {
-  id              Int          @id @default(autoincrement())
-  raw_materials   Raw_Material @relation(fields: [raw_material_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  raw_material_id Int
-  products        Product      @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  product_id      Int
+  id            Int           @id @default(autoincrement())
+  raw_materials RawMaterial[]
+  products      Product       @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  product_id    Int
+  orders        Order[]
 }
 
 enum AccessRole {
