@@ -49,7 +49,7 @@ model Order {
 }
 
 model Product {
-  id             Int                   @id @default(autoincrement())
+  id             Int                      @id @default(autoincrement())
   name           String
   price_per_unit Float
   status         Boolean
@@ -57,9 +57,9 @@ model Product {
   weight         Float
   product_order  ProductOrder[]
   inventory      Inventory[]
-  category       Category              @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category       Category                 @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   category_id    Int
-  raw_materials  ProductRawMaterials[]
+  raw_materials  ProductAllRawMaterials[]
 }
 
 model ProductOrder {
@@ -83,21 +83,31 @@ model Category {
   @@unique([name, id])
 }
 
-model ProductRawMaterials {
-  id            Int           @id @default(autoincrement())
-  raw_materials RawMaterial[]
-  product       Product       @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+model ProductAllRawMaterials {
+  id            Int                  @id @default(autoincrement())
+  raw_materials ProductRawMaterial[]
+  product       Product              @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   product_id    Int
+  time          String
+}
+
+model ProductRawMaterial {
+  id                      Int                    @id @default(autoincrement())
+  raw_materials           RawMaterial            @relation(fields: [raw_material_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  producttAllRawMaterials ProductAllRawMaterials @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  product_id              Int
+  raw_material_id         Int
+  quantity                Int
 }
 
 model RawMaterial {
-  id              Int                   @id @default(autoincrement())
+  id              Int                  @id @default(autoincrement())
   name            String
   quantity        Int
   price           Float
   status          Boolean
-  products        ProductRawMaterials[]
-  inventory       Inventory             @relation(fields: [inventory_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  products        ProductRawMaterial[]
+  inventory       Inventory            @relation(fields: [inventory_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   inventory_id    Int
   requested       Int
   requestedStatus RawMaterialStatus
