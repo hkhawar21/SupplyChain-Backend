@@ -38,7 +38,7 @@ class OrderCreateInputInventory extends OrderCreateInput {
 @Resolver()
 export class InventoryResolver {
     // Implementing all the functionalitites commented above
-    @Mutation()
+    @Mutation(() => Order)
     @Authorized()
     async createOrderRequest(
         @Arg("orderCreateInput", () => OrderCreateInputInventory)
@@ -54,18 +54,6 @@ export class InventoryResolver {
                     status: orderCreateInput.status,
                 },
             });
-            // const createdOrder = await prisma.order.create({
-            //     data: {
-            //         quantity: orderCreateInput.quantity,
-            //         amount: orderCreateInput.amount,
-            //         address: orderCreateInput.address,
-            //         status: orderCreateInput.status,
-            //         customer_id: orderCreateInput.customer_id,
-            //         products: {
-            //             create: orderCreateInput.products,
-            //         },
-            //     },
-            // });
 
             return updatedOrder;
         } catch (error: any) {
@@ -73,7 +61,7 @@ export class InventoryResolver {
         }
     }
 
-    @Mutation()
+    @Mutation(() => Order)
     @Authorized()
     async approveOrderRequest(
         @Arg("orderId", () => Int) orderId: number,

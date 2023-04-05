@@ -8,14 +8,17 @@ import {
     CategoryResolver,
     ProductResolver,
     OrderResolver,
+    RawMaterialResolver,
+    InventoryResolver,
 } from "./resolvers";
 import {
-    Raw_MaterialRelationsResolver,
+    RawMaterialRelationsResolver,
     ProductOrderRelationsResolver,
     ProductRelationsResolver,
     InventoryRelationsResolver,
     OrderRelationsResolver,
     CategoryRelationsResolver,
+    ProductRawMaterialsRelationsResolver,
 } from "@generated/type-graphql";
 import * as http from "http";
 import prisma from "./prisma/client";
@@ -36,11 +39,15 @@ const express = require("express");
             CategoryResolver,
             ProductResolver,
             OrderResolver,
-            Raw_MaterialRelationsResolver,
+            InventoryResolver,
+            RawMaterialResolver,
+            RawMaterialRelationsResolver,
             ProductOrderRelationsResolver,
             ProductRelationsResolver,
             OrderRelationsResolver,
             CategoryRelationsResolver,
+            InventoryRelationsResolver,
+            ProductRawMaterialsRelationsResolver,
         ],
         authChecker,
         validate: false,
