@@ -12,11 +12,7 @@ import {
 } from "type-graphql";
 import prisma from "../prisma/client";
 import { UserInputError } from "apollo-server-core";
-import {
-    OrderCreateInput,
-    OrderResolver,
-    ProductOrderCreateInput,
-} from "./OrderResolver";
+import { OrderCreateInput, OrderResolver } from "./OrderResolver";
 import {
     Order,
     OrderStatus,
@@ -112,6 +108,17 @@ export class InventoryResolver {
         try {
             const products = await prisma.product.findMany();
             return products;
+        } catch (error: any) {
+            throw new UserInputError(error);
+        }
+    }
+
+    @Query(() => [RawMaterial])
+    @Authorized()
+    async showRawMaterialsInInventory(): Promise<RawMaterial[]> {
+        try {
+            const rawMaterials = await prisma.rawMaterial.findMany();
+            return rawMaterials;
         } catch (error: any) {
             throw new UserInputError(error);
         }
