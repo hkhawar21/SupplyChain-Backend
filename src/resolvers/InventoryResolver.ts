@@ -93,7 +93,7 @@ export class InventoryResolver {
 
     @Query(() => [Order])
     @Authorized()
-    async showOrdersRequested(): Promise<Order[]> {
+    async ordersRequested(): Promise<Order[]> {
         try {
             const orders = await prisma.order.findMany();
             return orders;
@@ -104,7 +104,7 @@ export class InventoryResolver {
 
     @Query(() => [Product])
     @Authorized()
-    async showProductsInInventory(): Promise<Product[]> {
+    async productsInInventory(): Promise<Product[]> {
         try {
             const products = await prisma.product.findMany();
             return products;
@@ -115,7 +115,7 @@ export class InventoryResolver {
 
     @Query(() => [RawMaterial])
     @Authorized()
-    async showRawMaterialsInInventory(): Promise<RawMaterial[]> {
+    async rawMaterialsInInventory(): Promise<RawMaterial[]> {
         try {
             const rawMaterials = await prisma.rawMaterial.findMany();
             return rawMaterials;
