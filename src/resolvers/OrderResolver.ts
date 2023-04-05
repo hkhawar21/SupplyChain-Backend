@@ -30,7 +30,7 @@ export class ProductOrderCreateInput {
 }
 
 @InputType()
-export class OrderCreateInput {
+export abstract class OrderCreateInput {
     @Field(() => Int)
     quantity!: number;
 

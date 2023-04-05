@@ -11,14 +11,22 @@ import {
     Float,
 } from "type-graphql";
 import prisma from "../prisma/client";
-import { Inventory } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-core";
-import { OrderResolver, ProductOrderCreateInput } from "./OrderResolver";
-import { Order, OrderStatus } from "@generated/type-graphql";
+import {
+    OrderCreateInput,
+    OrderResolver,
+    ProductOrderCreateInput,
+} from "./OrderResolver";
+import {
+    Order,
+    OrderStatus,
+    Product,
+    RawMaterial,
+} from "@generated/type-graphql";
 
 // Inventory Resolver will provide the following functionalities:
 // 1. Create Order Request
-// 2. Update Order Request
+// 2. Approval of order
 // 3. Show Orders requested and pending
 // 4. Show all the products present in inventory with their respective quantity
 // 5. Change status of products from pending to approved or vice versa
@@ -26,24 +34,9 @@ import { Order, OrderStatus } from "@generated/type-graphql";
 // 7. Create requests for raw materials which is then to be approved by the finance admin
 
 @InputType()
-class OrderCreateInput {
-    @Field(() => Int)
-    quantity!: number;
-
-    @Field(() => Float)
-    amount!: number;
-
-    @Field(() => String)
-    address!: string;
-
+class OrderCreateInputInventory extends OrderCreateInput {
     @Field(() => OrderStatus)
     status!: OrderStatus;
-
-    @Field(() => Int, { nullable: true })
-    customer_id?: number;
-
-    @Field(() => [ProductOrderCreateInput])
-    products!: ProductOrderCreateInput[];
 }
 
 @Resolver()
@@ -52,14 +45,19 @@ export class InventoryResolver {
     @Mutation()
     @Authorized()
     async createOrderRequest(
-        @Arg("orderCreateInput", () => OrderCreateInput)
-        orderCreateInput: OrderCreateInput,
+        @Arg("orderCreateInput", () => OrderCreateInputInventory)
+        orderCreateInput: OrderCreateInputInventory,
     ): Promise<Order> {
         try {
             const createdOrder = await OrderResolver.createOrder(
                 orderCreateInput,
             );
-            createdOrder.status = orderCreateInput.status;
+            const updatedOrder = await prisma.order.update({
+                where: { id: createdOrder.id },
+                data: {
+                    status: orderCreateInput.status,
+                },
+            });
             // const createdOrder = await prisma.order.create({
             //     data: {
             //         quantity: orderCreateInput.quantity,
@@ -73,7 +71,47 @@ export class InventoryResolver {
             //     },
             // });
 
-            return createdOrder;
+            return updatedOrder;
+        } catch (error: any) {
+            throw new UserInputError(error);
+        }
+    }
+
+    @Mutation()
+    @Authorized()
+    async approveOrderRequest(
+        @Arg("orderId", () => Int) orderId: number,
+    ): Promise<Order> {
+        try {
+            const updatedOrder = await prisma.order.update({
+                where: { id: orderId },
+                data: {
+                    status: OrderStatus.PROCESSING,
+                },
+            });
+            return updatedOrder;
+        } catch (error: any) {
+            throw new UserInputError(error);
+        }
+    }
+
+    @Query(() => [Order])
+    @Authorized()
+    async showOrdersRequested(): Promise<Order[]> {
+        try {
+            const orders = await prisma.order.findMany();
+            return orders;
+        } catch (error: any) {
+            throw new UserInputError(error);
+        }
+    }
+
+    @Query(() => [Product])
+    @Authorized()
+    async showProductsInInventory(): Promise<Product[]> {
+        try {
+            const products = await prisma.product.findMany();
+            return products;
         } catch (error: any) {
             throw new UserInputError(error);
         }
