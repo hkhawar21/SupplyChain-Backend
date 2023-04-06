@@ -176,6 +176,7 @@ input InventoryWhereUniqueInput {
 
 type Mutation {
   addProductToOrder(id: Int!, productOrderCreateInput: [ProductOrderCreateInput!]!): Order!
+  addRawMaterialToProduct(productId: Int!, quantity: Int!, rawMaterialId: Int!): Product!
   approveOrderRequest(orderId: Int!): Order!
   changeStatusRawMaterial(id: Int!, status: RawMaterialStatus!): RawMaterial!
   createAgent(address: String!, city: String!, name: String!, phone_number: String!, status: Boolean!): Agent!

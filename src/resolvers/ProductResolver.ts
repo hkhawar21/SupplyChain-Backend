@@ -259,6 +259,34 @@ export class ProductResolver {
 
     @Mutation(() => Product)
     @Authorized()
+    async addRawMaterialToProduct(
+        @Arg("productId", () => Int) productId: number,
+        @Arg("rawMaterialId", () => Int) rawMaterialId: number,
+        @Arg("quantity", () => Int) quantity: number,
+    ) {
+        try {
+            await prisma.productRawMaterials.create({
+                data: {
+                    raw_material_id: rawMaterialId,
+                    quantity: quantity,
+                    product_id: productId,
+                },
+            });
+
+            return await prisma.product.findUnique({
+                where: { id: productId },
+                include: {
+                    raw_materials: true,
+                    category: true,
+                },
+            });
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    @Mutation(() => Product)
+    @Authorized()
     async deleteProduct(@Arg("id", () => Int) id: number): Promise<Product> {
         try {
             return await prisma.product.update({
