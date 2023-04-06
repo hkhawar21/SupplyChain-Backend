@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import {
     Arg,
     Authorized,
@@ -10,7 +11,7 @@ import {
     Int,
 } from "type-graphql";
 import prisma from "../prisma/client";
-import { Agent } from "@generated/type-graphql/models/Agent";
+import { Agent } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-express";
 
 @InputType()
@@ -54,8 +55,8 @@ export class AgentCreateInput {
 
 @Resolver()
 export class AgentsResolver {
-    @Mutation(() => Agent)
     @Authorized()
+    @Mutation(() => Agent)
     async createAgent(
         @Arg("agentCreateInput", () => AgentCreateInput)
         agentCreateInput: AgentCreateInput,

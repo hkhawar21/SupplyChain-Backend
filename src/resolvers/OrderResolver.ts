@@ -94,6 +94,7 @@ export class OrderResolver {
     static createOrder(orderCreateInput: OrderCreateInput): Promise<Order> {
         throw new Error("Method not implemented.");
     }
+
     @Mutation(() => Order)
     @Authorized()
     async createOrder(

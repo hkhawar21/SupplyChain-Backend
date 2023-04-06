@@ -3,18 +3,19 @@ import {
     Authorized,
     Ctx,
     Field,
+    Int,
     Mutation,
     ObjectType,
     Query,
     Resolver,
 } from "type-graphql";
+import { User } from "@generated/type-graphql";
 import prisma from "../prisma/client";
 import { compare } from "bcrypt";
-import { Context } from "../types";
-import { UserInputError } from "apollo-server-express";
 import { hashPassword } from "../utils/password";
-const jwt = require("jsonwebtoken");
 import { AccessRole } from "@prisma/client";
+
+import jwt from "jsonwebtoken";
 
 @ObjectType()
 class AuthenticationToken {
@@ -43,7 +44,10 @@ export class UserResolver {
         if (!(await compare(password, user.password)))
             throw new Error("Incorrect email/password");
 
-        const token = jwt.sign(user.id, process.env.JWT_SECRET || "JWT_SECRET");
+        const token = jwt.sign(
+            user.id.toString(),
+            process.env.JWT_SECRET || "JWT_SECRET",
+        );
         return {
             authenticationToken: token,
         };
@@ -74,5 +78,13 @@ export class UserResolver {
         return {
             authenticationToken: token,
         };
+    }
+
+    @Query(() => User)
+    @Authorized()
+    async userById(@Arg("id", () => Int) id: number): Promise<User> {
+        const user = await prisma.user.findFirst({ where: { id } });
+        if (!user) throw new Error("User not found");
+        return user;
     }
 }

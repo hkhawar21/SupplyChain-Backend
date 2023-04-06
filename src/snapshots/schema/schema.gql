@@ -3,6 +3,17 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+enum AccessRole {
+  admin
+  agents
+  customers
+  finance
+  inventory
+  orders
+  products
+  warehouse
+}
+
 type Agent {
   address: String!
   city: String!
@@ -659,6 +670,7 @@ type Query {
   rawMaterial: [RawMaterial!]!
   rawMaterialRequested: [RawMaterial!]!
   rawMaterialsInInventory: [RawMaterial!]!
+  userById(id: Int!): User!
 }
 
 enum QueryMode {
@@ -808,4 +820,12 @@ input StringNullableFilter {
   not: NestedStringNullableFilter
   notIn: [String!]
   startsWith: String
+}
+
+type User {
+  email: String!
+  id: Int!
+  name: String!
+  password: String!
+  role: AccessRole!
 }

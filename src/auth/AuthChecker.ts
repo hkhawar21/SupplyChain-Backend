@@ -9,6 +9,7 @@ export const authChecker: AuthChecker<Context> = async (
     _roles,
 ) => {
     const { req } = context;
+    console.log(req);
     const authorization = req.get("Authorization");
 
     if (!authorization) throw new UnauthorizedError();
