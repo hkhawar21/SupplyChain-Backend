@@ -15,6 +15,24 @@ import { UserInputError } from "apollo-server-core";
 import { RawMaterialStatus, RawMaterial } from "@generated/type-graphql";
 
 @InputType()
+class RawMaterialUpdateInput {
+    @Field(() => Int)
+    id!: number;
+
+    @Field(() => String, { nullable: true })
+    name?: string;
+
+    @Field(() => Boolean, { nullable: true })
+    status?: boolean;
+
+    @Field(() => Int, { nullable: true })
+    quantity?: number;
+
+    @Field(() => Float, { nullable: true })
+    price?: number;
+}
+
+@InputType()
 class RawMaterialInput {
     @Field(() => String)
     name!: string;
@@ -120,6 +138,23 @@ export class RawMaterialResolver {
                 },
             });
             return createdRawMaterial;
+        } catch (error: any) {
+            throw new UserInputError(error);
+        }
+    }
+
+    @Mutation(() => RawMaterial)
+    @Authorized()
+    async updateRawMaterial(
+        @Arg("rawMaterialInput", () => RawMaterialUpdateInput)
+        rawMaterialInput: RawMaterialUpdateInput,
+    ): Promise<RawMaterial> {
+        try {
+            const updatedRawMaterial = await prisma.rawMaterial.update({
+                where: { id: rawMaterialInput.id },
+                data: rawMaterialInput,
+            });
+            return updatedRawMaterial;
         } catch (error: any) {
             throw new UserInputError(error);
         }

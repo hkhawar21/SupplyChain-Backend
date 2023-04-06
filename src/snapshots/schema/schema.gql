@@ -196,6 +196,7 @@ type Mutation {
   updateCategory(id: Float!, image: String!, name: String!, status: Boolean!): Category!
   updateOrderDetails(data: OrderUpdateInput!, id: Int!): Order!
   updateProduct(productUpdateInput: ProductUpdateInput!): Product!
+  updateRawMaterial(rawMaterialInput: RawMaterialUpdateInput!): RawMaterial!
   updateStatus(id: Int!, status: Int!): Order!
 }
 
@@ -767,6 +768,14 @@ enum RawMaterialStatus {
   APPROVED
   PENDING
   REJECTED
+}
+
+input RawMaterialUpdateInput {
+  id: Int!
+  name: String
+  price: Float
+  quantity: Int
+  status: Boolean
 }
 
 input RawMaterialWhereInput {
