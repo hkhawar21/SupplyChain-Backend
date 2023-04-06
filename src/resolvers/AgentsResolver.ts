@@ -1,28 +1,70 @@
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+    Arg,
+    Authorized,
+    Ctx,
+    Mutation,
+    Query,
+    Resolver,
+    InputType,
+    Field,
+    Int,
+} from "type-graphql";
 import prisma from "../prisma/client";
 import { Agent } from "@generated/type-graphql/models/Agent";
 import { UserInputError } from "apollo-server-express";
+
+@InputType()
+export class AgentUpdateInput {
+    @Field(() => Int)
+    id!: number;
+
+    @Field(() => String, { nullable: true })
+    name?: string;
+
+    @Field(() => String, { nullable: true })
+    address?: string;
+
+    @Field(() => String, { nullable: true })
+    phone_number?: string;
+
+    @Field(() => String, { nullable: true })
+    city?: string;
+
+    @Field(() => Boolean, { nullable: true })
+    status?: boolean;
+}
+
+@InputType()
+export class AgentCreateInput {
+    @Field(() => String)
+    name!: string;
+
+    @Field(() => String)
+    address!: string;
+
+    @Field(() => String)
+    phone_number!: string;
+
+    @Field(() => String)
+    city!: string;
+
+    @Field(() => Boolean)
+    status!: boolean;
+}
 
 @Resolver()
 export class AgentsResolver {
     @Mutation(() => Agent)
     @Authorized()
     async createAgent(
-        @Arg("name", () => String) name: string,
-        @Arg("address", () => String) address: string,
-        @Arg("phone_number", () => String) phone_number: string,
-        @Arg("city", () => String) city: string,
-        @Arg("status", () => Boolean) status: boolean,
+        @Arg("agentCreateInput", () => AgentCreateInput)
+        agentCreateInput: AgentCreateInput,
     ): Promise<Agent> {
         try {
             // Restrict adding duplicate agent
             const agent = await prisma.agent.findFirst({
                 where: {
-                    name,
-                    address,
-                    phone_number,
-                    city,
-                    status,
+                    ...agentCreateInput,
                 },
             });
 
@@ -34,11 +76,7 @@ export class AgentsResolver {
 
             const createdAgent = await prisma.agent.create({
                 data: {
-                    name,
-                    address,
-                    phone_number,
-                    city,
-                    status,
+                    ...agentCreateInput,
                 },
             });
 
@@ -66,27 +104,21 @@ export class AgentsResolver {
     @Mutation(() => Agent)
     @Authorized()
     async updateAgent(
-        @Arg("id", () => Number) id: number,
-        @Arg("name", () => String) name: string,
-        @Arg("address", () => String) address: string,
-        @Arg("phone_number", () => String) phone_number: string,
-        @Arg("city", () => String) city: string,
-        @Arg("status", () => Boolean) status: boolean,
+        @Arg("agentUpdateInput", () => AgentUpdateInput)
+        agentUpdateInput: AgentUpdateInput,
     ) {
-        const agent = await prisma.agent.findUnique({ where: { id } });
+        const agent = await prisma.agent.findUnique({
+            where: { id: agentUpdateInput.id },
+        });
         if (!agent)
             throw new UserInputError(
                 "Agent does not exists with this data. Please enter different details",
             );
 
         return await prisma.agent.update({
-            where: { id },
+            where: { id: agentUpdateInput.id },
             data: {
-                name,
-                address,
-                phone_number,
-                city,
-                status,
+                ...agentUpdateInput,
             },
         });
     }
