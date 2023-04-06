@@ -1,8 +1,3 @@
-generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
-}
-
 generator typegraphql {
   provider = "typegraphql-prisma"
 }
@@ -92,7 +87,7 @@ model Category {
 // All the Raw Materials for a product
 model ProductRawMaterials {
   id              Int         @id @default(autoincrement())
-  raw_materials   RawMaterial @relation(fields: [raw_material_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  raw_material    RawMaterial @relation(fields: [raw_material_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   raw_material_id Int
   product         Product     @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   product_id      Int
