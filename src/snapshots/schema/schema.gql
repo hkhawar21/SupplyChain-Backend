@@ -188,10 +188,11 @@ type Mutation {
   deleteAgent(id: Float!): Boolean!
   deleteCategory(id: Int!): Boolean!
   deleteOrder(id: Int!): Order!
-  deleteProduct(id: Int!): Boolean!
+  deleteProduct(id: Int!): Product!
   deleteRawMaterial(id: Int!): RawMaterial!
   login(email: String!, password: String!): AuthenticationToken!
   removeProductFromOrder(id: Int!): Order!
+  removeRawMaterialFromProduct(productId: Int!, rawMaterialId: Int!): Product!
   signup(email: String!, name: String!, password: String!, role: String!): AuthenticationToken!
   updateAgent(address: String!, city: String!, id: Float!, name: String!, phone_number: String!, status: Boolean!): Agent!
   updateCategory(id: Float!, image: String!, name: String!, status: Boolean!): Category!

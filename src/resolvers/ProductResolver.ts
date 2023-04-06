@@ -231,15 +231,44 @@ export class ProductResolver {
         }
     }
 
-    @Mutation(() => Boolean)
+    @Mutation(() => Product)
     @Authorized()
-    async deleteProduct(@Arg("id", () => Int) id: number) {
-        await prisma.product.update({
-            where: { id },
-            data: {
-                status: false,
-            },
-        });
-        return true;
+    async removeRawMaterialFromProduct(
+        @Arg("productId", () => Int) productId: number,
+        @Arg("rawMaterialId", () => Int) rawMaterialId: number,
+    ) {
+        try {
+            return await prisma.product.update({
+                where: { id: productId },
+                data: {
+                    raw_materials: {
+                        disconnect: {
+                            id: rawMaterialId,
+                        },
+                    },
+                },
+                include: {
+                    raw_materials: true,
+                    category: true,
+                },
+            });
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    @Mutation(() => Product)
+    @Authorized()
+    async deleteProduct(@Arg("id", () => Int) id: number): Promise<Product> {
+        try {
+            return await prisma.product.update({
+                where: { id },
+                data: {
+                    status: false,
+                },
+            });
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
     }
 }
