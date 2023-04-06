@@ -184,7 +184,7 @@ type Mutation {
   createOrderRequest(orderCreateInput: OrderCreateInputInventory!): Order!
   createProduct(productInput: ProductInput!): Product!
   createRawMaterial(rawMaterialInput: RawMaterialInput!): RawMaterial!
-  createRawMaterialRequest(id: Int!, quantity: Int!): RawMaterial!
+  createRawMaterialRequest(rawMaterialRequestInput: RawMaterialRequestInput!): RawMaterial!
   deleteAgent(id: Float!): Boolean!
   deleteCategory(id: Int!): Boolean!
   deleteOrder(id: Int!): Order!
@@ -752,6 +752,11 @@ input RawMaterialOrderByWithRelationAndSearchRelevanceInput {
 input RawMaterialRelationFilter {
   is: RawMaterialWhereInput
   isNot: RawMaterialWhereInput
+}
+
+input RawMaterialRequestInput {
+  quantity: Int!
+  raw_material_id: Int!
 }
 
 enum RawMaterialScalarFieldEnum {

@@ -62,14 +62,14 @@ export class RawMaterialResolver {
     @Mutation(() => RawMaterial)
     @Authorized()
     async createRawMaterialRequest(
-        @Arg("id", () => Int) id: number,
-        @Arg("quantity", () => Int) quantity: number,
+        @Arg("rawMaterialRequestInput", () => RawMaterialRequestInput)
+        rawMaterialRequestInput: RawMaterialRequestInput,
     ): Promise<RawMaterial> {
         try {
             return await prisma.rawMaterial.update({
-                where: { id },
+                where: { id: rawMaterialRequestInput.raw_material_id },
                 data: {
-                    quantity: quantity,
+                    quantity: rawMaterialRequestInput.quantity,
                     requestedStatus: RawMaterialStatus.PENDING,
                 },
             });
