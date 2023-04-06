@@ -62,6 +62,12 @@ type CategoryCount {
   products: Int!
 }
 
+input CategoryCreateInput {
+  image: String!
+  name: String!
+  status: Boolean!
+}
+
 input CategoryOrderByWithRelationInput {
   id: SortOrder
   image: SortOrder
@@ -73,6 +79,13 @@ input CategoryOrderByWithRelationInput {
 input CategoryRelationFilter {
   is: CategoryWhereInput
   isNot: CategoryWhereInput
+}
+
+input CategoryUpdateInput {
+  id: Int!
+  image: String
+  name: String
+  status: Boolean
 }
 
 input CategoryWhereInput {
@@ -196,7 +209,7 @@ type Mutation {
   approveOrderRequest(orderId: Int!): Order!
   changeStatusRawMaterial(id: Int!, status: RawMaterialStatus!): RawMaterial!
   createAgent(agentCreateInput: AgentCreateInput!): Agent!
-  createCategory(image: String!, name: String!, status: Boolean!): Category!
+  createCategory(categoryCreateInput: CategoryCreateInput!): Category!
   createOrder(orderCreateInput: OrderCreateInput!): Order!
   createOrderRequest(orderCreateInput: OrderCreateInputInventory!): Order!
   createProduct(productInput: ProductInput!): Product!
@@ -212,7 +225,7 @@ type Mutation {
   removeRawMaterialFromProduct(productId: Int!, rawMaterialId: Int!): Product!
   signup(email: String!, name: String!, password: String!, role: String!): AuthenticationToken!
   updateAgent(agentUpdateInput: AgentUpdateInput!): Agent!
-  updateCategory(id: Float!, image: String!, name: String!, status: Boolean!): Category!
+  updateCategory(categoryUpdateInput: CategoryUpdateInput!): Category!
   updateOrderDetails(data: OrderUpdateInput!, id: Int!): Order!
   updateProduct(productUpdateInput: ProductUpdateInput!): Product!
   updateRawMaterial(rawMaterialInput: RawMaterialUpdateInput!): RawMaterial!

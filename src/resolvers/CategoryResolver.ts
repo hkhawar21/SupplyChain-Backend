@@ -6,27 +6,53 @@ import {
     Mutation,
     Query,
     Resolver,
+    InputType,
+    Field,
 } from "type-graphql";
 import { Category } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-express";
 import prisma from "../prisma/client";
+
+@InputType()
+export class CategoryUpdateInput {
+    @Field(() => Int)
+    id!: number;
+
+    @Field(() => String, { nullable: true })
+    name?: string;
+
+    @Field(() => Boolean, { nullable: true })
+    status?: boolean;
+
+    @Field(() => String, { nullable: true })
+    image?: string;
+}
+
+@InputType()
+export class CategoryCreateInput {
+    @Field(() => String)
+    name!: string;
+
+    @Field(() => Boolean)
+    status!: boolean;
+
+    @Field(() => String)
+    image!: string;
+}
 
 @Resolver()
 export class CategoryResolver {
     @Mutation(() => Category)
     @Authorized()
     async createCategory(
-        @Arg("name", () => String) name: string,
-        @Arg("status", () => Boolean) status: boolean,
-        @Arg("image", () => String) image: string,
+        @Arg("categoryCreateInput", () => CategoryCreateInput)
+        categoryCreateInput: CategoryCreateInput,
     ): Promise<Category> {
         try {
             // Restrict adding duplicate category
             const category = await prisma.category.findFirst({
                 where: {
-                    name,
-                    status,
-                    image,
+                    ...categoryCreateInput,
                 },
             });
 
@@ -38,9 +64,7 @@ export class CategoryResolver {
 
             const createdCategory = await prisma.category.create({
                 data: {
-                    name,
-                    status,
-                    image: image === "" || !image ? "" : image,
+                    ...categoryCreateInput,
                 },
             });
 
@@ -56,20 +80,8 @@ export class CategoryResolver {
     async categories() {
         try {
             return await prisma.category.findMany({
-                select: {
-                    id: true,
-                    name: true,
-                    status: true,
-                    image: true,
-                    products: {
-                        select: {
-                            id: true,
-                            name: true,
-                            price_per_unit: true,
-                            status: true,
-                            weight: true,
-                        },
-                    },
+                include: {
+                    products: true,
                 },
             });
         } catch (error: any) {
@@ -87,23 +99,21 @@ export class CategoryResolver {
     @Mutation(() => Category)
     @Authorized()
     async updateCategory(
-        @Arg("id", () => Number) id: number,
-        @Arg("name", () => String) name: string,
-        @Arg("status", () => Boolean) status: boolean,
-        @Arg("image", () => String) image: string,
+        @Arg("categoryUpdateInput", () => CategoryUpdateInput)
+        categoryUpdateInput: CategoryUpdateInput,
     ) {
-        const category = await prisma.category.findUnique({ where: { id } });
+        const category = await prisma.category.findUnique({
+            where: { id: categoryUpdateInput.id },
+        });
         if (!category)
             throw new UserInputError(
                 "Category does not exists with this data. Please enter different details",
             );
 
         return await prisma.category.update({
-            where: { id },
+            where: { id: categoryUpdateInput.id },
             data: {
-                name,
-                status,
-                image: image !== null ? image : undefined,
+                ...categoryUpdateInput,
             },
         });
     }
