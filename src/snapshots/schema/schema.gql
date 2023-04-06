@@ -672,7 +672,7 @@ type Query {
   agentById(id: Float!): Agent!
   agents: [Agent!]!
   categories: [Category!]!
-  categoryById(id: Float!): Category!
+  categoryById(id: Int!): Category!
   orderById(id: Int!): Order!
   orders: [Order!]!
   ordersByCustomerId(id: Int!): [Order!]!

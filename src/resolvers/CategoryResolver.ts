@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import {
     Arg,
     Authorized,
@@ -70,7 +71,6 @@ export class CategoryResolver {
 
             return createdCategory;
         } catch (error: any) {
-            console.error(error);
             throw new Error(error.message);
         }
     }
@@ -85,14 +85,13 @@ export class CategoryResolver {
                 },
             });
         } catch (error: any) {
-            console.error(error);
             throw new Error(error.message);
         }
     }
 
     @Query(() => Category)
     @Authorized()
-    async categoryById(@Arg("id", () => Number) id: number) {
+    async categoryById(@Arg("id", () => Int) id: number) {
         return await prisma.category.findUnique({ where: { id } });
     }
 
