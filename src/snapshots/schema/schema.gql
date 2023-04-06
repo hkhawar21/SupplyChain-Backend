@@ -182,7 +182,7 @@ type Mutation {
   createCategory(image: String!, name: String!, status: Boolean!): Category!
   createOrder(orderCreateInput: OrderCreateInput!): Order!
   createOrderRequest(orderCreateInput: OrderCreateInputInventory!): Order!
-  createProduct(category_id: Int!, image: String!, name: String!, price_per_unit: Float!, status: Boolean!, weight: Float!): Product!
+  createProduct(productInput: ProductInput!): Product!
   createRawMaterial(rawMaterialInput: RawMaterialInput!): RawMaterial!
   createRawMaterialRequest(id: Int!, quantity: Int!): RawMaterial!
   deleteAgent(id: Float!): Boolean!
@@ -195,7 +195,7 @@ type Mutation {
   updateAgent(address: String!, city: String!, id: Float!, name: String!, phone_number: String!, status: Boolean!): Agent!
   updateCategory(id: Float!, image: String!, name: String!, status: Boolean!): Category!
   updateOrderDetails(data: OrderUpdateInput!, id: Int!): Order!
-  updateProduct(category_id: Int!, id: Float!, image: String!, name: String!, price_per_unit: Float!, status: Boolean!, weight: Float!): Product!
+  updateProduct(productUpdateInput: ProductUpdateInput!): Product!
   updateStatus(id: Int!, status: Int!): Order!
 }
 
@@ -410,6 +410,7 @@ type Product {
   product_order(cursor: ProductOrderWhereUniqueInput, distinct: [ProductOrderScalarFieldEnum!], orderBy: [ProductOrderOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ProductOrderWhereInput): [ProductOrder!]!
   raw_materials(cursor: ProductRawMaterialsWhereUniqueInput, distinct: [ProductRawMaterialsScalarFieldEnum!], orderBy: [ProductRawMaterialsOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ProductRawMaterialsWhereInput): [ProductRawMaterials!]!
   status: Boolean!
+  time: String!
   weight: Float!
 }
 
@@ -417,6 +418,17 @@ type ProductCount {
   inventory: Int!
   product_order: Int!
   raw_materials: Int!
+}
+
+input ProductInput {
+  category_id: Int!
+  image: String!
+  name: String!
+  price_per_unit: Float!
+  raw_materials: [ProductRawMaterialsInput!]!
+  status: Boolean!
+  time: String!
+  weight: Float!
 }
 
 input ProductListRelationFilter {
@@ -443,6 +455,7 @@ input ProductOrderByRelationAggregateInput {
 enum ProductOrderByRelevanceFieldEnum {
   image
   name
+  time
 }
 
 input ProductOrderByRelevanceInput {
@@ -463,6 +476,7 @@ input ProductOrderByWithRelationAndSearchRelevanceInput {
   product_order: ProductOrderOrderByRelationAggregateInput
   raw_materials: ProductRawMaterialsOrderByRelationAggregateInput
   status: SortOrder
+  time: SortOrder
   weight: SortOrder
 }
 
@@ -541,16 +555,23 @@ input ProductOrderWhereUniqueInput {
   id: Int
 }
 
+input ProductRawMaterialUpdate {
+  id: Int!
+  quantity: Int!
+}
+
 type ProductRawMaterials {
-  _count: ProductRawMaterialsCount
   id: Int!
   product: Product!
   product_id: Int!
-  raw_materials(cursor: RawMaterialWhereUniqueInput, distinct: [RawMaterialScalarFieldEnum!], orderBy: [RawMaterialOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: RawMaterialWhereInput): [RawMaterial!]!
+  quantity: Int!
+  raw_material_id: Int!
+  raw_materials: RawMaterial!
 }
 
-type ProductRawMaterialsCount {
-  raw_materials: Int!
+input ProductRawMaterialsInput {
+  quantity: Int!
+  raw_material_id: Int!
 }
 
 input ProductRawMaterialsListRelationFilter {
@@ -567,12 +588,16 @@ input ProductRawMaterialsOrderByWithRelationAndSearchRelevanceInput {
   id: SortOrder
   product: ProductOrderByWithRelationAndSearchRelevanceInput
   product_id: SortOrder
-  raw_materials: RawMaterialOrderByRelationAggregateInput
+  quantity: SortOrder
+  raw_material_id: SortOrder
+  raw_materials: RawMaterialOrderByWithRelationAndSearchRelevanceInput
 }
 
 enum ProductRawMaterialsScalarFieldEnum {
   id
   product_id
+  quantity
+  raw_material_id
 }
 
 input ProductRawMaterialsWhereInput {
@@ -582,7 +607,9 @@ input ProductRawMaterialsWhereInput {
   id: IntFilter
   product: ProductRelationFilter
   product_id: IntFilter
-  raw_materials: RawMaterialListRelationFilter
+  quantity: IntFilter
+  raw_material_id: IntFilter
+  raw_materials: RawMaterialRelationFilter
 }
 
 input ProductRawMaterialsWhereUniqueInput {
@@ -601,7 +628,20 @@ enum ProductScalarFieldEnum {
   name
   price_per_unit
   status
+  time
   weight
+}
+
+input ProductUpdateInput {
+  category_id: Int
+  id: Int!
+  image: String
+  name: String
+  price_per_unit: Float
+  raw_materials: [ProductRawMaterialUpdate!]
+  status: Boolean
+  time: String
+  weight: Float
 }
 
 input ProductWhereInput {
@@ -618,6 +658,7 @@ input ProductWhereInput {
   product_order: ProductOrderListRelationFilter
   raw_materials: ProductRawMaterialsListRelationFilter
   status: BoolFilter
+  time: StringFilter
   weight: FloatFilter
 }
 
@@ -704,6 +745,11 @@ input RawMaterialOrderByWithRelationAndSearchRelevanceInput {
   requested: SortOrder
   requestedStatus: SortOrder
   status: SortOrder
+}
+
+input RawMaterialRelationFilter {
+  is: RawMaterialWhereInput
+  isNot: RawMaterialWhereInput
 }
 
 enum RawMaterialScalarFieldEnum {
