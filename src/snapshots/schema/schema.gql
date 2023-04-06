@@ -202,7 +202,7 @@ type Mutation {
   createProduct(productInput: ProductInput!): Product!
   createRawMaterial(rawMaterialInput: RawMaterialInput!): RawMaterial!
   createRawMaterialRequest(rawMaterialRequestInput: RawMaterialRequestInput!): RawMaterial!
-  deleteAgent(id: Float!): Boolean!
+  deleteAgent(id: Int!): Boolean!
   deleteCategory(id: Int!): Boolean!
   deleteOrder(id: Int!): Order!
   deleteProduct(id: Int!): Product!

@@ -126,7 +126,7 @@ export class AgentsResolver {
 
     @Mutation(() => Boolean)
     @Authorized()
-    async deleteAgent(@Arg("id", () => Number) id: number) {
+    async deleteAgent(@Arg("id", () => Int) id: number) {
         await prisma.agent.delete({ where: { id } });
         return true;
     }
