@@ -234,7 +234,12 @@ export class ProductResolver {
     @Mutation(() => Boolean)
     @Authorized()
     async deleteProduct(@Arg("id", () => Int) id: number) {
-        await prisma.product.delete({ where: { id } });
+        await prisma.product.update({
+            where: { id },
+            data: {
+                status: false,
+            },
+        });
         return true;
     }
 }
