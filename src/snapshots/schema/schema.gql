@@ -671,6 +671,7 @@ type Query {
   rawMaterialRequested: [RawMaterial!]!
   rawMaterialsInInventory: [RawMaterial!]!
   userById(id: Int!): User!
+  users: [User!]!
 }
 
 enum QueryMode {

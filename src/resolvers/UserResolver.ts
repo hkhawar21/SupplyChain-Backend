@@ -87,4 +87,11 @@ export class UserResolver {
         if (!user) throw new Error("User not found");
         return user;
     }
+
+    @Query(() => [User])
+    @Authorized()
+    async users(): Promise<User[]> {
+        const users = await prisma.user.findMany();
+        return users;
+    }
 }
