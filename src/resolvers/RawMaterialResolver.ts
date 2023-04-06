@@ -66,14 +66,13 @@ export class RawMaterialResolver {
         @Arg("quantity", () => Int) quantity: number,
     ): Promise<RawMaterial> {
         try {
-            const createdRequest = await prisma.rawMaterial.update({
+            return await prisma.rawMaterial.update({
                 where: { id },
                 data: {
                     quantity: quantity,
                     requestedStatus: RawMaterialStatus.PENDING,
                 },
             });
-            return createdRequest;
         } catch (error: any) {
             throw new UserInputError(error);
         }
@@ -83,12 +82,11 @@ export class RawMaterialResolver {
     @Authorized()
     async rawMaterialRequested(): Promise<RawMaterial[]> {
         try {
-            const rawMaterialRequest = await prisma.rawMaterial.findMany({
+            return await prisma.rawMaterial.findMany({
                 where: {
                     requestedStatus: RawMaterialStatus.PENDING,
                 },
             });
-            return rawMaterialRequest;
         } catch (error: any) {
             throw new UserInputError(error);
         }
@@ -98,8 +96,7 @@ export class RawMaterialResolver {
     @Authorized()
     async rawMaterial(): Promise<RawMaterial[]> {
         try {
-            const rawMaterial = await prisma.rawMaterial.findMany();
-            return rawMaterial;
+            return await prisma.rawMaterial.findMany();
         } catch (error: any) {
             throw new UserInputError(error);
         }
@@ -112,11 +109,10 @@ export class RawMaterialResolver {
         @Arg("status", () => RawMaterialStatus) status: RawMaterialStatus,
     ): Promise<RawMaterial> {
         try {
-            const updatedRawMaterial = await prisma.rawMaterial.update({
+            return await prisma.rawMaterial.update({
                 where: { id },
                 data: { requestedStatus: status },
             });
-            return updatedRawMaterial;
         } catch (error: any) {
             throw new UserInputError(error);
         }
@@ -129,7 +125,7 @@ export class RawMaterialResolver {
         rawMaterialInput: RawMaterialInput,
     ): Promise<RawMaterial> {
         try {
-            const createdRawMaterial = await prisma.rawMaterial.create({
+            return await prisma.rawMaterial.create({
                 data: {
                     ...rawMaterialInput,
                     requested: 0,
@@ -137,7 +133,6 @@ export class RawMaterialResolver {
                     inventory_id: 0,
                 },
             });
-            return createdRawMaterial;
         } catch (error: any) {
             throw new UserInputError(error);
         }
@@ -150,11 +145,25 @@ export class RawMaterialResolver {
         rawMaterialInput: RawMaterialUpdateInput,
     ): Promise<RawMaterial> {
         try {
-            const updatedRawMaterial = await prisma.rawMaterial.update({
+            return await prisma.rawMaterial.update({
                 where: { id: rawMaterialInput.id },
                 data: rawMaterialInput,
             });
-            return updatedRawMaterial;
+        } catch (error: any) {
+            throw new UserInputError(error);
+        }
+    }
+
+    @Mutation(() => RawMaterial)
+    @Authorized()
+    async deleteRawMaterial(@Arg("id", () => Int) id: number) {
+        try {
+            return await prisma.rawMaterial.update({
+                where: { id },
+                data: {
+                    status: false,
+                },
+            });
         } catch (error: any) {
             throw new UserInputError(error);
         }

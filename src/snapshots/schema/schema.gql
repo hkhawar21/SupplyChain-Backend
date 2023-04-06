@@ -189,6 +189,7 @@ type Mutation {
   deleteCategory(id: Int!): Boolean!
   deleteOrder(id: Int!): Order!
   deleteProduct(id: Int!): Boolean!
+  deleteRawMaterial(id: Int!): RawMaterial!
   login(email: String!, password: String!): AuthenticationToken!
   removeProductFromOrder(id: Int!): Order!
   signup(email: String!, name: String!, password: String!, role: String!): AuthenticationToken!
