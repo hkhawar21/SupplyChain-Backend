@@ -45,6 +45,9 @@ class ProductUpdateInput {
     @Field(() => Int, { nullable: true })
     category_id?: number;
 
+    @Field(() => Int, { nullable: true })
+    presentInInventory?: number;
+
     @Field(() => String, { nullable: true })
     time?: string;
 
@@ -84,6 +87,9 @@ export class ProductInput {
     @Field(() => String)
     time!: string;
 
+    @Field(() => Number)
+    presentInInventory!: number;
+
     @Field(() => [ProductRawMaterialsInput])
     raw_materials!: ProductRawMaterialsInput[];
 }
@@ -104,6 +110,7 @@ export class ProductResolver {
                     image: productInput.image,
                     weight: productInput.weight,
                     price_per_unit: productInput.price_per_unit,
+                    presentInInventory: productInput.presentInInventory,
                 },
             });
 
@@ -121,6 +128,7 @@ export class ProductResolver {
                     weight: productInput.weight,
                     price_per_unit: productInput.price_per_unit,
                     time: productInput.time,
+                    presentInInventory: productInput.presentInInventory,
                     category: {
                         connect: {
                             id: productInput.category_id,
@@ -221,6 +229,7 @@ export class ProductResolver {
                     weight: productUpdateInput.weight,
                     price_per_unit: productUpdateInput.price_per_unit,
                     time: productUpdateInput.time,
+                    presentInInventory: productUpdateInput.presentInInventory,
                 },
                 include: {
                     raw_materials: true,

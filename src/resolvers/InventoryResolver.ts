@@ -27,7 +27,6 @@ import {
 // 4. Show all the products present in inventory with their respective quantity
 // 5. Change status of products from pending to approved or vice versa
 // 6. Show all the raw materials available in inventory with their respective quantity
-// 7. Create requests for raw materials which is then to be approved by the finance admin
 
 @InputType()
 class OrderCreateInputInventory extends OrderCreateInput {
@@ -105,7 +104,11 @@ export class InventoryResolver {
     @Authorized()
     async rawMaterialsInInventory(): Promise<RawMaterial[]> {
         try {
-            const rawMaterials = await prisma.rawMaterial.findMany();
+            const rawMaterials = await prisma.rawMaterial.findMany({
+                where: {
+                    presentInInventory: { gt: 0 },
+                },
+            });
             return rawMaterials;
         } catch (error: any) {
             throw new UserInputError(error);

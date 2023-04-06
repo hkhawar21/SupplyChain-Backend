@@ -26,7 +26,7 @@ type Category {
   id: Int!
   image: String
   name: String!
-  products(cursor: ProductWhereUniqueInput, distinct: [ProductScalarFieldEnum!], orderBy: [ProductOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
+  products(cursor: ProductWhereUniqueInput, distinct: [ProductScalarFieldEnum!], orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
   status: Boolean!
 }
 
@@ -34,19 +34,7 @@ type CategoryCount {
   products: Int!
 }
 
-enum CategoryOrderByRelevanceFieldEnum {
-  image
-  name
-}
-
-input CategoryOrderByRelevanceInput {
-  fields: [CategoryOrderByRelevanceFieldEnum!]!
-  search: String!
-  sort: SortOrder!
-}
-
-input CategoryOrderByWithRelationAndSearchRelevanceInput {
-  _relevance: CategoryOrderByRelevanceInput
+input CategoryOrderByWithRelationInput {
   id: SortOrder
   image: SortOrder
   name: SortOrder
@@ -120,10 +108,10 @@ input IntNullableFilter {
 type Inventory {
   _count: InventoryCount
   id: Int!
-  orders(cursor: OrderWhereUniqueInput, distinct: [OrderScalarFieldEnum!], orderBy: [OrderOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: OrderWhereInput): [Order!]!
+  orders(cursor: OrderWhereUniqueInput, distinct: [OrderScalarFieldEnum!], orderBy: [OrderOrderByWithRelationInput!], skip: Int, take: Int, where: OrderWhereInput): [Order!]!
   product_id: Int!
   products: Product!
-  raw_materials(cursor: RawMaterialWhereUniqueInput, distinct: [RawMaterialScalarFieldEnum!], orderBy: [RawMaterialOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: RawMaterialWhereInput): [RawMaterial!]!
+  raw_materials(cursor: RawMaterialWhereUniqueInput, distinct: [RawMaterialScalarFieldEnum!], orderBy: [RawMaterialOrderByWithRelationInput!], skip: Int, take: Int, where: RawMaterialWhereInput): [RawMaterial!]!
 }
 
 type InventoryCount {
@@ -141,11 +129,11 @@ input InventoryOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-input InventoryOrderByWithRelationAndSearchRelevanceInput {
+input InventoryOrderByWithRelationInput {
   id: SortOrder
   orders: OrderOrderByRelationAggregateInput
   product_id: SortOrder
-  products: ProductOrderByWithRelationAndSearchRelevanceInput
+  products: ProductOrderByWithRelationInput
   raw_materials: RawMaterialOrderByRelationAggregateInput
 }
 
@@ -266,7 +254,6 @@ input NestedStringFilter {
   lte: String
   not: NestedStringFilter
   notIn: [String!]
-  search: String
   startsWith: String
 }
 
@@ -281,7 +268,6 @@ input NestedStringNullableFilter {
   lte: String
   not: NestedStringNullableFilter
   notIn: [String!]
-  search: String
   startsWith: String
 }
 
@@ -293,7 +279,7 @@ type Order {
   id: Int!
   inventory: Inventory!
   inventory_id: Int!
-  products(cursor: ProductOrderWhereUniqueInput, distinct: [ProductOrderScalarFieldEnum!], orderBy: [ProductOrderOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ProductOrderWhereInput): [ProductOrder!]!
+  products(cursor: ProductOrderWhereUniqueInput, distinct: [ProductOrderScalarFieldEnum!], orderBy: [ProductOrderOrderByWithRelationInput!], skip: Int, take: Int, where: ProductOrderWhereInput): [ProductOrder!]!
   quantity: Int!
   status: OrderStatus!
 }
@@ -329,23 +315,12 @@ input OrderOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-enum OrderOrderByRelevanceFieldEnum {
-  address
-}
-
-input OrderOrderByRelevanceInput {
-  fields: [OrderOrderByRelevanceFieldEnum!]!
-  search: String!
-  sort: SortOrder!
-}
-
-input OrderOrderByWithRelationAndSearchRelevanceInput {
-  _relevance: OrderOrderByRelevanceInput
+input OrderOrderByWithRelationInput {
   address: SortOrder
   amount: SortOrder
   customer_id: SortOrder
   id: SortOrder
-  inventory: InventoryOrderByWithRelationAndSearchRelevanceInput
+  inventory: InventoryOrderByWithRelationInput
   inventory_id: SortOrder
   products: ProductOrderOrderByRelationAggregateInput
   quantity: SortOrder
@@ -408,11 +383,12 @@ type Product {
   category_id: Int!
   id: Int!
   image: String
-  inventory(cursor: InventoryWhereUniqueInput, distinct: [InventoryScalarFieldEnum!], orderBy: [InventoryOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: InventoryWhereInput): [Inventory!]!
+  inventory(cursor: InventoryWhereUniqueInput, distinct: [InventoryScalarFieldEnum!], orderBy: [InventoryOrderByWithRelationInput!], skip: Int, take: Int, where: InventoryWhereInput): [Inventory!]!
   name: String!
+  presentInInventory: Int!
   price_per_unit: Float!
-  product_order(cursor: ProductOrderWhereUniqueInput, distinct: [ProductOrderScalarFieldEnum!], orderBy: [ProductOrderOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ProductOrderWhereInput): [ProductOrder!]!
-  raw_materials(cursor: ProductRawMaterialsWhereUniqueInput, distinct: [ProductRawMaterialsScalarFieldEnum!], orderBy: [ProductRawMaterialsOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ProductRawMaterialsWhereInput): [ProductRawMaterials!]!
+  product_order(cursor: ProductOrderWhereUniqueInput, distinct: [ProductOrderScalarFieldEnum!], orderBy: [ProductOrderOrderByWithRelationInput!], skip: Int, take: Int, where: ProductOrderWhereInput): [ProductOrder!]!
+  raw_materials(cursor: ProductRawMaterialsWhereUniqueInput, distinct: [ProductRawMaterialsScalarFieldEnum!], orderBy: [ProductRawMaterialsOrderByWithRelationInput!], skip: Int, take: Int, where: ProductRawMaterialsWhereInput): [ProductRawMaterials!]!
   status: Boolean!
   time: String!
   weight: Float!
@@ -428,6 +404,7 @@ input ProductInput {
   category_id: Int!
   image: String!
   name: String!
+  presentInInventory: Float!
   price_per_unit: Float!
   raw_materials: [ProductRawMaterialsInput!]!
   status: Boolean!
@@ -456,26 +433,14 @@ input ProductOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-enum ProductOrderByRelevanceFieldEnum {
-  image
-  name
-  time
-}
-
-input ProductOrderByRelevanceInput {
-  fields: [ProductOrderByRelevanceFieldEnum!]!
-  search: String!
-  sort: SortOrder!
-}
-
-input ProductOrderByWithRelationAndSearchRelevanceInput {
-  _relevance: ProductOrderByRelevanceInput
-  category: CategoryOrderByWithRelationAndSearchRelevanceInput
+input ProductOrderByWithRelationInput {
+  category: CategoryOrderByWithRelationInput
   category_id: SortOrder
   id: SortOrder
   image: SortOrder
   inventory: InventoryOrderByRelationAggregateInput
   name: SortOrder
+  presentInInventory: SortOrder
   price_per_unit: SortOrder
   product_order: ProductOrderOrderByRelationAggregateInput
   raw_materials: ProductRawMaterialsOrderByRelationAggregateInput
@@ -501,24 +466,13 @@ input ProductOrderOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-enum ProductOrderOrderByRelevanceFieldEnum {
-  name
-}
-
-input ProductOrderOrderByRelevanceInput {
-  fields: [ProductOrderOrderByRelevanceFieldEnum!]!
-  search: String!
-  sort: SortOrder!
-}
-
-input ProductOrderOrderByWithRelationAndSearchRelevanceInput {
-  _relevance: ProductOrderOrderByRelevanceInput
+input ProductOrderOrderByWithRelationInput {
   id: SortOrder
   name: SortOrder
-  order: OrderOrderByWithRelationAndSearchRelevanceInput
+  order: OrderOrderByWithRelationInput
   order_id: SortOrder
   price: SortOrder
-  product: ProductOrderByWithRelationAndSearchRelevanceInput
+  product: ProductOrderByWithRelationInput
   product_id: SortOrder
   quantity: SortOrder
 }
@@ -569,8 +523,8 @@ type ProductRawMaterials {
   product: Product!
   product_id: Int!
   quantity: Int!
+  raw_material: RawMaterial!
   raw_material_id: Int!
-  raw_materials: RawMaterial!
 }
 
 input ProductRawMaterialsInput {
@@ -588,13 +542,13 @@ input ProductRawMaterialsOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-input ProductRawMaterialsOrderByWithRelationAndSearchRelevanceInput {
+input ProductRawMaterialsOrderByWithRelationInput {
   id: SortOrder
-  product: ProductOrderByWithRelationAndSearchRelevanceInput
+  product: ProductOrderByWithRelationInput
   product_id: SortOrder
   quantity: SortOrder
+  raw_material: RawMaterialOrderByWithRelationInput
   raw_material_id: SortOrder
-  raw_materials: RawMaterialOrderByWithRelationAndSearchRelevanceInput
 }
 
 enum ProductRawMaterialsScalarFieldEnum {
@@ -612,8 +566,8 @@ input ProductRawMaterialsWhereInput {
   product: ProductRelationFilter
   product_id: IntFilter
   quantity: IntFilter
+  raw_material: RawMaterialRelationFilter
   raw_material_id: IntFilter
-  raw_materials: RawMaterialRelationFilter
 }
 
 input ProductRawMaterialsWhereUniqueInput {
@@ -630,6 +584,7 @@ enum ProductScalarFieldEnum {
   id
   image
   name
+  presentInInventory
   price_per_unit
   status
   time
@@ -641,6 +596,7 @@ input ProductUpdateInput {
   id: Int!
   image: String
   name: String
+  presentInInventory: Int
   price_per_unit: Float
   raw_materials: [ProductRawMaterialUpdate!]
   status: Boolean
@@ -658,6 +614,7 @@ input ProductWhereInput {
   image: StringNullableFilter
   inventory: InventoryListRelationFilter
   name: StringFilter
+  presentInInventory: IntFilter
   price_per_unit: FloatFilter
   product_order: ProductOrderListRelationFilter
   raw_materials: ProductRawMaterialsListRelationFilter
@@ -698,8 +655,9 @@ type RawMaterial {
   inventory: Inventory!
   inventory_id: Int!
   name: String!
+  presentInInventory: Int!
   price: Float!
-  products(cursor: ProductRawMaterialsWhereUniqueInput, distinct: [ProductRawMaterialsScalarFieldEnum!], orderBy: [ProductRawMaterialsOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ProductRawMaterialsWhereInput): [ProductRawMaterials!]!
+  products(cursor: ProductRawMaterialsWhereUniqueInput, distinct: [ProductRawMaterialsScalarFieldEnum!], orderBy: [ProductRawMaterialsOrderByWithRelationInput!], skip: Int, take: Int, where: ProductRawMaterialsWhereInput): [ProductRawMaterials!]!
   quantity: Int!
   requested: Int!
   requestedStatus: RawMaterialStatus!
@@ -712,6 +670,7 @@ type RawMaterialCount {
 
 input RawMaterialInput {
   name: String!
+  presentInInventory: Float!
   price: Float!
   quantity: Int!
   status: Boolean!
@@ -727,22 +686,12 @@ input RawMaterialOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-enum RawMaterialOrderByRelevanceFieldEnum {
-  name
-}
-
-input RawMaterialOrderByRelevanceInput {
-  fields: [RawMaterialOrderByRelevanceFieldEnum!]!
-  search: String!
-  sort: SortOrder!
-}
-
-input RawMaterialOrderByWithRelationAndSearchRelevanceInput {
-  _relevance: RawMaterialOrderByRelevanceInput
+input RawMaterialOrderByWithRelationInput {
   id: SortOrder
-  inventory: InventoryOrderByWithRelationAndSearchRelevanceInput
+  inventory: InventoryOrderByWithRelationInput
   inventory_id: SortOrder
   name: SortOrder
+  presentInInventory: SortOrder
   price: SortOrder
   products: ProductRawMaterialsOrderByRelationAggregateInput
   quantity: SortOrder
@@ -765,6 +714,7 @@ enum RawMaterialScalarFieldEnum {
   id
   inventory_id
   name
+  presentInInventory
   price
   quantity
   requested
@@ -781,6 +731,7 @@ enum RawMaterialStatus {
 input RawMaterialUpdateInput {
   id: Int!
   name: String
+  presentInInventory: Int
   price: Float
   quantity: Int
   status: Boolean
@@ -794,6 +745,7 @@ input RawMaterialWhereInput {
   inventory: InventoryRelationFilter
   inventory_id: IntFilter
   name: StringFilter
+  presentInInventory: IntFilter
   price: FloatFilter
   products: ProductRawMaterialsListRelationFilter
   quantity: IntFilter
@@ -823,7 +775,6 @@ input StringFilter {
   mode: QueryMode
   not: NestedStringFilter
   notIn: [String!]
-  search: String
   startsWith: String
 }
 
@@ -839,6 +790,5 @@ input StringNullableFilter {
   mode: QueryMode
   not: NestedStringNullableFilter
   notIn: [String!]
-  search: String
   startsWith: String
 }

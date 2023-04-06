@@ -1,3 +1,7 @@
+generator gen {
+  provider = "prisma-client-js"
+}
+
 generator typegraphql {
   provider = "typegraphql-prisma"
 }
@@ -49,18 +53,19 @@ model Order {
 }
 
 model Product {
-  id             Int                   @id @default(autoincrement())
-  name           String
-  price_per_unit Float
-  status         Boolean
-  image          String?
-  weight         Float
-  time           String
-  product_order  ProductOrder[]
-  inventory      Inventory[]
-  category       Category              @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  category_id    Int
-  raw_materials  ProductRawMaterials[]
+  id                 Int                   @id @default(autoincrement())
+  name               String
+  price_per_unit     Float
+  status             Boolean
+  image              String?
+  weight             Float
+  time               String
+  presentInInventory Int
+  product_order      ProductOrder[]
+  inventory          Inventory[]
+  category           Category              @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category_id        Int
+  raw_materials      ProductRawMaterials[]
 }
 
 model ProductOrder {
@@ -95,16 +100,17 @@ model ProductRawMaterials {
 }
 
 model RawMaterial {
-  id              Int                   @id @default(autoincrement())
-  name            String
-  quantity        Int
-  price           Float
-  status          Boolean
-  products        ProductRawMaterials[]
-  inventory       Inventory             @relation(fields: [inventory_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  inventory_id    Int
-  requested       Int
-  requestedStatus RawMaterialStatus
+  id                 Int                   @id @default(autoincrement())
+  name               String
+  quantity           Int
+  price              Float
+  status             Boolean
+  products           ProductRawMaterials[]
+  inventory          Inventory             @relation(fields: [inventory_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  inventory_id       Int
+  requested          Int
+  presentInInventory Int
+  requestedStatus    RawMaterialStatus
 }
 
 model Warehouse {

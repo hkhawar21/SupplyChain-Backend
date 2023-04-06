@@ -30,6 +30,9 @@ class RawMaterialUpdateInput {
 
     @Field(() => Float, { nullable: true })
     price?: number;
+
+    @Field(() => Int, { nullable: true })
+    presentInInventory?: number;
 }
 
 @InputType()
@@ -45,6 +48,9 @@ class RawMaterialInput {
 
     @Field(() => Int)
     quantity!: number;
+
+    @Field(() => Number)
+    presentInInventory!: number;
 }
 
 @InputType()
@@ -131,6 +137,7 @@ export class RawMaterialResolver {
                     requested: 0,
                     requestedStatus: RawMaterialStatus.PENDING,
                     inventory_id: 0,
+                    presentInInventory: rawMaterialInput.presentInInventory,
                 },
             });
         } catch (error: any) {
