@@ -15,7 +15,7 @@ import { UserInputError } from "apollo-server-core";
 import { RawMaterialStatus, RawMaterial } from "@generated/type-graphql";
 
 @InputType()
-class RawMaterialUpdateInput {
+export class RawMaterialUpdateInput {
     @Field(() => Int)
     id!: number;
 
@@ -36,7 +36,7 @@ class RawMaterialUpdateInput {
 }
 
 @InputType()
-class RawMaterialInput {
+export class RawMaterialInput {
     @Field(() => String)
     name!: string;
 
@@ -54,7 +54,7 @@ class RawMaterialInput {
 }
 
 @InputType()
-class RawMaterialRequestInput {
+export class RawMaterialRequestInput {
     @Field(() => Int)
     quantity!: number;
 

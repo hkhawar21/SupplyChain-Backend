@@ -1,5 +1,4 @@
 import { ApolloServer } from "apollo-server-express";
-import { createTestClient } from "apollo-server-testing";
 import { CategoryResolver } from "../resolvers";
 import { CategoryCreateInput, CategoryUpdateInput } from "../resolvers";
 import { Category } from "@generated/type-graphql";
