@@ -1,213 +1,216 @@
-// import { ApolloServer } from "apollo-server-express";
-// import { buildSchema } from "type-graphql";
-// import { AgentsResolver } from "../resolvers";
-// import { AgentCreateInput, AgentUpdateInput } from "../resolvers";
-// import prisma from "../prisma/client";
-// import { authChecker } from "../auth/AuthChecker";
-// import { Request } from "express";
+import { ApolloServer } from "apollo-server-express";
+import { buildSchema } from "type-graphql";
+import { AgentsResolver } from "../resolvers";
+import { AgentCreateInput, AgentUpdateInput } from "../resolvers";
+import prisma from "../prisma/client";
+import { authChecker } from "../auth/AuthChecker";
 
-// describe("AgentsResolver", () => {
-//     let server: ApolloServer;
+const extensions = {
+    req: {
+        headers: {
+            Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiJ9.MQ.qE39ToFvx4LCHkn3tDVpMwdABQHu4woudGi6jfg3zxs",
+        },
+    },
+};
 
-//     beforeAll(async () => {
-//         const schema = await buildSchema({
-//             resolvers: [AgentsResolver],
-//             validate: false,
-//             authChecker,
-//         });
+describe("AgentsResolver", () => {
+    let server: ApolloServer;
 
-//         server = new ApolloServer({
-//             schema,
-//             context: { prisma },
-//         });
-//     });
+    beforeAll(async () => {
+        const schema = await buildSchema({
+            resolvers: [AgentsResolver],
+            validate: false,
+            authChecker,
+        });
 
-//     afterAll(async () => {
-//         await prisma.$disconnect();
-//     });
+        server = new ApolloServer({
+            schema,
+            context: { prisma },
+        });
 
-//     describe("createAgent", () => {
-//         it("should create a new agent", async () => {
-//             // Define the input
-//             const input: AgentCreateInput = {
-//                 name: "John Doe Brent",
-//                 address: "123 Main St",
-//                 phone_number: "555-1234",
-//                 city: "Any New town",
-//                 status: true,
-//             };
+        await prisma.agent.deleteMany();
+    });
 
-//             // Define the query
-//             const mutation = `
-//         mutation CreateAgent($agentCreateInput: AgentCreateInput!) {
-//             createAgent(agentCreateInput: $agentCreateInput) {
-//             address
-//             city
-//             id
-//             phone_number
-//             name
-//             status
-//         }
-//         }
-//       `;
+    afterAll(async () => {
+        await prisma.$disconnect();
+    });
 
-//             // Execute the query
-//             const response = await server.executeOperation({
-//                 query: mutation,
-//                 variables: {
-//                     agentCreateInput: input,
-//                 },
-//                 extensions: {
-//                     req: {
-//                         headers: {
-//                             Authorization:
-//                                 "Bearer eyJhbGciOiJIUzI1NiJ9.MQ.qE39ToFvx4LCHkn3tDVpMwdABQHu4woudGi6jfg3zxs",
-//                         },
-//                     },
-//                 },
-//             });
+    it("should create a new agent", async () => {
+        // Define the input
+        const input: AgentCreateInput = {
+            name: "John Doe Brent",
+            address: "123 Main St",
+            phone_number: "555-1234",
+            city: "Any New town",
+            status: true,
+        };
 
-//             // Check the response
-//             expect(response.errors).toBeUndefined();
-//             expect(response.data).toBeDefined();
-//             expect(response.data?.createAgent).toBeDefined();
-//             expect(response.data?.createAgent.id).toBeDefined();
-//             expect(response.data?.createAgent.name).toEqual(input.name);
-//             expect(response.data?.createAgent.address).toEqual(input.address);
-//             expect(response.data?.createAgent.phone_number).toEqual(
-//                 input.phone_number,
-//             );
-//             expect(response.data?.createAgent.city).toEqual(input.city);
-//             expect(response.data?.createAgent.status).toEqual(input.status);
-//         });
-//     });
+        // Define the query
+        const mutation = `
+        mutation CreateAgent($agentCreateInput: AgentCreateInput!) {
+            createAgent(agentCreateInput: $agentCreateInput) {
+            address
+            city
+            id
+            phone_number
+            name
+            status
+        }
+        }
+      `;
 
-//     describe("updateAgent", () => {
-//         it("should update an existing agent", async () => {
-//             // Define the input
-//             const input: AgentUpdateInput = {
-//                 id: 1,
-//                 name: "John Doe Brent",
-//                 address: "123 Main St",
-//                 phone_number: "555-1234",
-//                 city: "Any New town",
-//                 status: true,
-//             };
+        // Execute the query
+        const response = await server.executeOperation({
+            query: mutation,
+            variables: {
+                agentCreateInput: input,
+            },
+            extensions,
+        });
 
-//             // Define the query
-//             const mutation = `
-//         mutation UpdateAgent($agentUpdateInput: AgentUpdateInput!) {
-//             updateAgent(agentUpdateInput: $agentUpdateInput) {
-//             address
-//             city
-//             id
-//             phone_number
-//             name
-//             status
-//             }
-//         }
-//             `;
+        // Check the response
+        expect(response.errors).toBeUndefined();
+        expect(response.data).toBeDefined();
+        expect(response.data?.createAgent).toBeDefined();
+        expect(response.data?.createAgent.id).toBeDefined();
+        expect(response.data?.createAgent.name).toEqual(input.name);
+        expect(response.data?.createAgent.address).toEqual(input.address);
+        expect(response.data?.createAgent.phone_number).toEqual(
+            input.phone_number,
+        );
+        expect(response.data?.createAgent.city).toEqual(input.city);
+        expect(response.data?.createAgent.status).toEqual(input.status);
 
-//             // Execute the query
-//             const response = await server.executeOperation({
-//                 query: mutation,
-//                 variables: {
-//                     agentUpdateInput: input,
-//                 },
-//                 extensions: {
-//                     req: {
-//                         headers: {
-//                             Authorization:
-//                                 "Bearer eyJhbGciOiJIUzI1NiJ9.MQ.qE39ToFvx4LCHkn3tDVpMwdABQHu4woudGi6jfg3zxs",
-//                         },
-//                     },
-//                 },
-//             });
+        // Cleaning up
+        await prisma.agent.delete({
+            where: {
+                id: response.data?.createAgent.id,
+            },
+        });
+    });
 
-//             // Check the response
-//             expect(response.errors).toBeUndefined();
-//             expect(response.data).toBeDefined();
-//             expect(response.data?.updateAgent).toBeDefined();
-//             expect(response.data?.updateAgent.id).toEqual(input.id);
-//             expect(response.data?.updateAgent.name).toEqual(input.name);
-//             expect(response.data?.updateAgent.address).toEqual(input.address);
-//             expect(response.data?.updateAgent.phone_number).toEqual(
-//                 input.phone_number,
-//             );
-//             expect(response.data?.updateAgent.city).toEqual(input.city);
-//             expect(response.data?.updateAgent.status).toEqual(input.status);
-//         });
-//     });
+    it("should update an existing agent", async () => {
+        // Create an agent
+        const agent = await prisma.agent.create({
+            data: {
+                name: "John Doe Brent",
+                address: "123 Main St",
+                phone_number: "555-1234",
+                city: "Any town",
+                status: true,
+            },
+        });
 
-//     describe("deleteAgent", () => {
-//         it("should delete an existing agent", async () => {
-//             // Define the input
-//             const input = {
-//                 deleteAgentId: 1,
-//             };
+        // Define the input
+        const input: AgentUpdateInput = {
+            id: agent.id,
+            name: "John Doe Matthew",
+            address: "123 Main St",
+            phone_number: "555-1234",
+            city: "Any New town",
+            status: false,
+        };
 
-//             // Define the query
-//             const mutation = `
-//             mutation DeleteAgent($deleteAgentId: Int!) {
-//                 deleteAgent(id: $deleteAgentId)
-//             }
+        // Define the query
+        const mutation = `
+        mutation UpdateAgent($agentUpdateInput: AgentUpdateInput!) {
+            updateAgent(agentUpdateInput: $agentUpdateInput) {
+            address
+            city
+            id
+            phone_number
+            name
+            status
+            }
+        }
+            `;
 
-//                 `;
-//             // Execute the query
-//             const response = await server.executeOperation({
-//                 query: mutation,
-//                 variables: {
-//                     deleteAgentId: input.deleteAgentId,
-//                 },
-//                 extensions: {
-//                     req: {
-//                         headers: {
-//                             Authorization:
-//                                 "Bearer eyJhbGciOiJIUzI1NiJ9.MQ.qE39ToFvx4LCHkn3tDVpMwdABQHu4woudGi6jfg3zxs",
-//                         },
-//                     },
-//                 },
-//             });
+        // Execute the query
+        const response = await server.executeOperation({
+            query: mutation,
+            variables: {
+                agentUpdateInput: input,
+            },
+            extensions,
+        });
 
-//             // Check the response
-//             expect(response.errors).toBeUndefined();
-//             expect(response.data).toBeDefined();
-//         });
-//     });
+        // Check the response
+        expect(response.errors).toBeUndefined();
+        expect(response.data).toBeDefined();
+        expect(response.data?.updateAgent).toBeDefined();
+        expect(response.data?.updateAgent).toMatchObject(input);
 
-//     describe("getAgents", () => {
-//         it("should return all agents", async () => {
-//             // Define the query
-//             const query = `
-//             query Agents {
-//   agents {
-//     address
-//     city
-//     id
-//     name
-//     phone_number
-//     status
-//   }
-// }
-//             `;
+        // Cleaning up
+        await prisma.agent.delete({
+            where: {
+                id: response.data?.updateAgent.id,
+            },
+        });
+    });
 
-//             // Execute the query
-//             const response = await server.executeOperation({
-//                 query,
-//                 extensions: {
-//                     req: {
-//                         headers: {
-//                             Authorization:
-//                                 "Bearer eyJhbGciOiJIUzI1NiJ9.MQ.qE39ToFvx4LCHkn3tDVpMwdABQHu4woudGi6jfg3zxs",
-//                         },
-//                     },
-//                 },
-//             });
+    it("should delete an existing agent", async () => {
+        // Create an agent
+        const agent = await prisma.agent.create({
+            data: {
+                name: "John Doe Brent",
+                address: "123 Main St",
+                phone_number: "555-1234",
+                city: "Any town",
+                status: true,
+            },
+        });
 
-//             // Check the response
-//             expect(response.errors).toBeUndefined();
-//             expect(response.data).toBeDefined();
-//             expect(response.data?.agents).toBeDefined();
-//         });
-//     });
-// });
+        // Define the input
+        const input = {
+            deleteAgentId: agent.id,
+        };
+
+        // Define the query
+        const mutation = `
+            mutation DeleteAgent($deleteAgentId: Int!) {
+                deleteAgent(id: $deleteAgentId)
+            }
+
+                `;
+        // Execute the query
+        const response = await server.executeOperation({
+            query: mutation,
+            variables: {
+                deleteAgentId: input.deleteAgentId,
+            },
+            extensions,
+        });
+
+        // Check the response
+        expect(response.errors).toBeUndefined();
+        expect(response.data).toBeDefined();
+    });
+
+    it("should return all agents", async () => {
+        // Define the query
+        const query = `
+            query Agents {
+  agents {
+    address
+    city
+    id
+    name
+    phone_number
+    status
+  }
+}
+            `;
+
+        // Execute the query
+        const response = await server.executeOperation({
+            query,
+            extensions,
+        });
+
+        // Check the response
+        expect(response.errors).toBeUndefined();
+        expect(response.data).toBeDefined();
+        expect(response.data?.agents).toBeDefined();
+    });
+});
