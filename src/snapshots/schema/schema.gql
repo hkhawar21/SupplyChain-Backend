@@ -150,13 +150,13 @@ type Inventory {
   _count: InventoryCount
   id: Int!
   orders(cursor: OrderWhereUniqueInput, distinct: [OrderScalarFieldEnum!], orderBy: [OrderOrderByWithRelationInput!], skip: Int, take: Int, where: OrderWhereInput): [Order!]!
-  product_id: Int!
-  products: Product!
+  products(cursor: ProductWhereUniqueInput, distinct: [ProductScalarFieldEnum!], orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
   raw_materials(cursor: RawMaterialWhereUniqueInput, distinct: [RawMaterialScalarFieldEnum!], orderBy: [RawMaterialOrderByWithRelationInput!], skip: Int, take: Int, where: RawMaterialWhereInput): [RawMaterial!]!
 }
 
 type InventoryCount {
   orders: Int!
+  products: Int!
   raw_materials: Int!
 }
 
@@ -173,8 +173,7 @@ input InventoryOrderByRelationAggregateInput {
 input InventoryOrderByWithRelationInput {
   id: SortOrder
   orders: OrderOrderByRelationAggregateInput
-  product_id: SortOrder
-  products: ProductOrderByWithRelationInput
+  products: ProductOrderByRelationAggregateInput
   raw_materials: RawMaterialOrderByRelationAggregateInput
 }
 
@@ -185,7 +184,6 @@ input InventoryRelationFilter {
 
 enum InventoryScalarFieldEnum {
   id
-  product_id
 }
 
 input InventoryWhereInput {
@@ -194,8 +192,7 @@ input InventoryWhereInput {
   OR: [InventoryWhereInput!]
   id: IntFilter
   orders: OrderListRelationFilter
-  product_id: IntFilter
-  products: ProductRelationFilter
+  products: ProductListRelationFilter
   raw_materials: RawMaterialListRelationFilter
 }
 
@@ -210,6 +207,7 @@ type Mutation {
   changeStatusRawMaterial(id: Int!, status: RawMaterialStatus!): RawMaterial!
   createAgent(agentCreateInput: AgentCreateInput!): Agent!
   createCategory(categoryCreateInput: CategoryCreateInput!): Category!
+  createInventory: Inventory!
   createOrder(orderCreateInput: OrderCreateInput!): Order!
   createOrderRequest(orderCreateInput: OrderCreateInputInventory!): Order!
   createProduct(productInput: ProductInput!): Product!
@@ -673,6 +671,7 @@ type Query {
   agents: [Agent!]!
   categories: [Category!]!
   categoryById(id: Int!): Category!
+  inventories: [Inventory!]!
   orderById(id: Int!): Order!
   orders: [Order!]!
   ordersByCustomerId(id: Int!): [Order!]!
@@ -749,8 +748,8 @@ input RawMaterialRelationFilter {
 }
 
 input RawMaterialRequestInput {
+  id: Int!
   quantity: Int!
-  raw_material_id: Int!
 }
 
 enum RawMaterialScalarFieldEnum {

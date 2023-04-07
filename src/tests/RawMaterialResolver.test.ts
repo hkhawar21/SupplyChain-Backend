@@ -1,11 +1,11 @@
 import { ApolloServer } from "apollo-server-express";
-import { CategoryResolver } from "../resolvers";
 import {
     RawMaterialInput,
     RawMaterialRequestInput,
     RawMaterialUpdateInput,
     RawMaterialResolver,
 } from "../resolvers";
+import { RawMaterialRelationsResolver } from "@generated/type-graphql";
 import { RawMaterial, RawMaterialStatus } from "@generated/type-graphql";
 import prisma from "../prisma/client";
 import { buildSchema } from "type-graphql";
@@ -25,7 +25,7 @@ describe("Raw Material Resolver", () => {
 
     beforeAll(async () => {
         const schema = await buildSchema({
-            resolvers: [RawMaterialResolver],
+            resolvers: [RawMaterialResolver, RawMaterialRelationsResolver],
             validate: false,
             authChecker,
         });
@@ -34,6 +34,8 @@ describe("Raw Material Resolver", () => {
             schema,
             context: { prisma },
         });
+
+        await prisma.rawMaterial.deleteMany({});
     });
 
     afterAll(async () => {
@@ -55,11 +57,14 @@ describe("Raw Material Resolver", () => {
         mutation CreateRawMaterial($rawMaterialInput: RawMaterialInput!) {
             createRawMaterial(rawMaterialInput: $rawMaterialInput) {
                 id
+                inventory_id
                 name
-                status
-                quantity
-                price
                 presentInInventory
+                price
+                quantity
+                requested
+                requestedStatus
+                status
             }
         }
         `;
@@ -70,6 +75,8 @@ describe("Raw Material Resolver", () => {
             variables: { rawMaterialInput: input },
             extensions,
         });
+
+        console.log(result);
 
         // Check the result
         expect(result.errors).toBeUndefined();
@@ -93,32 +100,28 @@ describe("Raw Material Resolver", () => {
             presentInInventory: 10,
         };
 
-        const createdCategory = await prisma.rawMaterial.create({
+        const createdRawMaterial = await prisma.rawMaterial.create({
             data: {
                 ...input,
                 requested: 0,
                 requestedStatus: RawMaterialStatus.PENDING,
-                inventory_id: 0,
+                inventory_id: 1,
                 presentInInventory: input.presentInInventory,
             },
         });
 
-        // Defining update input
-        const updateInput = {
-            ...input,
-            id: createdCategory.id,
-            name: "Updated Raw Material",
-            status: false,
-            presentInInventory: 0,
-        };
-
         // Define the mutation
         const mutation = `
-        mutation UpdateCategory($categoryUpdateInput: CategoryUpdateInput!) {
-            updateCategory(categoryUpdateInput: $categoryUpdateInput) {
+        mutation CreateRawMaterial($rawMaterialInput: RawMaterialInput!) {
+            createRawMaterial(rawMaterialInput: $rawMaterialInput) {
                 id
-                image
+                inventory_id
                 name
+                presentInInventory
+                price
+                quantity
+                requested
+                requestedStatus
                 status
             }
         }
@@ -127,7 +130,7 @@ describe("Raw Material Resolver", () => {
         // Run the mutation
         const result = await server.executeOperation({
             query: mutation,
-            variables: { rawMaterialInput: updateInput },
+            variables: { rawMaterialInput: input },
             extensions,
         });
 
@@ -140,8 +143,128 @@ describe("Raw Material Resolver", () => {
         // Cleaning up
         await prisma.rawMaterial.delete({
             where: {
-                id: createdCategory.id,
+                id: createdRawMaterial.id,
             },
+        });
+    });
+
+    it("should update a raw material", async () => {
+        // Define the input
+        const input: RawMaterialInput = {
+            name: "Test Raw Material",
+            status: true,
+            quantity: 10,
+            price: 100,
+            presentInInventory: 10,
+        };
+
+        const createdRawMaterial = await prisma.rawMaterial.create({
+            data: {
+                ...input,
+                requested: 0,
+                requestedStatus: RawMaterialStatus.PENDING,
+                inventory_id: 1,
+                presentInInventory: input.presentInInventory,
+            },
+        });
+
+        // Defining update input
+        const updateInput: RawMaterialUpdateInput = {
+            ...input,
+            id: createdRawMaterial.id,
+            name: "Updated Raw Material",
+            status: false,
+            presentInInventory: 0,
+        };
+
+        // Define the mutation
+        const mutation = `
+        mutation UpdateRawMaterial($rawMaterialInput: RawMaterialUpdateInput!) {
+  updateRawMaterial(rawMaterialInput: $rawMaterialInput) {
+    id
+    inventory_id
+    name
+    presentInInventory
+    price
+    quantity
+    requested
+    requestedStatus
+    status
+  }
+}
+        `;
+
+        // Run the mutation
+        const result = await server.executeOperation({
+            query: mutation,
+            variables: { rawMaterialInput: updateInput },
+            extensions,
+        });
+
+        // Check the result
+        expect(result.errors).toBeUndefined();
+        expect(result.data).toBeDefined();
+        expect(result.data?.updateRawMaterial).toBeDefined();
+        expect(result.data?.updateRawMaterial).toMatchObject(updateInput);
+
+        // Cleaning up
+        await prisma.rawMaterial.delete({
+            where: {
+                id: createdRawMaterial.id,
+            },
+        });
+    });
+
+    it("should create a request for raw materials", async () => {
+        // Create a raw material
+        const rawMaterial = await prisma.rawMaterial.create({
+            data: {
+                name: "Test Raw Material",
+                status: true,
+                quantity: 10,
+                price: 100,
+                presentInInventory: 10,
+                requested: 0,
+                requestedStatus: RawMaterialStatus.PENDING,
+                inventory_id: 1,
+            },
+        });
+
+        // Define the input
+        const input: RawMaterialRequestInput = {
+            id: rawMaterial.id,
+            quantity: 10,
+        };
+
+        // Define the mutation
+        const mutation = `
+        mutation CreateRawMaterialRequest($rawMaterialRequestInput: RawMaterialRequestInput!) {
+            createRawMaterialRequest(rawMaterialRequestInput: $rawMaterialRequestInput) {
+                id
+                requested
+            }
+        }
+        `;
+
+        // Run the mutation
+        const result = await server.executeOperation({
+            query: mutation,
+            variables: { rawMaterialRequestInput: input },
+            extensions,
+        });
+
+        // Check the result
+        expect(result.errors).toBeUndefined();
+        expect(result.data).toBeDefined();
+        expect(result.data?.createRawMaterialRequest).toBeDefined();
+        expect(result.data?.createRawMaterialRequest).toMatchObject({
+            id: rawMaterial.id,
+            requested: input.quantity,
+        });
+
+        // Cleaning up
+        await prisma.rawMaterial.delete({
+            where: { id: result.data?.createRawMaterialRequest.id },
         });
     });
 });

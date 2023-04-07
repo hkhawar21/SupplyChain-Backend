@@ -18,6 +18,7 @@ import {
     OrderStatus,
     Product,
     RawMaterial,
+    Inventory,
 } from "@generated/type-graphql";
 
 // Inventory Resolver will provide the following functionalities:
@@ -37,6 +38,30 @@ class OrderCreateInputInventory extends OrderCreateInput {
 @Resolver()
 export class InventoryResolver {
     // Implementing all the functionalitites commented above
+
+    @Mutation(() => Inventory)
+    @Authorized()
+    async createInventory() {
+        try {
+            const inventory = await prisma.inventory.create({
+                data: {},
+            });
+            return inventory;
+        } catch (error: any) {
+            throw new UserInputError(error);
+        }
+    }
+
+    @Query(() => [Inventory])
+    @Authorized()
+    async inventories(): Promise<Inventory[]> {
+        try {
+            return await prisma.inventory.findMany();
+        } catch (error: any) {
+            throw new UserInputError(error);
+        }
+    }
+
     @Mutation(() => Order)
     @Authorized()
     async createOrderRequest(

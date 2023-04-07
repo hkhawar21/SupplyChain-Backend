@@ -59,12 +59,14 @@ export class RawMaterialRequestInput {
     quantity!: number;
 
     @Field(() => Int)
-    raw_material_id!: number;
+    id!: number;
 }
 
 @Resolver()
 export class RawMaterialResolver {
     // Implementing all the functionalitites commented above
+
+    // CREATE RAW MATERIAL REQUEST
     @Mutation(() => RawMaterial)
     @Authorized()
     async createRawMaterialRequest(
@@ -73,9 +75,9 @@ export class RawMaterialResolver {
     ): Promise<RawMaterial> {
         try {
             return await prisma.rawMaterial.update({
-                where: { id: rawMaterialRequestInput.raw_material_id },
+                where: { id: rawMaterialRequestInput.id },
                 data: {
-                    quantity: rawMaterialRequestInput.quantity,
+                    requested: rawMaterialRequestInput.quantity,
                     requestedStatus: RawMaterialStatus.PENDING,
                 },
             });
@@ -84,6 +86,7 @@ export class RawMaterialResolver {
         }
     }
 
+    // RETURN RAW MATERIAL REQUESTED
     @Query(() => [RawMaterial])
     @Authorized()
     async rawMaterialRequested(): Promise<RawMaterial[]> {
@@ -98,6 +101,7 @@ export class RawMaterialResolver {
         }
     }
 
+    // ALL RAW MATERIALS
     @Query(() => [RawMaterial])
     @Authorized()
     async rawMaterial(): Promise<RawMaterial[]> {
@@ -108,6 +112,7 @@ export class RawMaterialResolver {
         }
     }
 
+    // UPDATE STATUS OF RAW MATERIAL REQUESTED
     @Mutation(() => RawMaterial)
     @Authorized()
     async changeStatusRawMaterial(
@@ -117,13 +122,17 @@ export class RawMaterialResolver {
         try {
             return await prisma.rawMaterial.update({
                 where: { id },
-                data: { requestedStatus: status },
+                data: {
+                    requestedStatus: status,
+                    requested: 0,
+                },
             });
         } catch (error: any) {
             throw new UserInputError(error);
         }
     }
 
+    // CREATE RAW MATERIAL
     @Mutation(() => RawMaterial)
     @Authorized()
     async createRawMaterial(
@@ -131,12 +140,21 @@ export class RawMaterialResolver {
         rawMaterialInput: RawMaterialInput,
     ): Promise<RawMaterial> {
         try {
+            const rawMaterial = await prisma.rawMaterial.findFirst({
+                where: {
+                    ...rawMaterialInput,
+                },
+            });
+
+            if (rawMaterial)
+                throw new UserInputError("Raw Material already exists");
+
             return await prisma.rawMaterial.create({
                 data: {
                     ...rawMaterialInput,
                     requested: 0,
                     requestedStatus: RawMaterialStatus.PENDING,
-                    inventory_id: 0,
+                    inventory_id: 1,
                     presentInInventory: rawMaterialInput.presentInInventory,
                 },
             });
@@ -145,6 +163,7 @@ export class RawMaterialResolver {
         }
     }
 
+    // UPDATE RAW MATERIAL
     @Mutation(() => RawMaterial)
     @Authorized()
     async updateRawMaterial(
@@ -161,6 +180,7 @@ export class RawMaterialResolver {
         }
     }
 
+    // DELETE RAW MATERIAL
     @Mutation(() => RawMaterial)
     @Authorized()
     async deleteRawMaterial(@Arg("id", () => Int) id: number) {

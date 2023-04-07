@@ -134,8 +134,7 @@ model Agent {
 model Inventory {
   id            Int           @id @default(autoincrement())
   raw_materials RawMaterial[]
-  products      Product       @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  product_id    Int
+  products      Product[]
   orders        Order[]
 }
 
