@@ -267,4 +267,59 @@ describe("Raw Material Resolver", () => {
             where: { id: result.data?.createRawMaterialRequest.id },
         });
     });
+
+    it("should update status of raw material request to approved", async () => {
+        // Creating a raw material
+        const rawMaterial = await prisma.rawMaterial.create({
+            data: {
+                name: "Test Raw Material",
+                status: true,
+                quantity: 10,
+                price: 100,
+                presentInInventory: 10,
+                requested: 10,
+                requestedStatus: RawMaterialStatus.PENDING,
+                inventory_id: 1,
+            },
+        });
+
+        // Define the input
+        const input = {
+            id: rawMaterial.id,
+            status: RawMaterialStatus.APPROVED,
+        };
+
+        // Define the mutation
+        const mutation = `
+            mutation ChangeStatusRawMaterial($changeStatusRawMaterialId: Int!, $status: RawMaterialStatus!) {
+                changeStatusRawMaterial(id: $changeStatusRawMaterialId, status: $status) {
+                    id
+                    quantity
+                    requested
+                    requestedStatus
+                }
+            }
+        `;
+
+        // Run the mutation
+        const result = await server.executeOperation({
+            query: mutation,
+            variables: {
+                changeStatusRawMaterialId: input.id,
+                status: input.status,
+            },
+            extensions,
+        });
+
+        // Check the result
+        expect(result.errors).toBeUndefined();
+        expect(result.data).toBeDefined();
+        expect(result.data?.changeStatusRawMaterial?.requestedStatus).toEqual(
+            RawMaterialStatus.APPROVED,
+        );
+        expect(result.data?.changeStatusRawMaterial?.requested).toEqual(0);
+        expect(result.data?.changeStatusRawMaterial?.quantity).toEqual(
+            rawMaterial.quantity + rawMaterial.requested,
+        );
+    });
 });

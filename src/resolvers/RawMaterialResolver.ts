@@ -120,10 +120,22 @@ export class RawMaterialResolver {
         @Arg("status", () => RawMaterialStatus) status: RawMaterialStatus,
     ): Promise<RawMaterial> {
         try {
+            const rawMaterial = await prisma.rawMaterial.findFirst({
+                where: {
+                    id,
+                },
+            });
+
             return await prisma.rawMaterial.update({
                 where: { id },
                 data: {
                     requestedStatus: status,
+                    quantity: {
+                        increment:
+                            status === RawMaterialStatus.APPROVED
+                                ? rawMaterial?.requested
+                                : 0,
+                    },
                     requested: 0,
                 },
             });
