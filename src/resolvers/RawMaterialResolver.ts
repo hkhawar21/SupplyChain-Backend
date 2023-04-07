@@ -130,7 +130,7 @@ export class RawMaterialResolver {
                 where: { id },
                 data: {
                     requestedStatus: status,
-                    quantity: {
+                    presentInInventory: {
                         increment:
                             status === RawMaterialStatus.APPROVED
                                 ? rawMaterial?.requested

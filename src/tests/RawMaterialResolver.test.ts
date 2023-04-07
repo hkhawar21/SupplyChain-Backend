@@ -217,7 +217,6 @@ describe("Raw Material Resolver", () => {
             data: {
                 name: "Test Raw Material",
                 status: true,
-                quantity: 10,
                 price: 100,
                 presentInInventory: 10,
                 requested: 0,
@@ -270,7 +269,6 @@ describe("Raw Material Resolver", () => {
             data: {
                 name: "Test Raw Material",
                 status: true,
-                quantity: 10,
                 price: 100,
                 presentInInventory: 10,
                 requested: 10,
@@ -315,7 +313,7 @@ describe("Raw Material Resolver", () => {
         );
         expect(result.data?.changeStatusRawMaterial?.requested).toEqual(0);
         expect(result.data?.changeStatusRawMaterial?.quantity).toEqual(
-            rawMaterial.quantity + rawMaterial.requested,
+            rawMaterial.presentInInventory + rawMaterial.requested,
         );
 
         // Cleaning up
@@ -330,7 +328,6 @@ describe("Raw Material Resolver", () => {
             data: {
                 name: "Test Raw Material",
                 status: true,
-                quantity: 10,
                 price: 100,
                 presentInInventory: 10,
                 requested: 10,
@@ -375,7 +372,7 @@ describe("Raw Material Resolver", () => {
         );
         expect(result.data?.changeStatusRawMaterial?.requested).toEqual(0);
         expect(result.data?.changeStatusRawMaterial?.quantity).toEqual(
-            rawMaterial.quantity,
+            rawMaterial.presentInInventory,
         );
 
         // Cleaning up
@@ -391,7 +388,6 @@ describe("Raw Material Resolver", () => {
                 {
                     name: "Test Raw Material 1",
                     status: true,
-                    quantity: 10,
                     price: 100,
                     presentInInventory: 10,
                     requested: 10,
@@ -401,7 +397,6 @@ describe("Raw Material Resolver", () => {
                 {
                     name: "Test Raw Material 2",
                     status: true,
-                    quantity: 10,
                     price: 100,
                     presentInInventory: 10,
                     requested: 30,
@@ -411,7 +406,6 @@ describe("Raw Material Resolver", () => {
                 {
                     name: "Test Raw Material 3",
                     status: true,
-                    quantity: 10,
                     price: 100,
                     presentInInventory: 10,
                     requested: 100,
@@ -421,7 +415,6 @@ describe("Raw Material Resolver", () => {
                 {
                     name: "Test Raw Material 4",
                     status: true,
-                    quantity: 10,
                     price: 100,
                     presentInInventory: 10,
                     requested: 500,
@@ -431,7 +424,6 @@ describe("Raw Material Resolver", () => {
                 {
                     name: "Test Raw Material 5",
                     status: true,
-                    quantity: 100,
                     price: 100,
                     presentInInventory: 10,
                     requested: 0,

@@ -700,7 +700,6 @@ type RawMaterial {
   presentInInventory: Int!
   price: Float!
   products(cursor: ProductRawMaterialsWhereUniqueInput, distinct: [ProductRawMaterialsScalarFieldEnum!], orderBy: [ProductRawMaterialsOrderByWithRelationInput!], skip: Int, take: Int, where: ProductRawMaterialsWhereInput): [ProductRawMaterials!]!
-  quantity: Int!
   requested: Int!
   requestedStatus: RawMaterialStatus!
   status: Boolean!
@@ -736,7 +735,6 @@ input RawMaterialOrderByWithRelationInput {
   presentInInventory: SortOrder
   price: SortOrder
   products: ProductRawMaterialsOrderByRelationAggregateInput
-  quantity: SortOrder
   requested: SortOrder
   requestedStatus: SortOrder
   status: SortOrder
@@ -758,7 +756,6 @@ enum RawMaterialScalarFieldEnum {
   name
   presentInInventory
   price
-  quantity
   requested
   requestedStatus
   status
@@ -790,7 +787,6 @@ input RawMaterialWhereInput {
   presentInInventory: IntFilter
   price: FloatFilter
   products: ProductRawMaterialsListRelationFilter
-  quantity: IntFilter
   requested: IntFilter
   requestedStatus: EnumRawMaterialStatusFilter
   status: BoolFilter
