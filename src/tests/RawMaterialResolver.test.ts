@@ -34,8 +34,6 @@ describe("Raw Material Resolver", () => {
             schema,
             context: { prisma },
         });
-
-        await prisma.rawMaterial.deleteMany({});
     });
 
     afterAll(async () => {
@@ -320,6 +318,170 @@ describe("Raw Material Resolver", () => {
         expect(result.data?.changeStatusRawMaterial?.requested).toEqual(0);
         expect(result.data?.changeStatusRawMaterial?.quantity).toEqual(
             rawMaterial.quantity + rawMaterial.requested,
+        );
+
+        // Cleaning up
+        await prisma.rawMaterial.delete({
+            where: { id: result.data?.changeStatusRawMaterial.id },
+        });
+    });
+
+    it("should update status of raw material request to rejected", async () => {
+        // Creating a raw material
+        const rawMaterial = await prisma.rawMaterial.create({
+            data: {
+                name: "Test Raw Material",
+                status: true,
+                quantity: 10,
+                price: 100,
+                presentInInventory: 10,
+                requested: 10,
+                requestedStatus: RawMaterialStatus.PENDING,
+                inventory_id: 1,
+            },
+        });
+
+        // Define the input
+        const input = {
+            id: rawMaterial.id,
+            status: RawMaterialStatus.REJECTED,
+        };
+
+        // Define the mutation
+        const mutation = `
+            mutation ChangeStatusRawMaterial($changeStatusRawMaterialId: Int!, $status: RawMaterialStatus!) {
+                changeStatusRawMaterial(id: $changeStatusRawMaterialId, status: $status) {
+                    id
+                    quantity
+                    requested
+                    requestedStatus
+                }
+            }
+        `;
+
+        // Run the mutation
+        const result = await server.executeOperation({
+            query: mutation,
+            variables: {
+                changeStatusRawMaterialId: input.id,
+                status: input.status,
+            },
+            extensions,
+        });
+
+        // Check the result
+        expect(result.errors).toBeUndefined();
+        expect(result.data).toBeDefined();
+        expect(result.data?.changeStatusRawMaterial?.requestedStatus).toEqual(
+            RawMaterialStatus.REJECTED,
+        );
+        expect(result.data?.changeStatusRawMaterial?.requested).toEqual(0);
+        expect(result.data?.changeStatusRawMaterial?.quantity).toEqual(
+            rawMaterial.quantity,
+        );
+
+        // Cleaning up
+        await prisma.rawMaterial.delete({
+            where: { id: result.data?.changeStatusRawMaterial.id },
+        });
+    });
+
+    it("should return all the raw materials requested", async () => {
+        // Creating multile raw materials with request
+        const rawMaterial1 = await prisma.rawMaterial.createMany({
+            data: [
+                {
+                    name: "Test Raw Material 1",
+                    status: true,
+                    quantity: 10,
+                    price: 100,
+                    presentInInventory: 10,
+                    requested: 10,
+                    requestedStatus: RawMaterialStatus.PENDING,
+                    inventory_id: 1,
+                },
+                {
+                    name: "Test Raw Material 2",
+                    status: true,
+                    quantity: 10,
+                    price: 100,
+                    presentInInventory: 10,
+                    requested: 30,
+                    requestedStatus: RawMaterialStatus.PENDING,
+                    inventory_id: 1,
+                },
+                {
+                    name: "Test Raw Material 3",
+                    status: true,
+                    quantity: 10,
+                    price: 100,
+                    presentInInventory: 10,
+                    requested: 100,
+                    requestedStatus: RawMaterialStatus.PENDING,
+                    inventory_id: 1,
+                },
+                {
+                    name: "Test Raw Material 4",
+                    status: true,
+                    quantity: 10,
+                    price: 100,
+                    presentInInventory: 10,
+                    requested: 500,
+                    requestedStatus: RawMaterialStatus.PENDING,
+                    inventory_id: 1,
+                },
+                {
+                    name: "Test Raw Material 5",
+                    status: true,
+                    quantity: 100,
+                    price: 100,
+                    presentInInventory: 10,
+                    requested: 0,
+                    requestedStatus: RawMaterialStatus.APPROVED,
+                    inventory_id: 1,
+                },
+            ],
+        });
+
+        // Define the query
+        const query = `
+            query RawMaterialRequested {
+                rawMaterialRequested {
+                    id
+                    inventory_id
+                    name
+                    presentInInventory
+                    quantity
+                    requested
+                    requestedStatus
+                    status
+                }
+            }
+        `;
+
+        // Run the query
+        const result = await server.executeOperation({
+            query,
+            extensions,
+        });
+
+        // Check the result
+        expect(result.errors).toBeUndefined();
+        expect(result.data).toBeDefined();
+        expect(result.data?.rawMaterialRequested).toBeDefined();
+        expect(result.data?.rawMaterialRequested).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    requestedStatus: RawMaterialStatus.PENDING,
+                }),
+            ]),
+        );
+        expect(result.data?.rawMaterialRequested).not.toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    requestedStatus: RawMaterialStatus.APPROVED,
+                }),
+            ]),
         );
     });
 });
