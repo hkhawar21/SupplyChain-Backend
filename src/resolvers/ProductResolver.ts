@@ -14,7 +14,7 @@ import { Product } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-express";
 
 @InputType()
-class ProductRawMaterialUpdate {
+export class ProductRawMaterialUpdate {
     @Field(() => Int)
     id!: number;
 
@@ -23,7 +23,7 @@ class ProductRawMaterialUpdate {
 }
 
 @InputType()
-class ProductUpdateInput {
+export class ProductUpdateInput {
     @Field(() => Int)
     id!: number;
 
@@ -93,6 +93,15 @@ export class ProductInput {
     @Field(() => [ProductRawMaterialsInput])
     raw_materials!: ProductRawMaterialsInput[];
 }
+
+// FUNCTIONS PRESENT IN THIS RESOLVER
+// 1. createProduct
+// 2. products
+// 3. productById
+// 4. updateProduct
+// 5. removeRawMaterialFromProduct
+// 6. addRawMaterialToProduct
+// 7. deleteProduct
 
 @Resolver()
 export class ProductResolver {

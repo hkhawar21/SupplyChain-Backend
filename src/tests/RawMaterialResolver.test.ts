@@ -74,8 +74,6 @@ describe("Raw Material Resolver", () => {
             extensions,
         });
 
-        console.log(result);
-
         // Check the result
         expect(result.errors).toBeUndefined();
         expect(result.data).toBeDefined();

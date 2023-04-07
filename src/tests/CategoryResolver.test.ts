@@ -253,8 +253,6 @@ describe("CategoryResolver", () => {
             extensions,
         });
 
-        console.log(response.errors);
-
         // Check the response
         expect(response.errors).toBeUndefined();
         expect(response.data).toBeDefined();

@@ -102,7 +102,6 @@ model ProductRawMaterials {
 model RawMaterial {
   id                 Int                   @id @default(autoincrement())
   name               String
-  quantity           Int
   price              Float
   status             Boolean
   products           ProductRawMaterials[]
