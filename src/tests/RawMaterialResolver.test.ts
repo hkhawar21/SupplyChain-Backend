@@ -45,7 +45,6 @@ describe("Raw Material Resolver", () => {
         const input: RawMaterialInput = {
             name: "Test Raw Material",
             status: true,
-            quantity: 10,
             price: 100,
             presentInInventory: 10,
         };
@@ -59,7 +58,6 @@ describe("Raw Material Resolver", () => {
                 name
                 presentInInventory
                 price
-                quantity
                 requested
                 requestedStatus
                 status
@@ -91,7 +89,6 @@ describe("Raw Material Resolver", () => {
         const input: RawMaterialInput = {
             name: "Test Raw Material",
             status: true,
-            quantity: 10,
             price: 100,
             presentInInventory: 10,
         };
@@ -115,7 +112,6 @@ describe("Raw Material Resolver", () => {
                 name
                 presentInInventory
                 price
-                quantity
                 requested
                 requestedStatus
                 status
@@ -149,7 +145,6 @@ describe("Raw Material Resolver", () => {
         const input: RawMaterialInput = {
             name: "Test Raw Material",
             status: true,
-            quantity: 10,
             price: 100,
             presentInInventory: 10,
         };
@@ -182,7 +177,6 @@ describe("Raw Material Resolver", () => {
     name
     presentInInventory
     price
-    quantity
     requested
     requestedStatus
     status
@@ -288,9 +282,9 @@ describe("Raw Material Resolver", () => {
             mutation ChangeStatusRawMaterial($changeStatusRawMaterialId: Int!, $status: RawMaterialStatus!) {
                 changeStatusRawMaterial(id: $changeStatusRawMaterialId, status: $status) {
                     id
-                    quantity
                     requested
                     requestedStatus
+                    presentInInventory
                 }
             }
         `;
@@ -312,9 +306,9 @@ describe("Raw Material Resolver", () => {
             RawMaterialStatus.APPROVED,
         );
         expect(result.data?.changeStatusRawMaterial?.requested).toEqual(0);
-        expect(result.data?.changeStatusRawMaterial?.quantity).toEqual(
-            rawMaterial.presentInInventory + rawMaterial.requested,
-        );
+        expect(
+            result.data?.changeStatusRawMaterial?.presentInInventory,
+        ).toEqual(rawMaterial.presentInInventory + rawMaterial.requested);
 
         // Cleaning up
         await prisma.rawMaterial.delete({
@@ -347,9 +341,9 @@ describe("Raw Material Resolver", () => {
             mutation ChangeStatusRawMaterial($changeStatusRawMaterialId: Int!, $status: RawMaterialStatus!) {
                 changeStatusRawMaterial(id: $changeStatusRawMaterialId, status: $status) {
                     id
-                    quantity
                     requested
                     requestedStatus
+                    presentInInventory
                 }
             }
         `;
@@ -371,9 +365,9 @@ describe("Raw Material Resolver", () => {
             RawMaterialStatus.REJECTED,
         );
         expect(result.data?.changeStatusRawMaterial?.requested).toEqual(0);
-        expect(result.data?.changeStatusRawMaterial?.quantity).toEqual(
-            rawMaterial.presentInInventory,
-        );
+        expect(
+            result.data?.changeStatusRawMaterial?.presentInInventory,
+        ).toEqual(rawMaterial.presentInInventory);
 
         // Cleaning up
         await prisma.rawMaterial.delete({
@@ -441,7 +435,6 @@ describe("Raw Material Resolver", () => {
                     inventory_id
                     name
                     presentInInventory
-                    quantity
                     requested
                     requestedStatus
                     status

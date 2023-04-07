@@ -1,0 +1,41 @@
+warning ../../../package.json: No license field
+watchman warning:  Recrawled this watch 29 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/hassankhawar/Documents/fyp/SupplyChain-Backend' ; watchman watch-project '/Users/hassankhawar/Documents/fyp/SupplyChain-Backend'`
+
+PASS src/tests/AgentsResolver.test.ts
+PASS src/tests/CategoryResolver.test.ts
+PASS src/tests/RawMaterialResolver.test.ts
+PASS src/tests/ProductResolver.test.ts
+  ● Console
+
+    console.error
+      UserInputError: Product already exists with this data. Please enter different details
+          at ProductResolver.createProduct (/Users/hassankhawar/Documents/fyp/SupplyChain-Backend/src/resolvers/ProductResolver.ts:127:23)
+          at dispatchHandler (/Users/hassankhawar/Documents/fyp/SupplyChain-Backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+          at /Users/hassankhawar/Documents/fyp/SupplyChain-Backend/node_modules/type-graphql/dist/resolvers/helpers.js:83:26
+          at dispatchHandler (/Users/hassankhawar/Documents/fyp/SupplyChain-Backend/node_modules/type-graphql/dist/resolvers/helpers.js:82:24) {
+        extensions: { code: 'BAD_USER_INPUT' }
+      }
+
+      169 |             return createdProduct;
+      170 |         } catch (error: any) {
+    > 171 |             console.error(error);
+          |                     ^
+      172 |             throw new Error(error.message);
+      173 |         }
+      174 |     }
+
+      at ProductResolver.createProduct (src/resolvers/ProductResolver.ts:171:21)
+      at dispatchHandler (node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+      at node_modules/type-graphql/dist/resolvers/helpers.js:83:26
+      at dispatchHandler (node_modules/type-graphql/dist/resolvers/helpers.js:82:24)
+
+
+Test Suites: 4 passed, 4 total
+Tests:       19 passed, 19 total
+Snapshots:   0 total
+Time:        4.048 s
+Ran all test suites.

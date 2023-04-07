@@ -25,9 +25,6 @@ export class RawMaterialUpdateInput {
     @Field(() => Boolean, { nullable: true })
     status?: boolean;
 
-    @Field(() => Int, { nullable: true })
-    quantity?: number;
-
     @Field(() => Float, { nullable: true })
     price?: number;
 
@@ -45,9 +42,6 @@ export class RawMaterialInput {
 
     @Field(() => Boolean)
     status!: boolean;
-
-    @Field(() => Int)
-    quantity!: number;
 
     @Field(() => Number)
     presentInInventory!: number;

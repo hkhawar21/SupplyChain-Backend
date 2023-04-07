@@ -161,12 +161,12 @@ describe("CategoryResolver", () => {
 
         // Define the query
         const query = `
-                query CategoryById($id: Int!) {
-                    categoryById(id: $id) {
+                query CategoryById($categoryByIdId: Int!) {
+                    categoryById(id: $categoryByIdId) {
                         id
+                        image
                         name
                         status
-                        image
                     }
                 }
             `;
@@ -174,7 +174,7 @@ describe("CategoryResolver", () => {
         // Execute the query
         const response = await server.executeOperation({
             query,
-            variables: { id: createdCategory.id },
+            variables: { categoryByIdId: createdCategory.id },
             extensions,
         });
 

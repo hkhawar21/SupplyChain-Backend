@@ -129,6 +129,14 @@ export class ProductResolver {
                 );
             }
 
+            // Restric adding product with invalid category
+            const category = await prisma.category.findFirst({
+                where: {
+                    id: productInput.category_id,
+                },
+            });
+            if (!category?.status) throw new UserInputError("Invalid category");
+
             const createdProduct = await prisma.product.create({
                 data: {
                     name: productInput.name,
@@ -144,14 +152,12 @@ export class ProductResolver {
                         },
                     },
                     raw_materials: {
-                        connect: [
-                            ...productInput.raw_materials.map(
-                                (raw_material) => ({
-                                    id: raw_material.raw_material_id,
-                                    quantity: raw_material.quantity,
-                                }),
-                            ),
-                        ],
+                        createMany: {
+                            data: productInput.raw_materials.map((item) => ({
+                                raw_material_id: item.raw_material_id,
+                                quantity: item.quantity,
+                            })),
+                        },
                     },
                 },
                 include: {

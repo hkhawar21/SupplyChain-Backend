@@ -713,7 +713,6 @@ input RawMaterialInput {
   name: String!
   presentInInventory: Float!
   price: Float!
-  quantity: Int!
   status: Boolean!
 }
 
@@ -772,7 +771,6 @@ input RawMaterialUpdateInput {
   name: String
   presentInInventory: Int
   price: Float
-  quantity: Int
   status: Boolean
 }
 
