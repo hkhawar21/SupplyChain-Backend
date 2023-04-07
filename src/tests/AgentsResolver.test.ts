@@ -28,8 +28,6 @@ describe("AgentsResolver", () => {
             schema,
             context: { prisma },
         });
-
-        await prisma.agent.deleteMany();
     });
 
     afterAll(async () => {
