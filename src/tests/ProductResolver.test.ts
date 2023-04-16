@@ -287,4 +287,61 @@ describe("Product Resolver", () => {
             where: { id: createProduct.id },
         });
     });
+
+    it("should return error for creating product with invalid category id", async () => {
+        const input: ProductInput = {
+            name: "Test Product",
+            status: true,
+            image: "",
+            category_id: 999999999,
+            weight: 800,
+            price_per_unit: 10000,
+            time: "8 days",
+            presentInInventory: 0,
+            raw_materials: [
+                {
+                    raw_material_id: rawMaterials[0].id,
+                    quantity: 10,
+                },
+                {
+                    raw_material_id: rawMaterials[1].id,
+                    quantity: 10,
+                },
+            ],
+        };
+
+        const mutation = `
+            mutation CreateProduct($productInput: ProductInput!) {
+                createProduct(productInput: $productInput) {
+                    id
+                    category_id
+                    category {
+                        id
+                        status
+                    }
+                    name
+                    presentInInventory
+                    price_per_unit
+                    raw_materials {
+                        id
+                        quantity
+                        raw_material_id
+                        product_id
+                    }
+                    status
+                    time
+                    weight
+                }
+            }
+        `;
+
+        const result = await server.executeOperation({
+            query: mutation,
+            variables: { productInput: input },
+            extensions,
+        });
+
+        expect(result.errors).toBeDefined();
+        expect(result.errors?.[0].message).toEqual("Invalid category");
+    });
 });
