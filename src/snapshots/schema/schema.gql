@@ -764,6 +764,7 @@ enum RawMaterialStatus {
   APPROVED
   PENDING
   REJECTED
+  WAITING
 }
 
 input RawMaterialUpdateInput {
