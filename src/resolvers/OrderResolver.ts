@@ -89,10 +89,89 @@ export class OrderUpdateInput {
     products!: ProductOrderUpdateInput[];
 }
 
+type RawMaterialsOrderCheck = {
+    raw_material_id: number;
+    quantityRequired: number;
+};
+
 @Resolver()
 export class OrderResolver {
-    static createOrder(orderCreateInput: OrderCreateInput): Promise<Order> {
-        throw new Error("Method not implemented.");
+    static async checkRawMaterialAvailability(
+        orderCreateInput: OrderCreateInput,
+    ): Promise<boolean> {
+        const products = orderCreateInput.products;
+        const rawMaterialsOrderCheck: RawMaterialsOrderCheck[] = [];
+        let status = true;
+        for (const product of products) {
+            const rawMaterials = await prisma.productRawMaterials.findMany({
+                where: {
+                    product_id: product.product_id,
+                },
+                select: {
+                    quantity: true,
+                    raw_material_id: true,
+                },
+            });
+            for (const rawMaterial of rawMaterials) {
+                const rawMaterialIndex = rawMaterialsOrderCheck.findIndex(
+                    (rawMaterialOrderCheck) =>
+                        rawMaterialOrderCheck.raw_material_id ===
+                        rawMaterial.raw_material_id,
+                );
+                if (rawMaterialIndex === -1) {
+                    rawMaterialsOrderCheck.push({
+                        raw_material_id: rawMaterial.raw_material_id,
+                        quantityRequired:
+                            rawMaterial.quantity * product.quantity,
+                    });
+                } else {
+                    rawMaterialsOrderCheck[rawMaterialIndex].quantityRequired +=
+                        rawMaterial.quantity * product.quantity;
+                }
+            }
+        }
+        for (const rawMaterial of rawMaterialsOrderCheck) {
+            const rawMaterialInventory = await prisma.rawMaterial.findUnique({
+                where: {
+                    id: rawMaterial.raw_material_id,
+                },
+                select: {
+                    presentInInventory: true,
+                },
+            });
+            if (!rawMaterialInventory)
+                throw new UserInputError("Raw material not found");
+            if (
+                rawMaterialInventory?.presentInInventory <
+                rawMaterial.quantityRequired
+            ) {
+                status = false;
+                break;
+            } else {
+                status = true;
+            }
+        }
+        return status;
+    }
+
+    static async createOrder(
+        orderCreateInput: OrderCreateInput,
+    ): Promise<Order> {
+        const orderCanBeCreated =
+            await OrderResolver.checkRawMaterialAvailability(orderCreateInput);
+        if (!orderCanBeCreated)
+            throw new UserInputError("Order cannot be created");
+
+        const createdOrder = await prisma.order.create({
+            data: {
+                ...orderCreateInput,
+                status: OrderStatus.PENDING,
+                products: {
+                    create: orderCreateInput.products,
+                },
+            },
+        });
+        return createdOrder;
     }
 
     @Mutation(() => Order)
@@ -101,6 +180,11 @@ export class OrderResolver {
         @Arg("orderCreateInput", () => OrderCreateInput)
         orderCreateInput: OrderCreateInput,
     ) {
+        const orderCanBeCreated =
+            await OrderResolver.checkRawMaterialAvailability(orderCreateInput);
+        if (!orderCanBeCreated)
+            throw new UserInputError("Order cannot be created");
+
         const createdOrder = await prisma.order.create({
             data: {
                 ...orderCreateInput,

@@ -69,6 +69,13 @@ export class InventoryResolver {
         orderCreateInput: OrderCreateInputInventory,
     ): Promise<Order> {
         try {
+            const orderCanBeCreated =
+                await OrderResolver.checkRawMaterialAvailability(
+                    orderCreateInput,
+                );
+            if (!orderCanBeCreated)
+                throw new UserInputError("Order cannot be created");
+
             const createdOrder = await OrderResolver.createOrder(
                 orderCreateInput,
             );
