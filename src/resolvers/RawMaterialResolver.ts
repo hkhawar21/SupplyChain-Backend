@@ -12,7 +12,13 @@ import {
 } from "type-graphql";
 import prisma from "../prisma/client";
 import { UserInputError } from "apollo-server-core";
-import { RawMaterialStatus, RawMaterial } from "@generated/type-graphql";
+import {
+    RawMaterialStatus,
+    RawMaterial,
+    AccessRole,
+} from "@generated/type-graphql";
+import { isUserAllowed } from "../utils/role";
+import { Context } from "../types";
 
 @InputType()
 export class RawMaterialUpdateInput {
@@ -66,7 +72,16 @@ export class RawMaterialResolver {
     async createRawMaterialRequest(
         @Arg("rawMaterialRequestInput", () => RawMaterialRequestInput)
         rawMaterialRequestInput: RawMaterialRequestInput,
+        @Ctx() ctx: Context,
     ): Promise<RawMaterial> {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.admin,
+                AccessRole.products,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             return await prisma.rawMaterial.update({
                 where: { id: rawMaterialRequestInput.id },
@@ -112,7 +127,16 @@ export class RawMaterialResolver {
     async changeStatusRawMaterial(
         @Arg("id", () => Int) id: number,
         @Arg("status", () => RawMaterialStatus) status: RawMaterialStatus,
+        @Ctx() ctx: Context,
     ): Promise<RawMaterial> {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.admin,
+                AccessRole.products,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             const rawMaterial = await prisma.rawMaterial.findFirst({
                 where: {
@@ -144,7 +168,16 @@ export class RawMaterialResolver {
     async createRawMaterial(
         @Arg("rawMaterialInput", () => RawMaterialInput)
         rawMaterialInput: RawMaterialInput,
+        @Ctx() ctx: Context,
     ): Promise<RawMaterial> {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.admin,
+                AccessRole.products,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             const rawMaterial = await prisma.rawMaterial.findFirst({
                 where: {
@@ -175,7 +208,16 @@ export class RawMaterialResolver {
     async updateRawMaterial(
         @Arg("rawMaterialInput", () => RawMaterialUpdateInput)
         rawMaterialInput: RawMaterialUpdateInput,
+        @Ctx() ctx: Context,
     ): Promise<RawMaterial> {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.admin,
+                AccessRole.products,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             return await prisma.rawMaterial.update({
                 where: { id: rawMaterialInput.id },
@@ -189,7 +231,18 @@ export class RawMaterialResolver {
     // DELETE RAW MATERIAL
     @Mutation(() => RawMaterial)
     @Authorized()
-    async deleteRawMaterial(@Arg("id", () => Int) id: number) {
+    async deleteRawMaterial(
+        @Arg("id", () => Int) id: number,
+        @Ctx() ctx: Context,
+    ) {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.admin,
+                AccessRole.products,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             return await prisma.rawMaterial.update({
                 where: { id },
