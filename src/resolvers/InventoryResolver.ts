@@ -8,7 +8,6 @@ import {
     Resolver,
     InputType,
     Field,
-    Float,
 } from "type-graphql";
 import prisma from "../prisma/client";
 import { UserInputError } from "apollo-server-core";
