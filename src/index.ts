@@ -25,7 +25,7 @@ import prisma from "./prisma/client";
 import "dotenv/config";
 import { useServer } from "graphql-ws/lib/use/ws";
 import { WebSocketServer } from "ws";
-import { authChecker } from "./auth/AuthChecker";
+import { authChecker, getUserFromToken } from "./auth/AuthChecker";
 import * as path from "path";
 
 const cors = require("cors");
@@ -71,7 +71,12 @@ const express = require("express");
 
     const server = new ApolloServer({
         schema,
-        context: ({ req, res }) => ({ req, res, prisma }),
+        context: ({ req, res }) => ({
+            req,
+            res,
+            prisma,
+            user: getUserFromToken(req),
+        }),
         persistedQueries: false,
         plugins: [
             ApolloServerPluginDrainHttpServer({ httpServer }),

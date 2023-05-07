@@ -62,7 +62,7 @@ export class AgentsResolver {
     async createAgent(
         @Arg("agentCreateInput", () => AgentCreateInput)
         agentCreateInput: AgentCreateInput,
-        @Ctx("user") ctx: Context,
+        @Ctx() ctx: Context,
     ): Promise<Agent> {
         if (
             !isUserAllowed(ctx.user!.role, [
