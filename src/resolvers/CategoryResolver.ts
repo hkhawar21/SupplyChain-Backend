@@ -10,9 +10,11 @@ import {
     InputType,
     Field,
 } from "type-graphql";
-import { Category } from "@generated/type-graphql";
+import { Category, AccessRole } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-express";
 import prisma from "../prisma/client";
+import { Context } from "../types";
+import { isUserAllowed } from "../utils/role";
 
 @InputType()
 export class CategoryUpdateInput {
@@ -48,7 +50,16 @@ export class CategoryResolver {
     async createCategory(
         @Arg("categoryCreateInput", () => CategoryCreateInput)
         categoryCreateInput: CategoryCreateInput,
+        @Ctx() ctx: Context,
     ): Promise<Category> {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.products,
+                AccessRole.admin,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             // Restrict adding duplicate category
             const category = await prisma.category.findFirst({
@@ -100,7 +111,16 @@ export class CategoryResolver {
     async updateCategory(
         @Arg("categoryUpdateInput", () => CategoryUpdateInput)
         categoryUpdateInput: CategoryUpdateInput,
+        @Ctx() ctx: Context,
     ) {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.products,
+                AccessRole.admin,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         const category = await prisma.category.findUnique({
             where: { id: categoryUpdateInput.id },
         });
@@ -119,7 +139,18 @@ export class CategoryResolver {
 
     @Mutation(() => Boolean)
     @Authorized()
-    async deleteCategory(@Arg("id", () => Int) id: number) {
+    async deleteCategory(
+        @Arg("id", () => Int) id: number,
+        @Ctx() ctx: Context,
+    ) {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.products,
+                AccessRole.admin,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         await prisma.category.delete({ where: { id } });
         return true;
     }
