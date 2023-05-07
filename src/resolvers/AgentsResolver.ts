@@ -65,7 +65,7 @@ export class AgentsResolver {
         @Ctx("user") ctx: Context,
     ): Promise<Agent> {
         if (
-            !isUserAllowed(ctx.user?.role, [
+            !isUserAllowed(ctx.user!.role, [
                 AccessRole.agents,
                 AccessRole.admin,
             ])
@@ -117,7 +117,15 @@ export class AgentsResolver {
     async updateAgent(
         @Arg("agentUpdateInput", () => AgentUpdateInput)
         agentUpdateInput: AgentUpdateInput,
+        @Ctx("user") ctx: Context,
     ) {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.agents,
+                AccessRole.admin,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         const agent = await prisma.agent.findUnique({
             where: { id: agentUpdateInput.id },
         });
@@ -136,7 +144,17 @@ export class AgentsResolver {
 
     @Mutation(() => Boolean)
     @Authorized()
-    async deleteAgent(@Arg("id", () => Int) id: number) {
+    async deleteAgent(
+        @Arg("id", () => Int) id: number,
+        @Ctx("user") ctx: Context,
+    ) {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.agents,
+                AccessRole.admin,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         await prisma.agent.delete({ where: { id } });
         return true;
     }

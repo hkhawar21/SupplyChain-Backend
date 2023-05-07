@@ -54,6 +54,7 @@ export class UserResolver {
     }
 
     @Mutation(() => AuthenticationToken)
+    // @Authorized()
     async signup(
         @Arg("name", () => String) name: string,
         @Arg("email", () => String) email: string,
