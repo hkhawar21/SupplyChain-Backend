@@ -20,8 +20,7 @@ export class FinanceResolver {
     ) {
         if (
             !isUserAllowed(ctx.user!.role, [
-                AccessRole.inventory,
-                AccessRole.products,
+                AccessRole.finance,
                 AccessRole.admin,
             ])
         )
@@ -51,8 +50,7 @@ export class FinanceResolver {
     ) {
         if (
             !isUserAllowed(ctx.user!.role, [
-                AccessRole.inventory,
-                AccessRole.products,
+                AccessRole.finance,
                 AccessRole.admin,
             ])
         )
