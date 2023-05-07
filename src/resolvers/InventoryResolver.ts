@@ -18,7 +18,10 @@ import {
     Product,
     RawMaterial,
     Inventory,
+    AccessRole,
 } from "@generated/type-graphql";
+import { isUserAllowed } from "../utils/role";
+import { Context } from "../types";
 
 // Inventory Resolver will provide the following functionalities:
 // 1. Create Order Request
@@ -40,7 +43,14 @@ export class InventoryResolver {
 
     @Mutation(() => Inventory)
     @Authorized()
-    async createInventory() {
+    async createInventory(@Ctx() ctx: Context): Promise<Inventory> {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.admin,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             const inventory = await prisma.inventory.create({
                 data: {},
@@ -66,7 +76,15 @@ export class InventoryResolver {
     async createOrderRequest(
         @Arg("orderCreateInput", () => OrderCreateInputInventory)
         orderCreateInput: OrderCreateInputInventory,
+        @Ctx() ctx: Context,
     ): Promise<Order> {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.admin,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             const orderCanBeCreated =
                 await OrderResolver.checkRawMaterialAvailability(
@@ -95,7 +113,15 @@ export class InventoryResolver {
     @Authorized()
     async approveOrderRequest(
         @Arg("orderId", () => Int) orderId: number,
+        @Ctx() ctx: Context,
     ): Promise<Order> {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.admin,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             const updatedOrder = await prisma.order.update({
                 where: { id: orderId },
