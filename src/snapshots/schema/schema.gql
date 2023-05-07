@@ -835,5 +835,5 @@ type User {
   id: Int!
   name: String!
   password: String!
-  role: AccessRole!
+  role: [AccessRole!]!
 }
