@@ -1,7 +1,13 @@
 import { Arg, Authorized, Ctx, Int, Mutation, Resolver } from "type-graphql";
 import prisma from "../prisma/client";
 import { UserInputError } from "apollo-server-core";
-import { RawMaterialStatus, RawMaterial } from "@generated/type-graphql";
+import {
+    RawMaterialStatus,
+    RawMaterial,
+    AccessRole,
+} from "@generated/type-graphql";
+import { Context } from "../types";
+import { isUserAllowed } from "../utils/role";
 
 @Resolver()
 export class FinanceResolver {
@@ -10,7 +16,16 @@ export class FinanceResolver {
     async approveRawmaterialRequest(
         @Arg("id", () => Int) id: number,
         @Arg("quantity", () => Int) quantity: number,
+        @Ctx() ctx: Context,
     ) {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.products,
+                AccessRole.admin,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             // If existing raw materials request is present, then provide the updated value
             const rawMaterial = await prisma.rawMaterial.update({
@@ -30,7 +45,18 @@ export class FinanceResolver {
 
     @Mutation(() => RawMaterial)
     @Authorized()
-    async rejectRawmaterialRequest(@Arg("id", () => Int) id: number) {
+    async rejectRawmaterialRequest(
+        @Arg("id", () => Int) id: number,
+        @Ctx() ctx: Context,
+    ) {
+        if (
+            !isUserAllowed(ctx.user!.role, [
+                AccessRole.inventory,
+                AccessRole.products,
+                AccessRole.admin,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             // If existing raw materials request is present, then provide the updated value
             const rawMaterial = await prisma.rawMaterial.update({
