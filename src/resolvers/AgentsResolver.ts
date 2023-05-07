@@ -11,8 +11,10 @@ import {
     Int,
 } from "type-graphql";
 import prisma from "../prisma/client";
-import { Agent } from "@generated/type-graphql";
+import { Agent, AccessRole } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-express";
+import { isUserAllowed } from "../utils/role";
+import { Context } from "../types";
 
 @InputType()
 export class AgentUpdateInput {
@@ -60,7 +62,15 @@ export class AgentsResolver {
     async createAgent(
         @Arg("agentCreateInput", () => AgentCreateInput)
         agentCreateInput: AgentCreateInput,
+        @Ctx("user") ctx: Context,
     ): Promise<Agent> {
+        if (
+            !isUserAllowed(ctx.user?.role, [
+                AccessRole.agents,
+                AccessRole.admin,
+            ])
+        )
+            throw new UserInputError("Not Authorized");
         try {
             // Restrict adding duplicate agent
             const agent = await prisma.agent.findFirst({
