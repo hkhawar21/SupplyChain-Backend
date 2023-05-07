@@ -221,7 +221,7 @@ type Mutation {
   login(email: String!, password: String!): AuthenticationToken!
   removeProductFromOrder(id: Int!): Order!
   removeRawMaterialFromProduct(productId: Int!, rawMaterialId: Int!): Product!
-  signup(email: String!, name: String!, password: String!, role: String!): AuthenticationToken!
+  signup(email: String!, name: String!, password: String!, role: [String!]!): AuthenticationToken!
   updateAgent(agentUpdateInput: AgentUpdateInput!): Agent!
   updateCategory(categoryUpdateInput: CategoryUpdateInput!): Category!
   updateOrderDetails(data: OrderUpdateInput!, id: Int!): Order!

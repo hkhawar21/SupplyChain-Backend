@@ -54,12 +54,11 @@ export class UserResolver {
     }
 
     @Mutation(() => AuthenticationToken)
-    // @Authorized()
     async signup(
         @Arg("name", () => String) name: string,
         @Arg("email", () => String) email: string,
         @Arg("password", () => String) password: string,
-        @Arg("role", () => String) role: AccessRole,
+        @Arg("role", () => [String]) role: AccessRole[],
     ): Promise<AuthenticationToken> {
         const existingUser = await prisma.user.findFirst({ where: { email } });
         if (existingUser) throw new Error("Email already exists");
