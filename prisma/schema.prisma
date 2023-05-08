@@ -24,15 +24,6 @@ model User {
   role     AccessRole[]
 }
 
-model Vendor {
-  id             Int    @id @default(autoincrement())
-  name           String
-  contact        String
-  address        String
-  price_per_unit Float
-  // Raw materials
-}
-
 model Customer {
   id         Int    @id @default(autoincrement())
   first_name String

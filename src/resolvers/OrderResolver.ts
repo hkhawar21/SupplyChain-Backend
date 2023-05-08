@@ -99,9 +99,9 @@ type RawMaterialsOrderCheck = {
 @Resolver()
 export class OrderResolver {
     static async checkRawMaterialAvailability(
-        orderCreateInput: OrderCreateInput,
+        order: OrderCreateInput | OrderUpdateInput,
     ): Promise<boolean> {
-        const products = orderCreateInput.products;
+        const products = order.products;
         const rawMaterialsOrderCheck: RawMaterialsOrderCheck[] = [];
         let status = true;
         for (const product of products) {
@@ -254,6 +254,12 @@ export class OrderResolver {
             ])
         )
             throw new UserInputError("Not Authorized");
+
+        const orderCanBeUpdated =
+            await OrderResolver.checkRawMaterialAvailability(data);
+        if (!orderCanBeUpdated)
+            throw new UserInputError("Order cannot be updated");
+
         const order = await prisma.order.update({
             where: {
                 id,
@@ -291,6 +297,7 @@ export class OrderResolver {
             ])
         )
             throw new UserInputError("Not Authorized");
+
         const order = await prisma.order.update({
             where: {
                 id,

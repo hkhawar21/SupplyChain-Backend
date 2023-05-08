@@ -10,6 +10,7 @@ import {
     OrderResolver,
     RawMaterialResolver,
     InventoryResolver,
+    FinanceResolver,
 } from "./resolvers";
 import {
     RawMaterialRelationsResolver,
@@ -41,6 +42,7 @@ const express = require("express");
             OrderResolver,
             InventoryResolver,
             RawMaterialResolver,
+            FinanceResolver,
             RawMaterialRelationsResolver,
             ProductOrderRelationsResolver,
             ProductRelationsResolver,

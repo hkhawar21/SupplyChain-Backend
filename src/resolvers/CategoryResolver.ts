@@ -10,9 +10,9 @@ import {
     InputType,
     Field,
 } from "type-graphql";
-import { Category, AccessRole } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-express";
 import prisma from "../prisma/client";
+import { Category, AccessRole } from "@generated/type-graphql";
 import { Context } from "../types";
 import { isUserAllowed } from "../utils/role";
 
@@ -103,7 +103,12 @@ export class CategoryResolver {
     @Query(() => Category)
     @Authorized()
     async categoryById(@Arg("id", () => Int) id: number) {
-        return await prisma.category.findUnique({ where: { id } });
+        return await prisma.category.findUnique({
+            where: { id },
+            include: {
+                products: true,
+            },
+        });
     }
 
     @Mutation(() => Category)

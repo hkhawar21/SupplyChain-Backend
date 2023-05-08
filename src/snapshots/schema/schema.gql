@@ -204,6 +204,7 @@ type Mutation {
   addProductToOrder(id: Int!, productOrderCreateInput: [ProductOrderCreateInput!]!): Order!
   addRawMaterialToProduct(productId: Int!, quantity: Int!, rawMaterialId: Int!): Product!
   approveOrderRequest(orderId: Int!): Order!
+  approveRawmaterialRequest(id: Int!, quantity: Int!): RawMaterial!
   changeStatusRawMaterial(id: Int!, status: RawMaterialStatus!): RawMaterial!
   createAgent(agentCreateInput: AgentCreateInput!): Agent!
   createCategory(categoryCreateInput: CategoryCreateInput!): Category!
@@ -219,6 +220,7 @@ type Mutation {
   deleteProduct(id: Int!): Product!
   deleteRawMaterial(id: Int!): RawMaterial!
   login(email: String!, password: String!): AuthenticationToken!
+  rejectRawmaterialRequest(id: Int!): RawMaterial!
   removeProductFromOrder(id: Int!): Order!
   removeRawMaterialFromProduct(productId: Int!, rawMaterialId: Int!): Product!
   signup(email: String!, name: String!, password: String!, role: [String!]!): AuthenticationToken!
