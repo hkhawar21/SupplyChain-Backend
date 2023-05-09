@@ -69,6 +69,11 @@ const express = require("express");
             ],
         }),
     );
+
+    app.get("/test", (req: any, res: any) => {
+        res.send("The server is running");
+    });
+
     const httpServer = http.createServer(app);
 
     const server = new ApolloServer({
