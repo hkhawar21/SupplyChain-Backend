@@ -37,12 +37,6 @@ export const authChecker: AuthChecker<Context> = async (
     { context },
     _roles,
 ) => {
-    console.log("ROLES: ", _roles);
-    if (_roles.length === 0) {
-        // if `@Authorized()`, check only if user exists
-        return context.user !== undefined;
-    }
-
     const { req } = context;
     const authorization = req.get("Authorization");
 

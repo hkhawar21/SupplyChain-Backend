@@ -12,7 +12,6 @@ import {
 import prisma from "../prisma/client";
 import { Product, AccessRole } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-express";
-import { Context } from "../types";
 import { isUserAllowed } from "../utils/role";
 
 @InputType()
@@ -111,14 +110,9 @@ export class ProductResolver {
     @Authorized()
     async createProduct(
         @Arg("productInput", () => ProductInput) productInput: ProductInput,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ): Promise<Product> {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.products,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.products, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             // Restrict adding duplicate product
@@ -211,14 +205,9 @@ export class ProductResolver {
     async updateProduct(
         @Arg("productUpdateInput", () => ProductUpdateInput)
         productUpdateInput: ProductUpdateInput,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.products,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.products, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         const product = await prisma.product.findUnique({
             where: { id: productUpdateInput.id },
@@ -278,14 +267,9 @@ export class ProductResolver {
     async removeRawMaterialFromProduct(
         @Arg("productId", () => Int) productId: number,
         @Arg("rawMaterialId", () => Int) rawMaterialId: number,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.products,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.products, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             return await prisma.product.update({
@@ -313,14 +297,9 @@ export class ProductResolver {
         @Arg("productId", () => Int) productId: number,
         @Arg("rawMaterialId", () => Int) rawMaterialId: number,
         @Arg("quantity", () => Int) quantity: number,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.products,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.products, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             await prisma.productRawMaterials.create({
@@ -347,14 +326,9 @@ export class ProductResolver {
     @Authorized()
     async deleteProduct(
         @Arg("id", () => Int) id: number,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ): Promise<Product> {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.products,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.products, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             return await prisma.product.update({

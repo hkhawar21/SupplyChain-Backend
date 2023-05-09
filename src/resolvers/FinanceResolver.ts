@@ -6,7 +6,6 @@ import {
     RawMaterial,
     AccessRole,
 } from "@generated/type-graphql";
-import { Context } from "../types";
 import { isUserAllowed } from "../utils/role";
 
 @Resolver()
@@ -16,14 +15,9 @@ export class FinanceResolver {
     async approveRawmaterialRequest(
         @Arg("id", () => Int) id: number,
         @Arg("quantity", () => Int) quantity: number,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.finance,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.finance, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             // If existing raw materials request is present, then provide the updated value
@@ -46,14 +40,9 @@ export class FinanceResolver {
     @Authorized()
     async rejectRawmaterialRequest(
         @Arg("id", () => Int) id: number,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.finance,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.finance, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             // If existing raw materials request is present, then provide the updated value

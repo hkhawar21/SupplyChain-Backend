@@ -21,7 +21,6 @@ import {
     AccessRole,
 } from "@generated/type-graphql";
 import { isUserAllowed } from "../utils/role";
-import { Context } from "../types";
 
 // Inventory Resolver will provide the following functionalities:
 // 1. Create Order Request
@@ -43,13 +42,8 @@ export class InventoryResolver {
 
     @Mutation(() => Inventory)
     @Authorized()
-    async createInventory(@Ctx() ctx: Context): Promise<Inventory> {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.inventory,
-                AccessRole.admin,
-            ])
-        )
+    async createInventory(@Ctx() ctx: any): Promise<Inventory> {
+        if (!isUserAllowed(ctx.role, [AccessRole.inventory, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             const inventory = await prisma.inventory.create({
@@ -76,14 +70,9 @@ export class InventoryResolver {
     async createOrderRequest(
         @Arg("orderCreateInput", () => OrderCreateInputInventory)
         orderCreateInput: OrderCreateInputInventory,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ): Promise<Order> {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.inventory,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.inventory, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             const orderCanBeCreated =
@@ -113,14 +102,9 @@ export class InventoryResolver {
     @Authorized()
     async approveOrderRequest(
         @Arg("orderId", () => Int) orderId: number,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ): Promise<Order> {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.inventory,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.inventory, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             const updatedOrder = await prisma.order.update({

@@ -14,7 +14,6 @@ import prisma from "../prisma/client";
 import { Agent, AccessRole } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-express";
 import { isUserAllowed } from "../utils/role";
-import { Context } from "../types";
 
 @InputType()
 export class AgentUpdateInput {
@@ -62,14 +61,9 @@ export class AgentsResolver {
     async createAgent(
         @Arg("agentCreateInput", () => AgentCreateInput)
         agentCreateInput: AgentCreateInput,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ): Promise<Agent> {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.agents,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.agents, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             // Restrict adding duplicate agent
@@ -117,14 +111,9 @@ export class AgentsResolver {
     async updateAgent(
         @Arg("agentUpdateInput", () => AgentUpdateInput)
         agentUpdateInput: AgentUpdateInput,
-        @Ctx("user") ctx: Context,
+        @Ctx("user") ctx: any,
     ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.agents,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx!.role, [AccessRole.agents, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         const agent = await prisma.agent.findUnique({
             where: { id: agentUpdateInput.id },
@@ -144,16 +133,8 @@ export class AgentsResolver {
 
     @Mutation(() => Boolean)
     @Authorized()
-    async deleteAgent(
-        @Arg("id", () => Int) id: number,
-        @Ctx("user") ctx: Context,
-    ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.agents,
-                AccessRole.admin,
-            ])
-        )
+    async deleteAgent(@Arg("id", () => Int) id: number, @Ctx("user") ctx: any) {
+        if (!isUserAllowed(ctx.role, [AccessRole.agents, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         await prisma.agent.delete({ where: { id } });
         return true;

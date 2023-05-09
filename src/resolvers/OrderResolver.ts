@@ -13,7 +13,6 @@ import {
 import prisma from "../prisma/client";
 import { Order, OrderStatus, AccessRole } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-core";
-import { Context } from "../types";
 import { isUserAllowed } from "../utils/role";
 
 @InputType()
@@ -181,14 +180,9 @@ export class OrderResolver {
     async createOrder(
         @Arg("orderCreateInput", () => OrderCreateInput)
         orderCreateInput: OrderCreateInput,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.orders,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.orders, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         const orderCanBeCreated =
             await OrderResolver.checkRawMaterialAvailability(orderCreateInput);
@@ -245,14 +239,9 @@ export class OrderResolver {
     async updateOrderDetails(
         @Arg("id", () => Int) id: number,
         @Arg("data", () => OrderUpdateInput) data: OrderUpdateInput,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.orders,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.orders, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
 
         const orderCanBeUpdated =
@@ -288,14 +277,9 @@ export class OrderResolver {
         @Arg("id", () => Int) id: number,
         @Arg("productOrderCreateInput", () => [ProductOrderCreateInput])
         productOrderCreateInput: ProductOrderCreateInput[],
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.orders,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.orders, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
 
         const order = await prisma.order.update({
@@ -316,14 +300,9 @@ export class OrderResolver {
     @Authorized()
     async removeProductFromOrder(
         @Arg("id", () => Int) id: number,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.orders,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.orders, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         return await prisma.productOrder.delete({
             where: {
@@ -336,15 +315,10 @@ export class OrderResolver {
     @Authorized()
     async updateStatus(
         @Arg("id", () => Int) id: number,
-        @Arg("status", () => Int) status: OrderStatus,
-        @Ctx() ctx: Context,
+        @Arg("status", () => String) status: OrderStatus,
+        @Ctx() ctx: any,
     ) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.orders,
-                AccessRole.admin,
-            ])
-        )
+        if (!isUserAllowed(ctx.role, [AccessRole.orders, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             const order = prisma.order.update({
@@ -363,13 +337,8 @@ export class OrderResolver {
 
     @Mutation(() => Order)
     @Authorized()
-    async deleteOrder(@Arg("id", () => Int) id: number, @Ctx() ctx: Context) {
-        if (
-            !isUserAllowed(ctx.user!.role, [
-                AccessRole.orders,
-                AccessRole.admin,
-            ])
-        )
+    async deleteOrder(@Arg("id", () => Int) id: number, @Ctx() ctx: any) {
+        if (!isUserAllowed(ctx.role, [AccessRole.orders, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
             const order = prisma.order.update({

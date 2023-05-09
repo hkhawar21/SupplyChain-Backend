@@ -13,7 +13,6 @@ import {
 import { UserInputError } from "apollo-server-express";
 import prisma from "../prisma/client";
 import { Category, AccessRole } from "@generated/type-graphql";
-import { Context } from "../types";
 import { isUserAllowed } from "../utils/role";
 
 @InputType()
@@ -50,10 +49,10 @@ export class CategoryResolver {
     async createCategory(
         @Arg("categoryCreateInput", () => CategoryCreateInput)
         categoryCreateInput: CategoryCreateInput,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ): Promise<Category> {
         if (
-            !isUserAllowed(ctx.user!.role, [
+            !isUserAllowed(ctx.role, [
                 AccessRole.inventory,
                 AccessRole.products,
                 AccessRole.admin,
@@ -116,10 +115,11 @@ export class CategoryResolver {
     async updateCategory(
         @Arg("categoryUpdateInput", () => CategoryUpdateInput)
         categoryUpdateInput: CategoryUpdateInput,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ) {
+        console.log("ROLEEE", ctx);
         if (
-            !isUserAllowed(ctx.user!.role, [
+            !isUserAllowed(ctx.role, [
                 AccessRole.inventory,
                 AccessRole.products,
                 AccessRole.admin,
@@ -144,12 +144,9 @@ export class CategoryResolver {
 
     @Mutation(() => Boolean)
     @Authorized()
-    async deleteCategory(
-        @Arg("id", () => Int) id: number,
-        @Ctx() ctx: Context,
-    ) {
+    async deleteCategory(@Arg("id", () => Int) id: number, @Ctx() ctx: any) {
         if (
-            !isUserAllowed(ctx.user!.role, [
+            !isUserAllowed(ctx.role, [
                 AccessRole.inventory,
                 AccessRole.products,
                 AccessRole.admin,

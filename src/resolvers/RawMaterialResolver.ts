@@ -18,7 +18,6 @@ import {
     AccessRole,
 } from "@generated/type-graphql";
 import { isUserAllowed } from "../utils/role";
-import { Context } from "../types";
 
 @InputType()
 export class RawMaterialUpdateInput {
@@ -72,10 +71,10 @@ export class RawMaterialResolver {
     async createRawMaterialRequest(
         @Arg("rawMaterialRequestInput", () => RawMaterialRequestInput)
         rawMaterialRequestInput: RawMaterialRequestInput,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ): Promise<RawMaterial> {
         if (
-            !isUserAllowed(ctx.user!.role, [
+            !isUserAllowed(ctx.role, [
                 AccessRole.inventory,
                 AccessRole.admin,
                 AccessRole.products,
@@ -127,10 +126,10 @@ export class RawMaterialResolver {
     async changeStatusRawMaterial(
         @Arg("id", () => Int) id: number,
         @Arg("status", () => RawMaterialStatus) status: RawMaterialStatus,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ): Promise<RawMaterial> {
         if (
-            !isUserAllowed(ctx.user!.role, [
+            !isUserAllowed(ctx.role, [
                 AccessRole.inventory,
                 AccessRole.admin,
                 AccessRole.products,
@@ -168,10 +167,10 @@ export class RawMaterialResolver {
     async createRawMaterial(
         @Arg("rawMaterialInput", () => RawMaterialInput)
         rawMaterialInput: RawMaterialInput,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ): Promise<RawMaterial> {
         if (
-            !isUserAllowed(ctx.user!.role, [
+            !isUserAllowed(ctx.role, [
                 AccessRole.inventory,
                 AccessRole.admin,
                 AccessRole.products,
@@ -208,10 +207,10 @@ export class RawMaterialResolver {
     async updateRawMaterial(
         @Arg("rawMaterialInput", () => RawMaterialUpdateInput)
         rawMaterialInput: RawMaterialUpdateInput,
-        @Ctx() ctx: Context,
+        @Ctx() ctx: any,
     ): Promise<RawMaterial> {
         if (
-            !isUserAllowed(ctx.user!.role, [
+            !isUserAllowed(ctx.role, [
                 AccessRole.inventory,
                 AccessRole.admin,
                 AccessRole.products,
@@ -231,12 +230,9 @@ export class RawMaterialResolver {
     // DELETE RAW MATERIAL
     @Mutation(() => RawMaterial)
     @Authorized()
-    async deleteRawMaterial(
-        @Arg("id", () => Int) id: number,
-        @Ctx() ctx: Context,
-    ) {
+    async deleteRawMaterial(@Arg("id", () => Int) id: number, @Ctx() ctx: any) {
         if (
-            !isUserAllowed(ctx.user!.role, [
+            !isUserAllowed(ctx.role, [
                 AccessRole.inventory,
                 AccessRole.admin,
                 AccessRole.products,

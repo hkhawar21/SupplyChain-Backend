@@ -229,7 +229,7 @@ type Mutation {
   updateOrderDetails(data: OrderUpdateInput!, id: Int!): Order!
   updateProduct(productUpdateInput: ProductUpdateInput!): Product!
   updateRawMaterial(rawMaterialInput: RawMaterialUpdateInput!): RawMaterial!
-  updateStatus(id: Int!, status: Int!): Order!
+  updateStatus(id: Int!, status: String!): Order!
 }
 
 input NestedBoolFilter {

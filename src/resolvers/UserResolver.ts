@@ -44,8 +44,14 @@ export class UserResolver {
         if (!(await compare(password, user.password)))
             throw new Error("Incorrect email/password");
 
+        const userData = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+        };
+
         const token = jwt.sign(
-            user.id.toString(),
+            userData,
             process.env.JWT_SECRET || "JWT_SECRET",
         );
         return {
@@ -73,8 +79,16 @@ export class UserResolver {
                 role,
             },
         });
+        const userData = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+        };
 
-        const token = jwt.sign(user, process.env.JWT_SECRET || "JWT_SECRET");
+        const token = jwt.sign(
+            userData,
+            process.env.JWT_SECRET || "JWT_SECRET",
+        );
         return {
             authenticationToken: token,
         };
