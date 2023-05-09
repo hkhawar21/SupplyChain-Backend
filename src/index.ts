@@ -123,7 +123,7 @@ const express = require("express");
         path: "/",
     });
 
-    const PORT = process.env.LISTENING_PORT || 4000;
+    const PORT = 8080;
     console.log("GRAPHQL PATH:  ", server.graphqlPath);
     httpServer.listen(PORT, () => {
         console.log(
