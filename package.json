@@ -9,7 +9,7 @@
         "generate": "ts-node --transpile-only src/schema",
         "prettier-format": "prettier 'src/**/*.ts' --write",
         "migrate:deploy": "prisma migrate deploy",
-        "build": "prisma generate && npm run generate && tsc",
+        "build": "prisma generate && tsc",
         "start": "nodemon src/index.ts"
     },
     "keywords": [],
