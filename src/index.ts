@@ -66,6 +66,7 @@ const express = require("express");
             origin: [
                 "https://studio.apollographql.com",
                 "http://localhost:3000",
+                "https://supply-chain-frontend.vercel.app/",
             ],
         }),
     );
@@ -74,6 +75,10 @@ const express = require("express");
         res.setHeader(
             "access-control-allow-origin",
             "https://studio.apollographql.com",
+        );
+        res.setHeader(
+            "access-control-allow-origin",
+            "https://supply-chain-frontend.vercel.app/",
         );
         res.setHeader("access-control-allow-credentials", "true");
         next();
