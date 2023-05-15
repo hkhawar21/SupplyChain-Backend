@@ -61,14 +61,13 @@ const express = require("express");
     });
 
     const app = express();
-    app.use(
-        cors({
-            origin: [
-                "https://studio.apollographql.com",
-                "http://localhost:3000",
-            ],
-        }),
-    );
+    app.use(cors()); // Enable CORS for all routes
+
+    // Set the Access-Control-Allow-Origin header to *
+    app.use((req: any, res: any, next: any) => {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        next();
+    });
 
     app.get("/test", (req: any, res: any) => {
         res.send("The server is running");
