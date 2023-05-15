@@ -61,15 +61,8 @@ const express = require("express");
     });
 
     const app = express();
-    app.use(
-        cors({
-            origin: [
-                "https://studio.apollographql.com",
-                "http://localhost:3000",
-                "https://supply-chain-frontend.vercel.app/",
-            ],
-        }),
-    );
+    app.use(cors());
+
     app.use((req: any, res: any, next: any) => {
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader(
