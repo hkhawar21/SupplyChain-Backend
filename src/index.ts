@@ -89,7 +89,7 @@ const express = require("express");
             req,
             res,
             prisma,
-            user: getUserFromToken(req),
+            user: getUserFromToken(req.get("Authorization")),
         }),
         persistedQueries: false,
         plugins: [

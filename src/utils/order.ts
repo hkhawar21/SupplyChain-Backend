@@ -33,6 +33,8 @@ export async function deductRawMaterialsFromInventory(
                 id: product.id,
             },
         });
+        console.log("RAW MATERIALS PRODUCT");
+        console.log(productRawMaterials);
         productRawMaterials?.map((productRawMaterial) => {
             // If the raw material is already present in the rawMaterialsRequired array, then add the quantity to the existing quantity
             if (

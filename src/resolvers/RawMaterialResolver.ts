@@ -102,6 +102,9 @@ export class RawMaterialResolver {
             return await prisma.rawMaterial.findMany({
                 where: {
                     requestedStatus: RawMaterialStatus.PENDING,
+                    requested: {
+                        not: 0,
+                    },
                 },
             });
         } catch (error: any) {

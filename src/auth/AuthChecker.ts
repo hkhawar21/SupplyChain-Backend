@@ -5,13 +5,12 @@ import { verify } from "jsonwebtoken";
 import { Context, JwtPayload } from "../types";
 import prisma from "../prisma/client";
 
-export const getUserFromToken = async (req: any): Promise<User | null> => {
-    const authorization = req.get("Authorization");
-
-    if (!authorization) return null;
-
+export const getUserFromToken = async (
+    token: string | undefined,
+): Promise<User | null> => {
     try {
-        const token = authorization.split(" ")[1] || " ";
+        if (!token) return null;
+        token.split(" ")[1] || " ";
         const user = verify(
             token,
             process.env.JWT_SECRET || "JWT_SECRET",
@@ -30,7 +29,7 @@ export const getUserFromToken = async (req: any): Promise<User | null> => {
         });
         return userDetails;
     } catch (e) {
-        throw new AuthenticationError("You are not logged in");
+        return null;
     }
 };
 
