@@ -21,6 +21,9 @@ import jwt from "jsonwebtoken";
 class AuthenticationToken {
     @Field((type) => String)
     authenticationToken!: string;
+
+    @Field((type) => User)
+    user!: User;
 }
 
 @Resolver()
@@ -56,6 +59,7 @@ export class UserResolver {
         );
         return {
             authenticationToken: token,
+            user,
         };
     }
 
@@ -91,6 +95,7 @@ export class UserResolver {
         );
         return {
             authenticationToken: token,
+            user,
         };
     }
 

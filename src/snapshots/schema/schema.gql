@@ -42,6 +42,7 @@ input AgentUpdateInput {
 
 type AuthenticationToken {
   authenticationToken: String!
+  user: User!
 }
 
 input BoolFilter {

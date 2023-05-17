@@ -14,6 +14,7 @@ import prisma from "../prisma/client";
 import { Order, OrderStatus, AccessRole } from "@generated/type-graphql";
 import { UserInputError } from "apollo-server-core";
 import { isUserAllowed } from "../utils/role";
+import { deductRawMaterialsFromInventory } from "../utils/order";
 
 @InputType()
 export class ProductOrderCreateInput {
@@ -321,7 +322,12 @@ export class OrderResolver {
         if (!isUserAllowed(ctx.role, [AccessRole.orders, AccessRole.admin]))
             throw new UserInputError("Not Authorized");
         try {
-            const order = prisma.order.update({
+            const existingOrder = await prisma.order.findFirst({
+                where: {
+                    id,
+                },
+            });
+            const order = await prisma.order.update({
                 where: {
                     id,
                 },
@@ -329,6 +335,14 @@ export class OrderResolver {
                     status,
                 },
             });
+            if (
+                existingOrder?.status === OrderStatus.PENDING &&
+                status === OrderStatus.PROCESSING
+            ) {
+                const status = deductRawMaterialsFromInventory(order.id);
+                if (!status)
+                    throw new UserInputError("Order cannot be processed");
+            }
             return order;
         } catch (error) {
             throw new UserInputError("Order not found");
