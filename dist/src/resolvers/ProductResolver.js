@@ -147,7 +147,10 @@ exports.ProductInput = ProductInput;
 // 7. deleteProduct
 let ProductResolver = class ProductResolver {
     async createProduct(productInput, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.products, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
+            type_graphql_2.AccessRole.products,
+            type_graphql_2.AccessRole.admin,
+        ]))
             throw new apollo_server_express_1.UserInputError("Not Authorized");
         try {
             // Restrict adding duplicate product
@@ -225,7 +228,10 @@ let ProductResolver = class ProductResolver {
         });
     }
     async updateProduct(productUpdateInput, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.products, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
+            type_graphql_2.AccessRole.products,
+            type_graphql_2.AccessRole.admin,
+        ]))
             throw new apollo_server_express_1.UserInputError("Not Authorized");
         const product = await client_1.default.product.findUnique({
             where: { id: productUpdateInput.id },
@@ -277,7 +283,10 @@ let ProductResolver = class ProductResolver {
         }
     }
     async removeRawMaterialFromProduct(productId, rawMaterialId, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.products, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
+            type_graphql_2.AccessRole.products,
+            type_graphql_2.AccessRole.admin,
+        ]))
             throw new apollo_server_express_1.UserInputError("Not Authorized");
         try {
             return await client_1.default.product.update({
@@ -300,7 +309,10 @@ let ProductResolver = class ProductResolver {
         }
     }
     async addRawMaterialToProduct(productId, rawMaterialId, quantity, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.products, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
+            type_graphql_2.AccessRole.products,
+            type_graphql_2.AccessRole.admin,
+        ]))
             throw new apollo_server_express_1.UserInputError("Not Authorized");
         try {
             await client_1.default.productRawMaterials.create({
@@ -323,7 +335,10 @@ let ProductResolver = class ProductResolver {
         }
     }
     async deleteProduct(id, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.products, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
+            type_graphql_2.AccessRole.products,
+            type_graphql_2.AccessRole.admin,
+        ]))
             throw new apollo_server_express_1.UserInputError("Not Authorized");
         try {
             return await client_1.default.product.update({

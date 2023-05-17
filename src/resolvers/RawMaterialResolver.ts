@@ -74,7 +74,7 @@ export class RawMaterialResolver {
         @Ctx() ctx: any,
     ): Promise<RawMaterial> {
         if (
-            !isUserAllowed(ctx.role, [
+            !isUserAllowed(ctx.user.role, [
                 AccessRole.inventory,
                 AccessRole.admin,
                 AccessRole.products,
@@ -129,7 +129,7 @@ export class RawMaterialResolver {
         @Ctx() ctx: any,
     ): Promise<RawMaterial> {
         if (
-            !isUserAllowed(ctx.role, [
+            !isUserAllowed(ctx.user.role, [
                 AccessRole.inventory,
                 AccessRole.admin,
                 AccessRole.products,
@@ -170,7 +170,7 @@ export class RawMaterialResolver {
         @Ctx() ctx: any,
     ): Promise<RawMaterial> {
         if (
-            !isUserAllowed(ctx.role, [
+            !isUserAllowed(ctx.user.role, [
                 AccessRole.inventory,
                 AccessRole.admin,
                 AccessRole.products,
@@ -210,7 +210,7 @@ export class RawMaterialResolver {
         @Ctx() ctx: any,
     ): Promise<RawMaterial> {
         if (
-            !isUserAllowed(ctx.role, [
+            !isUserAllowed(ctx.user.role, [
                 AccessRole.inventory,
                 AccessRole.admin,
                 AccessRole.products,
@@ -232,7 +232,7 @@ export class RawMaterialResolver {
     @Authorized()
     async deleteRawMaterial(@Arg("id", () => Int) id: number, @Ctx() ctx: any) {
         if (
-            !isUserAllowed(ctx.role, [
+            !isUserAllowed(ctx.user.role, [
                 AccessRole.inventory,
                 AccessRole.admin,
                 AccessRole.products,

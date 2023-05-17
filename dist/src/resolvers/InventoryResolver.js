@@ -41,7 +41,10 @@ OrderCreateInputInventory = __decorate([
 let InventoryResolver = class InventoryResolver {
     // Implementing all the functionalitites commented above
     async createInventory(ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.inventory, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
+            type_graphql_2.AccessRole.inventory,
+            type_graphql_2.AccessRole.admin,
+        ]))
             throw new apollo_server_core_1.UserInputError("Not Authorized");
         try {
             const inventory = await client_1.default.inventory.create({
@@ -62,7 +65,10 @@ let InventoryResolver = class InventoryResolver {
         }
     }
     async createOrderRequest(orderCreateInput, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.inventory, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
+            type_graphql_2.AccessRole.inventory,
+            type_graphql_2.AccessRole.admin,
+        ]))
             throw new apollo_server_core_1.UserInputError("Not Authorized");
         try {
             const orderCanBeCreated = await OrderResolver_1.OrderResolver.checkRawMaterialAvailability(orderCreateInput);
@@ -82,7 +88,10 @@ let InventoryResolver = class InventoryResolver {
         }
     }
     async approveOrderRequest(orderId, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.inventory, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
+            type_graphql_2.AccessRole.inventory,
+            type_graphql_2.AccessRole.admin,
+        ]))
             throw new apollo_server_core_1.UserInputError("Not Authorized");
         try {
             const updatedOrder = await client_1.default.order.update({

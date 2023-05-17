@@ -23,7 +23,10 @@ const type_graphql_2 = require("@generated/type-graphql");
 const role_1 = require("../utils/role");
 let FinanceResolver = class FinanceResolver {
     async approveRawmaterialRequest(id, quantity, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.finance, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
+            type_graphql_2.AccessRole.finance,
+            type_graphql_2.AccessRole.admin,
+        ]))
             throw new apollo_server_core_1.UserInputError("Not Authorized");
         try {
             // If existing raw materials request is present, then provide the updated value
@@ -43,7 +46,10 @@ let FinanceResolver = class FinanceResolver {
         }
     }
     async rejectRawmaterialRequest(id, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.finance, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
+            type_graphql_2.AccessRole.finance,
+            type_graphql_2.AccessRole.admin,
+        ]))
             throw new apollo_server_core_1.UserInputError("Not Authorized");
         try {
             // If existing raw materials request is present, then provide the updated value

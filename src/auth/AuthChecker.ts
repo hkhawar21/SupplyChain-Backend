@@ -16,6 +16,7 @@ export const getUserFromToken = async (req: any): Promise<User | null> => {
             token,
             process.env.JWT_SECRET || "JWT_SECRET",
         ) as JwtPayload;
+        console.log(user);
 
         const userDetails = await prisma.user.findFirst({
             where: { id: user.id },

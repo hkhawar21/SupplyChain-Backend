@@ -80,7 +80,7 @@ AgentCreateInput = __decorate([
 exports.AgentCreateInput = AgentCreateInput;
 let AgentsResolver = class AgentsResolver {
     async createAgent(agentCreateInput, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.agents, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [type_graphql_2.AccessRole.agents, type_graphql_2.AccessRole.admin]))
             throw new apollo_server_express_1.UserInputError("Not Authorized");
         try {
             // Restrict adding duplicate agent
@@ -129,7 +129,7 @@ let AgentsResolver = class AgentsResolver {
         });
     }
     async deleteAgent(id, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.agents, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [type_graphql_2.AccessRole.agents, type_graphql_2.AccessRole.admin]))
             throw new apollo_server_express_1.UserInputError("Not Authorized");
         await client_1.default.agent.delete({ where: { id } });
         return true;

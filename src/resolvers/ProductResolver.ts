@@ -112,7 +112,12 @@ export class ProductResolver {
         @Arg("productInput", () => ProductInput) productInput: ProductInput,
         @Ctx() ctx: any,
     ): Promise<Product> {
-        if (!isUserAllowed(ctx.role, [AccessRole.products, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [
+                AccessRole.products,
+                AccessRole.admin,
+            ])
+        )
             throw new UserInputError("Not Authorized");
         try {
             // Restrict adding duplicate product
@@ -207,7 +212,12 @@ export class ProductResolver {
         productUpdateInput: ProductUpdateInput,
         @Ctx() ctx: any,
     ) {
-        if (!isUserAllowed(ctx.role, [AccessRole.products, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [
+                AccessRole.products,
+                AccessRole.admin,
+            ])
+        )
             throw new UserInputError("Not Authorized");
         const product = await prisma.product.findUnique({
             where: { id: productUpdateInput.id },
@@ -269,7 +279,12 @@ export class ProductResolver {
         @Arg("rawMaterialId", () => Int) rawMaterialId: number,
         @Ctx() ctx: any,
     ) {
-        if (!isUserAllowed(ctx.role, [AccessRole.products, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [
+                AccessRole.products,
+                AccessRole.admin,
+            ])
+        )
             throw new UserInputError("Not Authorized");
         try {
             return await prisma.product.update({
@@ -299,7 +314,12 @@ export class ProductResolver {
         @Arg("quantity", () => Int) quantity: number,
         @Ctx() ctx: any,
     ) {
-        if (!isUserAllowed(ctx.role, [AccessRole.products, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [
+                AccessRole.products,
+                AccessRole.admin,
+            ])
+        )
             throw new UserInputError("Not Authorized");
         try {
             await prisma.productRawMaterials.create({
@@ -328,7 +348,12 @@ export class ProductResolver {
         @Arg("id", () => Int) id: number,
         @Ctx() ctx: any,
     ): Promise<Product> {
-        if (!isUserAllowed(ctx.role, [AccessRole.products, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [
+                AccessRole.products,
+                AccessRole.admin,
+            ])
+        )
             throw new UserInputError("Not Authorized");
         try {
             return await prisma.product.update({

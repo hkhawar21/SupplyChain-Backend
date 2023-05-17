@@ -63,7 +63,9 @@ export class AgentsResolver {
         agentCreateInput: AgentCreateInput,
         @Ctx() ctx: any,
     ): Promise<Agent> {
-        if (!isUserAllowed(ctx.role, [AccessRole.agents, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [AccessRole.agents, AccessRole.admin])
+        )
             throw new UserInputError("Not Authorized");
         try {
             // Restrict adding duplicate agent
@@ -134,7 +136,9 @@ export class AgentsResolver {
     @Mutation(() => Boolean)
     @Authorized()
     async deleteAgent(@Arg("id", () => Int) id: number, @Ctx("user") ctx: any) {
-        if (!isUserAllowed(ctx.role, [AccessRole.agents, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [AccessRole.agents, AccessRole.admin])
+        )
             throw new UserInputError("Not Authorized");
         await prisma.agent.delete({ where: { id } });
         return true;

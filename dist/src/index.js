@@ -65,12 +65,17 @@ const express = require("express");
         emitSchemaFile: path.resolve(__dirname, "snapshots/schema", "schema.gql"),
     });
     const app = express();
-    app.use(cors({
-        origin: [
-            "https://studio.apollographql.com",
-            "http://localhost:3000",
-        ],
-    }));
+    app.use(cors());
+    app.use((req, res, next) => {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("access-control-allow-origin", "https://studio.apollographql.com");
+        res.setHeader("access-control-allow-origin", "https://supply-chain-frontend.vercel.app/");
+        res.setHeader("access-control-allow-credentials", "true");
+        next();
+    });
+    app.get("/test", (req, res) => {
+        res.send("The server is running");
+    });
     const httpServer = http.createServer(app);
     const server = new apollo_server_express_1.ApolloServer({
         schema,
@@ -112,7 +117,7 @@ const express = require("express");
         app,
         path: "/",
     });
-    const PORT = process.env.LISTENING_PORT || 4000;
+    const PORT = 8080;
     console.log("GRAPHQL PATH:  ", server.graphqlPath);
     httpServer.listen(PORT, () => {
         console.log(`Server is now running on http://localhost:${PORT}${server.graphqlPath}`);

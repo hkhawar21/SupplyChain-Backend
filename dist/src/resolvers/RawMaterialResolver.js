@@ -87,7 +87,7 @@ let RawMaterialResolver = class RawMaterialResolver {
     // Implementing all the functionalitites commented above
     // CREATE RAW MATERIAL REQUEST
     async createRawMaterialRequest(rawMaterialRequestInput, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
             type_graphql_2.AccessRole.inventory,
             type_graphql_2.AccessRole.admin,
             type_graphql_2.AccessRole.products,
@@ -130,7 +130,7 @@ let RawMaterialResolver = class RawMaterialResolver {
     }
     // UPDATE STATUS OF RAW MATERIAL REQUESTED
     async changeStatusRawMaterial(id, status, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
             type_graphql_2.AccessRole.inventory,
             type_graphql_2.AccessRole.admin,
             type_graphql_2.AccessRole.products,
@@ -161,7 +161,7 @@ let RawMaterialResolver = class RawMaterialResolver {
     }
     // CREATE RAW MATERIAL
     async createRawMaterial(rawMaterialInput, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
             type_graphql_2.AccessRole.inventory,
             type_graphql_2.AccessRole.admin,
             type_graphql_2.AccessRole.products,
@@ -191,7 +191,7 @@ let RawMaterialResolver = class RawMaterialResolver {
     }
     // UPDATE RAW MATERIAL
     async updateRawMaterial(rawMaterialInput, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
             type_graphql_2.AccessRole.inventory,
             type_graphql_2.AccessRole.admin,
             type_graphql_2.AccessRole.products,
@@ -209,7 +209,7 @@ let RawMaterialResolver = class RawMaterialResolver {
     }
     // DELETE RAW MATERIAL
     async deleteRawMaterial(id, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
             type_graphql_2.AccessRole.inventory,
             type_graphql_2.AccessRole.admin,
             type_graphql_2.AccessRole.products,

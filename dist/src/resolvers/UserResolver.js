@@ -28,6 +28,10 @@ __decorate([
     (0, type_graphql_1.Field)((type) => String),
     __metadata("design:type", String)
 ], AuthenticationToken.prototype, "authenticationToken", void 0);
+__decorate([
+    (0, type_graphql_1.Field)((type) => type_graphql_2.User),
+    __metadata("design:type", type_graphql_2.User)
+], AuthenticationToken.prototype, "user", void 0);
 AuthenticationToken = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], AuthenticationToken);
@@ -53,6 +57,7 @@ let UserResolver = class UserResolver {
         const token = jsonwebtoken_1.default.sign(userData, process.env.JWT_SECRET || "JWT_SECRET");
         return {
             authenticationToken: token,
+            user,
         };
     }
     async signup(name, email, password, role) {
@@ -76,6 +81,7 @@ let UserResolver = class UserResolver {
         const token = jsonwebtoken_1.default.sign(userData, process.env.JWT_SECRET || "JWT_SECRET");
         return {
             authenticationToken: token,
+            user,
         };
     }
     async userById(id) {

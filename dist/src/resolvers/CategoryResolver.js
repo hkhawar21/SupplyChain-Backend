@@ -64,7 +64,8 @@ CategoryCreateInput = __decorate([
 exports.CategoryCreateInput = CategoryCreateInput;
 let CategoryResolver = class CategoryResolver {
     async createCategory(categoryCreateInput, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [
+        console.log(ctx);
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
             type_graphql_2.AccessRole.inventory,
             type_graphql_2.AccessRole.products,
             type_graphql_2.AccessRole.admin,
@@ -91,7 +92,7 @@ let CategoryResolver = class CategoryResolver {
             throw new Error(error.message);
         }
     }
-    async categories() {
+    async categories(ctx) {
         try {
             return await client_1.default.category.findMany({
                 include: {
@@ -113,7 +114,7 @@ let CategoryResolver = class CategoryResolver {
     }
     async updateCategory(categoryUpdateInput, ctx) {
         console.log("ROLEEE", ctx);
-        if (!(0, role_1.isUserAllowed)(ctx.role, [
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
             type_graphql_2.AccessRole.inventory,
             type_graphql_2.AccessRole.products,
             type_graphql_2.AccessRole.admin,
@@ -132,7 +133,7 @@ let CategoryResolver = class CategoryResolver {
         });
     }
     async deleteCategory(id, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [
             type_graphql_2.AccessRole.inventory,
             type_graphql_2.AccessRole.products,
             type_graphql_2.AccessRole.admin,
@@ -154,8 +155,9 @@ __decorate([
 __decorate([
     (0, type_graphql_1.Query)(() => [type_graphql_2.Category]),
     (0, type_graphql_1.Authorized)(),
+    __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], CategoryResolver.prototype, "categories", null);
 __decorate([

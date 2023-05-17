@@ -22,6 +22,7 @@ const client_1 = __importDefault(require("../prisma/client"));
 const type_graphql_2 = require("@generated/type-graphql");
 const apollo_server_core_1 = require("apollo-server-core");
 const role_1 = require("../utils/role");
+const order_1 = require("../utils/order");
 let ProductOrderCreateInput = class ProductOrderCreateInput {
 };
 __decorate([
@@ -198,7 +199,7 @@ let OrderResolver = OrderResolver_1 = class OrderResolver {
         return createdOrder;
     }
     async createOrder(orderCreateInput, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
             throw new apollo_server_core_1.UserInputError("Not Authorized");
         const orderCanBeCreated = await OrderResolver_1.checkRawMaterialAvailability(orderCreateInput);
         if (!orderCanBeCreated)
@@ -238,7 +239,7 @@ let OrderResolver = OrderResolver_1 = class OrderResolver {
         });
     }
     async updateOrderDetails(id, data, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
             throw new apollo_server_core_1.UserInputError("Not Authorized");
         const orderCanBeUpdated = await OrderResolver_1.checkRawMaterialAvailability(data);
         if (!orderCanBeUpdated)
@@ -264,7 +265,7 @@ let OrderResolver = OrderResolver_1 = class OrderResolver {
         return order;
     }
     async addProductToOrder(id, productOrderCreateInput, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
             throw new apollo_server_core_1.UserInputError("Not Authorized");
         const order = await client_1.default.order.update({
             where: {
@@ -279,7 +280,7 @@ let OrderResolver = OrderResolver_1 = class OrderResolver {
         return order;
     }
     async removeProductFromOrder(id, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
             throw new apollo_server_core_1.UserInputError("Not Authorized");
         return await client_1.default.productOrder.delete({
             where: {
@@ -288,10 +289,15 @@ let OrderResolver = OrderResolver_1 = class OrderResolver {
         });
     }
     async updateStatus(id, status, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
             throw new apollo_server_core_1.UserInputError("Not Authorized");
         try {
-            const order = client_1.default.order.update({
+            const existingOrder = await client_1.default.order.findFirst({
+                where: {
+                    id,
+                },
+            });
+            const order = await client_1.default.order.update({
                 where: {
                     id,
                 },
@@ -299,6 +305,12 @@ let OrderResolver = OrderResolver_1 = class OrderResolver {
                     status,
                 },
             });
+            if (existingOrder?.status === type_graphql_2.OrderStatus.PENDING &&
+                status === type_graphql_2.OrderStatus.PROCESSING) {
+                const status = (0, order_1.deductRawMaterialsFromInventory)(order.id);
+                if (!status)
+                    throw new apollo_server_core_1.UserInputError("Order cannot be processed");
+            }
             return order;
         }
         catch (error) {
@@ -306,7 +318,7 @@ let OrderResolver = OrderResolver_1 = class OrderResolver {
         }
     }
     async deleteOrder(id, ctx) {
-        if (!(0, role_1.isUserAllowed)(ctx.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
+        if (!(0, role_1.isUserAllowed)(ctx.user.role, [type_graphql_2.AccessRole.orders, type_graphql_2.AccessRole.admin]))
             throw new apollo_server_core_1.UserInputError("Not Authorized");
         try {
             const order = client_1.default.order.update({

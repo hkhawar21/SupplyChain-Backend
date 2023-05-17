@@ -43,7 +43,12 @@ export class InventoryResolver {
     @Mutation(() => Inventory)
     @Authorized()
     async createInventory(@Ctx() ctx: any): Promise<Inventory> {
-        if (!isUserAllowed(ctx.role, [AccessRole.inventory, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [
+                AccessRole.inventory,
+                AccessRole.admin,
+            ])
+        )
             throw new UserInputError("Not Authorized");
         try {
             const inventory = await prisma.inventory.create({
@@ -72,7 +77,12 @@ export class InventoryResolver {
         orderCreateInput: OrderCreateInputInventory,
         @Ctx() ctx: any,
     ): Promise<Order> {
-        if (!isUserAllowed(ctx.role, [AccessRole.inventory, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [
+                AccessRole.inventory,
+                AccessRole.admin,
+            ])
+        )
             throw new UserInputError("Not Authorized");
         try {
             const orderCanBeCreated =
@@ -104,7 +114,12 @@ export class InventoryResolver {
         @Arg("orderId", () => Int) orderId: number,
         @Ctx() ctx: any,
     ): Promise<Order> {
-        if (!isUserAllowed(ctx.role, [AccessRole.inventory, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [
+                AccessRole.inventory,
+                AccessRole.admin,
+            ])
+        )
             throw new UserInputError("Not Authorized");
         try {
             const updatedOrder = await prisma.order.update({

@@ -51,8 +51,9 @@ export class CategoryResolver {
         categoryCreateInput: CategoryCreateInput,
         @Ctx() ctx: any,
     ): Promise<Category> {
+        console.log(ctx);
         if (
-            !isUserAllowed(ctx.role, [
+            !isUserAllowed(ctx.user.role, [
                 AccessRole.inventory,
                 AccessRole.products,
                 AccessRole.admin,
@@ -87,7 +88,7 @@ export class CategoryResolver {
 
     @Query(() => [Category])
     @Authorized()
-    async categories() {
+    async categories(@Ctx() ctx: any) {
         try {
             return await prisma.category.findMany({
                 include: {
@@ -119,7 +120,7 @@ export class CategoryResolver {
     ) {
         console.log("ROLEEE", ctx);
         if (
-            !isUserAllowed(ctx.role, [
+            !isUserAllowed(ctx.user.role, [
                 AccessRole.inventory,
                 AccessRole.products,
                 AccessRole.admin,
@@ -146,7 +147,7 @@ export class CategoryResolver {
     @Authorized()
     async deleteCategory(@Arg("id", () => Int) id: number, @Ctx() ctx: any) {
         if (
-            !isUserAllowed(ctx.role, [
+            !isUserAllowed(ctx.user.role, [
                 AccessRole.inventory,
                 AccessRole.products,
                 AccessRole.admin,

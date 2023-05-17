@@ -17,7 +17,12 @@ export class FinanceResolver {
         @Arg("quantity", () => Int) quantity: number,
         @Ctx() ctx: any,
     ) {
-        if (!isUserAllowed(ctx.role, [AccessRole.finance, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [
+                AccessRole.finance,
+                AccessRole.admin,
+            ])
+        )
             throw new UserInputError("Not Authorized");
         try {
             // If existing raw materials request is present, then provide the updated value
@@ -42,7 +47,12 @@ export class FinanceResolver {
         @Arg("id", () => Int) id: number,
         @Ctx() ctx: any,
     ) {
-        if (!isUserAllowed(ctx.role, [AccessRole.finance, AccessRole.admin]))
+        if (
+            !isUserAllowed(ctx.user.role, [
+                AccessRole.finance,
+                AccessRole.admin,
+            ])
+        )
             throw new UserInputError("Not Authorized");
         try {
             // If existing raw materials request is present, then provide the updated value
