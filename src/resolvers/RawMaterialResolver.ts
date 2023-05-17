@@ -18,6 +18,7 @@ import {
     AccessRole,
 } from "@generated/type-graphql";
 import { isUserAllowed } from "../utils/role";
+import { raw } from "@prisma/client/runtime";
 
 @InputType()
 export class RawMaterialUpdateInput {
@@ -249,6 +250,21 @@ export class RawMaterialResolver {
                     status: false,
                 },
             });
+        } catch (error: any) {
+            throw new UserInputError(error);
+        }
+    }
+
+    @Query(() => [RawMaterial])
+    @Authorized()
+    async rawMaterialOffSetCheck() {
+        try {
+            const rawMaterials = await prisma.rawMaterial.findMany();
+            const rawMaterialsOffSet = rawMaterials.filter(
+                (rawMaterial) =>
+                    rawMaterial.presentInInventory < rawMaterial.minimumAmount,
+            );
+            return rawMaterialsOffSet;
         } catch (error: any) {
             throw new UserInputError(error);
         }

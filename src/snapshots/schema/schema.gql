@@ -678,11 +678,13 @@ type Query {
   orderById(id: Int!): Order!
   orders: [Order!]!
   ordersByCustomerId(id: Int!): [Order!]!
+  ordersForPredictions: [Order!]!
   ordersRequested: [Order!]!
   productById(id: Int!): Product!
   products: [Product!]!
   productsInInventory: [Product!]!
   rawMaterial: [RawMaterial!]!
+  rawMaterialOffSetCheck: [RawMaterial!]!
   rawMaterialRequested: [RawMaterial!]!
   rawMaterialsInInventory: [RawMaterial!]!
   userById(id: Int!): User!
@@ -699,6 +701,7 @@ type RawMaterial {
   id: Int!
   inventory: Inventory!
   inventory_id: Int!
+  minimumAmount: Int!
   name: String!
   presentInInventory: Int!
   price: Float!
@@ -733,6 +736,7 @@ input RawMaterialOrderByWithRelationInput {
   id: SortOrder
   inventory: InventoryOrderByWithRelationInput
   inventory_id: SortOrder
+  minimumAmount: SortOrder
   name: SortOrder
   presentInInventory: SortOrder
   price: SortOrder
@@ -755,6 +759,7 @@ input RawMaterialRequestInput {
 enum RawMaterialScalarFieldEnum {
   id
   inventory_id
+  minimumAmount
   name
   presentInInventory
   price
@@ -785,6 +790,7 @@ input RawMaterialWhereInput {
   id: IntFilter
   inventory: InventoryRelationFilter
   inventory_id: IntFilter
+  minimumAmount: IntFilter
   name: StringFilter
   presentInInventory: IntFilter
   price: FloatFilter

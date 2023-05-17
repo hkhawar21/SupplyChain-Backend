@@ -381,4 +381,24 @@ export class OrderResolver {
             throw new UserInputError("Order not found");
         }
     }
+
+    @Query(() => [Order])
+    @Authorized()
+    async ordersForPredictions() {
+        // fetch all orders
+        return await prisma.order.findMany({
+            where: {
+                status: {
+                    in: [
+                        OrderStatus.PENDING,
+                        OrderStatus.PROCESSING,
+                        OrderStatus.CANCELLED,
+                    ],
+                },
+            },
+            include: {
+                products: true,
+            },
+        });
+    }
 }
